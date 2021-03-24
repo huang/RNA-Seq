@@ -899,7 +899,7 @@ p602_d3_vs_p600_d3-down.txt \
 
 
 
-############### prepare IPA tables ###############
+## prepare IPA tables ###############
 # First thing: commenting the 4 lines in the for-loop above.
 cut -d',' -f1-1 mock_sT_d8_vs_mock_sT_d3_background.txt > symbol1.txt
 cut -d',' -f1-1 sT_d3_vs_mock_sT_d3_background.txt > symbol2.txt
