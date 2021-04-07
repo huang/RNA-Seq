@@ -1,7 +1,5 @@
 # RNA-Seq
 
-
-
 In this study, performed by Holzer et al. (2016), 
 - (1) total RNA from a human HuH7 cell line and a fruit bat cell line (R06E-J; Rousettus aegyptiacs) infected with either the Ebola or Marburg virus (EBOV, MARV) was harvested 3, 7, and 23 h postinfection, depleted of ribosomal RNA and sequenced on an Illumina HiSeq2500. The bat RNA was further pooled and additionally sequenced on an Illumina MiSeq system. Initial quality control and trimming of the raw data were conducted with FastQC (Andrews, 2010) and PRINSEQ (Schmieder and Edwards, 2011). 
 - (2) For bat RNA, a de novo transcriptome assembly was constructed by combining MiSeq and HiSeq data using Velvet/Oases (Schulz et al., 2012; Zerbino and Birney, 2008), ABySS/Trans-ABySS (Birol et al., 2009; Simpson et al., 2009), SOAPdenovo-Trans (Luo et al., 2012), Trinity (Grabherr et al., 2011), and Mira (Chevreux et al., 2004) with default parameters and multiple k-mer values, if possible. 
@@ -12,41 +10,7 @@ response to infection based on an enriched pathway analysis and the literature. 
 - (6) One huge advantage of this comprehensive study was the manual inspection of ~7.5 % of the human genes. Each candidate gene was manually investigated in the IGV (Thorvaldsdóttir et al., 2013) and UCSC (Dreszer et al., 2012) browsers for the human and bat samples from all time points. Single-nucleotide modifications (differential SNPs, posttranscriptional modifications), intronic transcripts and regulators, alternative splicing and isoforms, as well as upstream and downstream transcript characteristics were described.
 
 
-
-## 1, convert bam to bigwig using deepTools by feeding inverse of DESeq’s size Factor
-You can read the details laid out by ATpoint about how to use a scale factor with deepTools. He specified it for ATAC-seq/ChIP-seq, but the principles are the same for RNA-seq: calculate a scaling factor with DESeq2 and supply the inverse (!) to bamCoverage --scaleFactor.
-
-https://www.biostars.org/p/317023/
-
-https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html
-
-```sh
-#Create DESeq2Dataset object
-dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
-sizeFactors(dds)
-View(counts(dds))
-dds <- estimateSizeFactors(dds)
-sizeFactors(dds)
-normalized_counts <- counts(dds, normalized=TRUE)
-write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
-
-bamCoverage --bam a.bam -o a.SeqDepthNorm.bw \
-    --binSize 10
-    --normalizeUsing RPGC
-    --effectiveGenomeSize 2150570000
-    --ignoreForNormalization chrX
-    --extendReads
-```
-Sure, you can use the DESeq2 scale factor. I don't recall whether DESeq2 is dividing by the scale factor or multiplying by it. If it's doing the latter then you don't need to invert (just compare a normalized and raw count in DESeq2 to be sure).
-```sh
---skipNonCoveredRegions --binSize 10 --scaleFactor 1/DESeq's size factor
-```
-#https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3941356
-
-BamCoverage from deepTools (version 3.0.2) was used to generate bigwig tracks with parameters “--skipNonCoveredRegions --binSize 10 --scaleFactor 1/DESeq’s size Factor”.
-
-
-## 2(optional), mapping on the p602, p604, and p605 (MCPyV)
+## 1(optional), mapping on the p602, p604, and p605 (MCPyV)
 ```sh
 ./damian_extended/main.rb --host human3 --type dna --ref_db MCPyV.fa --external_ref MCPyV.fa --external_groupref MCPyV.fa --min_contiglength 200  -u trimmed/V_8_4_2_p602_d8_DonorI.fastq.gz  --sample p602_on_MCPyV   --no_anno_groupref   --threads 15 --force
 
@@ -60,7 +24,7 @@ done
 ```
 
 
-## 3, raw data (from genbank or with own data)
+## 2, raw data (from genbank or with own data)
 ```sh
 # from genbank
 cat SRR_Acc_List.txt | xargs -n 1 bash get_SRR_data.sh
@@ -105,7 +69,7 @@ cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
 ```
 
 
-## 4, trimming + nextflow
+## 3, trimming + nextflow
 ```sh
 #http://genome.ucsc.edu/FAQ/FAQformat.html#format4
 --0--
@@ -116,7 +80,7 @@ for sample_id in mock_sT_d3 mock_sT_d8 sT_d3 sT_d8 mock_truncLT_d3 mock_truncLT_
 done 2>trimmomatic.log
 
 # see read_biotype_assignment: https://github.com/ewels/ngi_visualizations/tree/master/ngi_visualizations/biotypes
-Running twice, once without biotype using UCSC  --> get the results which comparable to ChIPSeq-data, since they both using UCSC-gtf -->1
+#Running twice, once without biotype using UCSC  --> get the results which comparable to ChIPSeq-data, since they both using UCSC-gtf -->1
                once with biotype using ENSEMBLE reference --> get images of biotypes and as controls -->2
 
 #--1--
@@ -157,9 +121,9 @@ nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fast
 cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
 ```
 
-################################################################################################################
-##### STEP1: pca and heatmap_clusters, remove batch effects, intercept assay(rld), then removeBatchEffect  #####
 
+## 4, load and clean data, and construct DESeqDataSet
+```sh
 library("AnnotationDbi")
 library("clusterProfiler")
 library("ReactomePA")
@@ -169,7 +133,6 @@ library(gplots)
 setwd("/mnt/Seagate_Corona/Data_Denise_RNASeq/results/featureCounts")
 
 ####-- dataset 16 isolates: CORRECTION!! --
-
 
 # --- IMPORTANT: to reminder that sequencing in a batch if possible! ---
 d.raw<- read.delim2("merged_gene_counts_2.txt",sep="\t", header=TRUE, row.names=1)
@@ -200,17 +163,11 @@ d.raw<- read.delim2("merged_gene_counts_2.txt",sep="\t", header=TRUE, row.names=
 [25] V_8_3_1_p604and605_d12_DonorIAligned.sortedByCoord.out.bam
 [26] V_8_3_2_p600and601_d9_DonorIIAligned.sortedByCoord.out.bam
 
-
-
-
 colnames(d.raw)<- c("V_8_0_mock_DonorI","V_8_1_6_p601_d8_DonorI","V_8_1_5_p604_d3_DonorII","V_8_1_6_p604_d3_DonorI","V_8_2_3_p605_d8_DonorII","V_8_0_mock_DonorII","V_8_1_5_p601_d8_DonorII","V_8_2_3_p605_d3_DonorII","V_8_1_6_p604_d8_DonorI","V_8_2_3_p600_d8_DonorII","V_8_2_4_p600_d8_DonorI","V_8_2_4_p600_d3_DonorI","V_8_1_5_p604_d8_DonorII","V_8_1_5_p601_d3_DonorII","V_8_1_6_p601_d3_DonorI","V_8_2_3_p600_d3_DonorII","V_8_2_4_p605_d3_DonorI","V_8_4_1_p602_d8_DonorI","V_8_3_2_p604and605_d9_DonorII","V_8_4_2_p602_d3_DonorI","V_8_4_2_p602_d3_DonorII","V_8_2_4_p605_d8_DonorI","V_8_3_1_p600and601_d12_DonorI","V_8_4_1_p602_d8_DonorII","V_8_3_1_p604and605_d12_DonorI","V_8_3_2_p600and601_d9_DonorII")  #26364
 
 col_order <- c("V_8_0_mock_DonorI","V_8_0_mock_DonorII","V_8_1_5_p601_d3_DonorII", "V_8_1_5_p604_d3_DonorII", "V_8_1_5_p601_d8_DonorII","V_8_1_5_p604_d8_DonorII",   "V_8_1_6_p601_d3_DonorI","V_8_1_6_p604_d3_DonorI","V_8_1_6_p601_d8_DonorI","V_8_1_6_p604_d8_DonorI",  "V_8_2_3_p600_d3_DonorII","V_8_2_3_p605_d3_DonorII","V_8_2_3_p600_d8_DonorII", "V_8_2_3_p605_d8_DonorII",  "V_8_2_4_p600_d3_DonorI","V_8_2_4_p605_d3_DonorI","V_8_2_4_p600_d8_DonorI","V_8_2_4_p605_d8_DonorI",  "V_8_4_1_p602_d8_DonorII","V_8_4_1_p602_d8_DonorI",  "V_8_3_1_p600and601_d12_DonorI", "V_8_3_1_p604and605_d12_DonorI","V_8_3_2_p600and601_d9_DonorII","V_8_3_2_p604and605_d9_DonorII",    "V_8_4_2_p602_d3_DonorI","V_8_4_2_p602_d3_DonorII")
 reordered.raw <- d.raw[,col_order]
 #reordered.raw <- subset(d.raw, select=col_order)
-
-
-
 
 # OPTION1: sT
 d.raw_sT <- subset(d.raw, select=c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
@@ -254,7 +211,6 @@ ids = as.factor(c("sT_mock_d3_r2","sT_mock_d8_r1","sT_mock_d8_r2","LTtr_mock_d8_
 cData = data.frame(row.names=colnames(d.raw_mock_untreated), replicates=replicates, batch=batch, ids=ids)
 dds<-DESeqDataSetFromMatrix(countData=d.raw_mock_untreated, colData=cData, design=~batch+replicates)
 
-
 # OPTION6: sT vs untreated or LTtr vs untreated
 #P602 d8 vs p600 d8 (donor 1+2)
 #P604+605 d9/12 vs p600+601 d9/12 (donor 1+2)
@@ -265,7 +221,6 @@ ids = as.factor(c("p602_d8_DII","p602_d8_DI","p600_d8_DII","p600_d8_DI", "p604an
 cData = data.frame(row.names=colnames(d.raw_p602_p600_mixed), replicates=replicates, batch=batch, ids=ids)
 dds<-DESeqDataSetFromMatrix(countData=d.raw_p602_p600_mixed, colData=cData, design=~batch+replicates)
 
-
 # OPTION7
 #replicates = as.factor(c("untreated","untreated","p601_d3","p604_d3",     "p601_d8","p604_d8","p601_d3","p604_d3",     "p601_d8","p604_d8","p600_d3","p605_d3",   "p600_d8", "p605_d8","p600_d3","p605_d3",       "p600_d8","p605_d8","p602_d8","p602_d8",      "p600and601_d12", "p604and605_d12","p600and601_d9","p604and605_d9"))
 
@@ -275,9 +230,10 @@ ids = as.factor(c("untreated_DonorI","untreated_DonorII", "p601_d3_DonorII","p60
 donor = as.factor(c("DonorI","DonorII", "DonorII","DonorII", "DonorII","DonorII",   "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorII","DonorII", "DonorII",  "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorI",  "DonorI", "DonorI","DonorII","DonorII"))
 cData = data.frame(row.names=colnames(reordered.raw), replicates=replicates, donor=donor, batch=batch, ids=ids)
 dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~donor+replicates)  #batch+
+```
 
-
-
+## 5, fake or non-fake replicates
+```sh
 #"p602_d3_DonorI","p602_d3_DonorII"
 #, "210302", "210302"
 # ---- ACTIVATED for fake replicates, y are the fake-replicate of x ----
@@ -299,8 +255,6 @@ cData = data.frame(row.names=colnames(total2), replicates=replicates, donor=dono
 dds<-DESeqDataSetFromMatrix(countData=total2, colData=cData, design=~replicates)  #batch+
 
 
-
-
 # ---- ACTIVATED for non-fake replicates ----
 replicates = as.factor(c("untreated","untreated", "p601_d3","p604_d3", "p601_d8","p604_d8",   "p601_d3","p604_d3","p601_d8","p604_d8",  "p600_d3","p605_d3","p600_d8", "p605_d8",  "p600_d3","p605_d3","p600_d8","p605_d8",  "p602_d8","p602_d8",  "p600and601_d12", "p604and605_d12","p600and601_d9","p604and605_d9",     "p602_d3","p602_d3"))
 
@@ -313,10 +267,42 @@ donor = as.factor(c("DonorI","DonorII", "DonorII","DonorII", "DonorII","DonorII"
 cData = data.frame(row.names=colnames(reordered.raw), replicates=replicates, donor=donor, batch=batch, ids=ids)
 dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~batch+replicates) # ERROR due to the factor 'batch'
 dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~donor+replicates)
+```
 
 
+## 6, convert bam to bigwig using deepTools by feeding inverse of DESeq’s size Factor
+You can read the details laid out by ATpoint about how to use a scale factor with deepTools. He specified it for ATAC-seq/ChIP-seq, but the principles are the same for RNA-seq: calculate a scaling factor with DESeq2 and supply the inverse (!) to bamCoverage --scaleFactor.
 
+https://www.biostars.org/p/317023/
 
+https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html
+
+```sh
+#Create DESeq2Dataset object
+dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
+sizeFactors(dds)
+View(counts(dds))
+dds <- estimateSizeFactors(dds)
+sizeFactors(dds)
+normalized_counts <- counts(dds, normalized=TRUE)
+write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
+
+bamCoverage --bam a.bam -o a.SeqDepthNorm.bw \
+    --binSize 10
+    --normalizeUsing RPGC
+    --effectiveGenomeSize 2150570000
+    --ignoreForNormalization chrX
+    --extendReads
+```
+Sure, you can use the DESeq2 scale factor. I don't recall whether DESeq2 is dividing by the scale factor or multiplying by it. If it's doing the latter then you don't need to invert (just compare a normalized and raw count in DESeq2 to be sure).
+```sh
+--skipNonCoveredRegions --binSize 10 --scaleFactor 1/DESeq's size factor
+```
+#https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3941356
+
+BamCoverage from deepTools (version 3.0.2) was used to generate bigwig tracks with parameters “--skipNonCoveredRegions --binSize 10 --scaleFactor 1/DESeq’s size Factor”.
+
+```sh
 #> head(reordered.raw,0)
  [1] V_8_0_mock_DonorI             V_8_0_mock_DonorII           
  [3] V_8_1_5_p601_d3_DonorII       V_8_1_5_p604_d3_DonorII      
@@ -331,8 +317,6 @@ dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~dono
 [21] V_8_3_1_p600and601_d12_DonorI V_8_3_1_p604and605_d12_DonorI
 [23] V_8_3_2_p600and601_d9_DonorII V_8_3_2_p604and605_d9_DonorII
 [25] V_8_4_2_p602_d3_DonorI        V_8_4_2_p602_d3_DonorII  
-
-
 
 dds <- estimateSizeFactors(dds)
 sizeFactors(dds)
@@ -439,13 +423,11 @@ bamCoverage --bam V_8_3_2_p604and605_d9_DonorIIAligned.sortedByCoord.out.bam -o 
 #7
 bamCoverage --bam V_8_4_2_p602_d3_DonorIAligned.sortedByCoord.out.bam  -o ../bigWigs/V_8_4_2_p602_d3_DonorI_norm.bw --binSize 10 --scaleFactor 0.8947267  --effectiveGenomeSize 2864785220
 bamCoverage --bam V_8_4_2_p602_d3_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_4_2_p602_d3_DonorII_norm.bw --binSize 10 --scaleFactor 1.0892385 --effectiveGenomeSize 2864785220
+```
 
 
-
-
-
-
-
+## 7, pca and heatmap before and after removing batch effects
+```sh
 #--go to BREAK POINT--
 # sorted by sT and truncLT
 
@@ -503,19 +485,12 @@ hc <- hclust(distsRL)
 hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
 heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
 dev.off()
+```
 
 
-
-
-
-
-
-
-
-############################################################
-####################### sT #################################
-##### STEP2: select the differentially expressed genes #####
-
+## 8, select the differentially expressed genes
+```sh
+#sT
 #p600and601_d9or12
 #p600_d3
 #p601_d3
@@ -539,9 +514,7 @@ dev.off()
 #P602 d8 vs p600 d8 (donor 1+2)       --> p602_d8_vs_p600_d8
 #P604+605 d9/12 vs p600+601 d9/12 (donor 1+2)  --> p604and605_d9or12_vs_p600and601_d9or12
 
-
 setwd("/mnt/Seagate_Corona/Data_Denise_RNASeq/results/featureCounts/degenes_2021")
-
 #---- * to untreated ----
 dds$replicates <- relevel(dds$replicates, "untreated")
 dds = DESeq(dds, betaPrior=FALSE)
@@ -583,9 +556,6 @@ dds$replicates <- relevel(dds$replicates, "p600and601_d9or12")
 dds = DESeq(dds, betaPrior=FALSE)
 resultsNames(dds)
 clist <- c("p604and605_d9or12_vs_p600and601_d9or12")
-
-
-
 
 
 setwd("/mnt/Seagate_Corona/Data_Denise_RNASeq/results/featureCounts/degenes_DonorII")
@@ -855,18 +825,11 @@ p602_d3_vs_p600_d3-all.txt \
 p602_d3_vs_p600_d3-up.txt \
 p602_d3_vs_p600_d3-down.txt \
 -d$',' -o p602_d3_vs_p600_d3.xls;
+```
 
 
-
-
-
-
-
-
-
-
-
-## prepare IPA tables ###############
+## 9, prepare IPA tables
+```sh
 # First thing: commenting the 4 lines in the for-loop above.
 cut -d',' -f1-1 mock_sT_d8_vs_mock_sT_d3_background.txt > symbol1.txt
 cut -d',' -f1-1 sT_d3_vs_mock_sT_d3_background.txt > symbol2.txt
@@ -888,10 +851,6 @@ identical(rownames(sT_degenes_IPA), rownames(geness))
 geness_sT_degenes_IPA <- merge(geness, sT_degenes_IPA)
 write.csv(as.data.frame(geness_sT_degenes_IPA[order(geness_sT_degenes_IPA$sT_d8_vs_mock_d8_padj),]), file = "geness_sT_degenes_IPA.txt")
 ~/Tools/csv2xls-0.4/csv_to_xls.py geness_sT_degenes_IPA.txt -d$',' -o geness_sT_degenes_IPA.xls;
-############### prepare IPA tables END ###############
-
-
-
 
 #under DIR degenes under KONSOLE
 for comp in mock_sT_d8_vs_mock_sT_d3 sT_d3_vs_mock_sT_d3 sT_d8_vs_mock_sT_d8 sT_d8_vs_sT_d3; do \
@@ -905,8 +864,11 @@ cd ${comp}_output; \
 ~/Tools/csv2xls-0.4/csv_to_xls.py upregulated_filtered downregulated_filtered background -d$',' -o ../${comp}_degenes.xls; \
 cd ..; \
 done
-# 
+```
 
+
+## 10, KEGG pathway enrichments
+```sh
 ##--- load the temporary results and pathways_KEGG calculation (https://yulab-smu.github.io/clusterProfiler-book/chapter6.html) ----
 # under CONSOLE
 # perform the GAMOLA2-annotation with “/media/jhuang/Elements/Data_Tam_RNASeq/run_with_gamola2.sh”
@@ -939,15 +901,16 @@ merged_list <- merge_result(list('p602_d8_vs_p600_d8'=p602_d8_vs_p600_d8_KEGG, '
 dotplot(merged_list, showCategory=20)
 dev.off()
 
-
 # under CONSOLE
 cd pathways_KEGG
 ~/Tools/csv2xls-0.4/csv_to_xls.py sT_d3_vs_mock_sT_d3_KEGG.txt sT_d8_vs_mock_sT_d8_KEGG.txt mock_sT_d8_vs_mock_sT_d3_KEGG.txt sT_d8_vs_sT_d3_KEGG.txt -d$'\t' -o pathways_KEGG.xls
 ~/Tools/csv2xls-0.4/csv_to_xls.py sT_mock_d3_vs_untreated_KEGG.txt sT_mock_d8_vs_untreated_KEGG.txt LTtr_mock_d3_vs_untreated_KEGG.txt LTtr_mock_d8_vs_untreated_KEGG.txt -d$'\t' -o pathways_KEGG.xls
 ~/Tools/csv2xls-0.4/csv_to_xls.py p602_d8_vs_p600_d8_KEGG.txt p604and605_d9ord12_vs_p600and601_d9ord12_KEGG.txt -d$'\t' -o pathways_KEGG.xls
+```
 
 
-
+## 11, MSigDB pathway enrichments
+```sh
 ##--- load the temporary results and pathways_MSigDB calculation on the sT-RNASeq (https://yulab-smu.github.io/clusterProfiler-book/chapter7.html) ----
 #https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp
 #https://www.gsea-msigdb.org/gsea/msigdb/index.jsp
@@ -977,12 +940,12 @@ done
 # under CONSOLE
 cd pathways_MSigDB
 ~/Tools/csv2xls-0.4/csv_to_xls.py p602_d8_vs_p600_d8_MSigDB.txt p604and605_d9ord12_vs_p600and601_d9ord12_MSigDB.txt -d$'\t' -o pathways_MSigDB_C7_all.xls
+```
 
 
-
-
-###################################################################
-##### STEP3: prepare all_genes #####
+## 12, clustering the genes and draw heatmap
+```sh
+# -- prepare all_genes --
 #rld <- rlogTransformation(dds)
 RNASeq.NoCellLine <- assay(rld)
 # reorder the columns
@@ -1021,10 +984,7 @@ RNASeq.NoCellLine_ <- RNASeq.NoCellLine_[,c(-1:-8)]        #663x4
 write.csv(as.data.frame(RNASeq.NoCellLine_ ), file ="gene_expression_merging_replicates.txt")
 
 
-
-
-######################################################################
-##### STEP4: clustering the genes and draw heatmap #####
+# -- clustering the genes and draw heatmap --
 #clustering methods: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).  pearson or spearman
 datamat = RNASeq.NoCellLine_
 hr <- hclust(as.dist(1-cor(t(datamat), method="pearson")), method="complete")
@@ -1056,7 +1016,7 @@ heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSide
 dev.off()
 
 
-#### cluster members #####
+#-- cluster members --
 write.csv(names(subset(mycl, mycl == '1')),file='cluster1_YELLOW.txt')
 write.csv(names(subset(mycl, mycl == '2')),file='cluster2_DARKBLUE.txt') 
 write.csv(names(subset(mycl, mycl == '3')),file='cluster3_DARKORANGE.txt')  
@@ -1064,7 +1024,7 @@ write.csv(names(subset(mycl, mycl == '4')),file='cluster4_DARKMAGENTA.txt')
 #~/Tools/csv2xls-0.4/csv_to_xls.py cluster*.txt -d',' -o genelist_clusters.xls
 
 
-#### pathway plot ####
+#-- pathway plot --
 library("clusterProfiler")
 library("ReactomePA")
 #The cutoff of pathway enrichment is padj <=  0.001.
@@ -1088,7 +1048,7 @@ mv gene_expression_* ../degenes/
 mv DEGs_heatmap.png ../degenes/
 mv cluster*.txt ../degenes/
 mv genelist_clusters.xls ../degenes/
-
+```
 
 
 
