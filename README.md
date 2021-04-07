@@ -54,12 +54,12 @@ ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf33/8_2_1_p600_d3_S5_R1_001.
 ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf34/8_2_1_p600_d8_S6_R1_001.fastq.gz   V_8_2_4_p600_d8_DonorI.fastq.gz
 ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf35/8_2_1_p605_d3_S7_R1_001.fastq.gz   V_8_2_4_p605_d3_DonorI.fastq.gz
 ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf36/8_2_1_p605_d8_S8_R1_001.fastq.gz   V_8_2_4_p605_d8_DonorI.fastq.gz
-#RNASeq V.8.4.1 (Note V_8_4_2 should be V_8_4_1)
-ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf298/V_8_4_1_p602_Donor_II_d8_S12_R1_001.fastq.gz V_8_4_1_p602_d8_DonorII.fastq.gz
-ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf297/V_8_4_2_p602_Donor_I_d8_S11_R1_001.fastq.gz  V_8_4_1_p602_d8_DonorI.fastq.gz
-#RNASeq V.8.4.2
-ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf613/V842_NHDF_Donor_1_LT_d3_S19_R1_001.fastq.gz  V_8_4_2_p602_d3_DonorI.fastq.gz
-ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf614/V842_NHDF_Donor_2_LT_d3_S20_R1_001.fastq.gz  V_8_4_2_p602_d3_DonorII.fastq.gz
+#RNASeq V.8.4.1 (Note V_8_4_1 should be V_8_4_2)
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf298/V_8_4_1_p602_Donor_II_d8_S12_R1_001.fastq.gz V_8_4_2_p602_d8_DonorII.fastq.gz
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf297/V_8_4_2_p602_Donor_I_d8_S11_R1_001.fastq.gz  V_8_4_2_p602_d8_DonorI.fastq.gz
+#RNASeq V.8.4.2 (Note V_8_4_2 should be V_8_4_1)
+ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf613/V842_NHDF_Donor_1_LT_d3_S19_R1_001.fastq.gz  V_8_4_1_p602_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf614/V842_NHDF_Donor_2_LT_d3_S20_R1_001.fastq.gz  V_8_4_1_p602_d3_DonorII.fastq.gz
 #RNASeq V.8.3.1 (Note that 8_2_3 should be V_8_3_1)
 ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf209/8_3_1_p600and601_d12_S13_R1_001.fastq.gz    V_8_3_1_p600and601_d12_DonorI.fastq.gz
 ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf210/8_2_3_p604and605_d12_S14_R1_001.fastq.gz    V_8_3_1_p604and605_d12_DonorI.fastq.gz
