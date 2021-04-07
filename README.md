@@ -17,9 +17,10 @@ response to infection based on an enriched pathway analysis and the literature. 
 You can read the details laid out by ATpoint about how to use a scale factor with deepTools. He specified it for ATAC-seq/ChIP-seq, but the principles are the same for RNA-seq: calculate a scaling factor with DESeq2 and supply the inverse (!) to bamCoverage --scaleFactor.
 
 https://www.biostars.org/p/317023/
+
 https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html
 
-
+```sh
 #Create DESeq2Dataset object
 dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
 sizeFactors(dds)
@@ -35,16 +36,18 @@ bamCoverage --bam a.bam -o a.SeqDepthNorm.bw \
     --effectiveGenomeSize 2150570000
     --ignoreForNormalization chrX
     --extendReads
-
+```
 Sure, you can use the DESeq2 scale factor. I don't recall whether DESeq2 is dividing by the scale factor or multiplying by it. If it's doing the latter then you don't need to invert (just compare a normalized and raw count in DESeq2 to be sure).
-
-–skipNonCoveredRegions –binSize 10 –scaleFactor 1/DESeq's size factor”.
-
+```sh
+--skipNonCoveredRegions --binSize 10 --scaleFactor 1/DESeq's size factor
+```
 #https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3941356
+
 BamCoverage from deepTools (version 3.0.2) was used to generate bigwig tracks with parameters “--skipNonCoveredRegions --binSize 10 --scaleFactor 1/DESeq’s size Factor”.
 
 
-## 2(optional), mapping on the p602, p604, and p605 (MCPyV) ----------------
+## 2(optional), mapping on the p602, p604, and p605 (MCPyV)
+```sh
 ./damian_extended/main.rb --host human3 --type dna --ref_db MCPyV.fa --external_ref MCPyV.fa --external_groupref MCPyV.fa --min_contiglength 200  -u trimmed/V_8_4_2_p602_d8_DonorI.fastq.gz  --sample p602_on_MCPyV   --no_anno_groupref   --threads 15 --force
 
 for rna_sample in p602_d8_DonorI p602_d8_DonorII p604_d8_DonorI p604_d8_DonorII p605_d8_DonorI p605_d8_DonorII; do
@@ -54,107 +57,16 @@ samtools view -Sb ${rna_sample}_on_MCPyV.sam > ${rna_sample}_on_MCPyV.bam
 samtools flagstat ${rna_sample}_on_MCPyV.bam 
 rm *.sam
 done
-
-#22876 + 0 mapped (5.55% : N/A)
-
+```
 
 
--------------- p602_d8_DonorI_on_MCPyV -------------- 
-16573480 + 0 in total (QC-passed reads + QC-failed reads)
-581 + 0 secondary
-0 + 0 supplementary
-0 + 0 duplicates
-22886 + 0 mapped (0.14% : N/A)
-0 + 0 paired in sequencing
-0 + 0 read1
-0 + 0 read2
-0 + 0 properly paired (N/A : N/A)
-0 + 0 with itself and mate mapped
-0 + 0 singletons (N/A : N/A)
-0 + 0 with mate mapped to a different chr
-0 + 0 with mate mapped to a different chr (mapQ>=5)
+## 3, raw data (from genbank or with own data)
+```sh
+# from genbank
+cat SRR_Acc_List.txt | xargs -n 1 bash get_SRR_data.sh
+gzip *.fastq
 
--------------- p602_d8_DonorII_on_MCPyV -------------- 
-22167579 + 0 in total (QC-passed reads + QC-failed reads)
-589 + 0 secondary
-0 + 0 supplementary
-0 + 0 duplicates
-22251 + 0 mapped (0.10% : N/A)
-0 + 0 paired in sequencing
-0 + 0 read1
-0 + 0 read2
-0 + 0 properly paired (N/A : N/A)
-0 + 0 with itself and mate mapped
-0 + 0 singletons (N/A : N/A)
-0 + 0 with mate mapped to a different chr
-0 + 0 with mate mapped to a different chr (mapQ>=5)
-
--------------- p604_d8_DonorI_on_MCPyV -------------- 
-23432568 + 0 in total (QC-passed reads + QC-failed reads)
-1 + 0 secondary
-0 + 0 supplementary
-0 + 0 duplicates
-5580 + 0 mapped (0.02% : N/A)
-0 + 0 paired in sequencing
-0 + 0 read1
-0 + 0 read2
-0 + 0 properly paired (N/A : N/A)
-0 + 0 with itself and mate mapped
-0 + 0 singletons (N/A : N/A)
-0 + 0 with mate mapped to a different chr
-0 + 0 with mate mapped to a different chr (mapQ>=5)
-
--------------- p604_d8_DonorII_on_MCPyV --------------
-17221146 + 0 in total (QC-passed reads + QC-failed reads)
-1 + 0 secondary
-0 + 0 supplementary
-0 + 0 duplicates
-1722 + 0 mapped (0.01% : N/A)
-0 + 0 paired in sequencing
-0 + 0 read1
-0 + 0 read2
-0 + 0 properly paired (N/A : N/A)
-0 + 0 with itself and mate mapped
-0 + 0 singletons (N/A : N/A)
-0 + 0 with mate mapped to a different chr
-0 + 0 with mate mapped to a different chr (mapQ>=5)
-
--------------- p605_d8_DonorI_on_MCPyV.bam -------------- 
-28101636 + 0 in total (QC-passed reads + QC-failed reads)
-767 + 0 secondary
-0 + 0 supplementary
-0 + 0 duplicates
-52354 + 0 mapped (0.19% : N/A)
-0 + 0 paired in sequencing
-0 + 0 read1
-0 + 0 read2
-0 + 0 properly paired (N/A : N/A)
-0 + 0 with itself and mate mapped
-0 + 0 singletons (N/A : N/A)
-0 + 0 with mate mapped to a different chr
-0 + 0 with mate mapped to a different chr (mapQ>=5)
-
--------------- p605_d8_DonorII_on_MCPyV.bam --------------
-14773793 + 0 in total (QC-passed reads + QC-failed reads)
-387 + 0 secondary
-0 + 0 supplementary
-0 + 0 duplicates
-20222 + 0 mapped (0.14% : N/A)
-0 + 0 paired in sequencing
-0 + 0 read1
-0 + 0 read2
-0 + 0 properly paired (N/A : N/A)
-0 + 0 with itself and mate mapped
-0 + 0 singletons (N/A : N/A)
-0 + 0 with mate mapped to a different chr
-0 + 0 with mate mapped to a different chr (mapQ>=5)
-
-
-
-
-#############################################################################################
-
-# RNASeq batch 1 --> good_quality
+# with own data: RNASeq batch 1 --> good_quality
 ./190228_NB501882_0102_AHYJJ2BGX9/nf32/8_1_3_p604_d8_S4_R1_001.fastq.gz
 ./190228_NB501882_0102_AHYJJ2BGX9/nf29/8_1_3_p601_d3_S1_R1_001.fastq.gz
 ./190228_NB501882_0102_AHYJJ2BGX9/nf31/_8_1_3_p604_d3_S3_R1_001.fastq.gz
@@ -189,13 +101,61 @@ mv 8_2_3_p600_d8_S22_R1_001.fastq.gz mock_truncLT_d8_r2.fastq.gz
 mv 8_2_3_p605_d3_S21_R1_001.fastq.gz truncLT_d3_r2.fastq.gz
 mv 8_2_3_p605_d8_S23_R1_001.fastq.gz truncLT_d8_r2.fastq.gz
 
-
 cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
+```
+
+
+## 4, trimming + nextflow
+```sh
+#http://genome.ucsc.edu/FAQ/FAQformat.html#format4
+--0--
+mkdir trimmed; 
+cd trimmed;
+for sample_id in mock_sT_d3 mock_sT_d8 sT_d3 sT_d8 mock_truncLT_d3 mock_truncLT_d8 truncLT_d3 truncLT_d8 truncLT_d8_r2 mock_truncLT_d3_r2 truncLT_d3_r2 mock_truncLT_d8_r2 sT_d8_r2 mock_sT_d3_r2 sT_d3_r2 mock_sT_d8_r2    IMR90_GFP_0_1 IMR90_GFP_0_2 IMR90_GFP_0_3 IMR90_GFP_8_1 IMR90_GFP_8_2 IMR90_GFP_8_3 IMR90_GFP_16_1 IMR90_GFP_16_2 IMR90_GFP_16_3 IMR90_GFP_24_1 IMR90_GFP_24_2 IMR90_GFP_24_3 IMR90_GFP_32_1 IMR90_GFP_32_2 IMR90_GFP_32_3 IMR90_GFP_40_1 IMR90_GFP_40_2 IMR90_GFP_40_3 IMR90_GFP_48_1 IMR90_GFP_48_2 IMR90_GFP_48_3 IMR90_GFP_56_1 IMR90_GFP_56_2 IMR90_GFP_56_3 IMR90_GFP_64_1 IMR90_GFP_64_2 IMR90_GFP_64_3 IMR90_GFP_72_1 IMR90_GFP_72_2 IMR90_GFP_72_3 IMR90_GFP_80_1 IMR90_GFP_80_2 IMR90_GFP_80_3 IMR90_GFP_88_1 IMR90_GFP_88_2 IMR90_GFP_88_3 IMR90_GFP_96_1 IMR90_GFP_96_2 IMR90_GFP_96_3 IMR90_MCPyV_ST_0_1 IMR90_MCPyV_ST_0_2 IMR90_MCPyV_ST_0_3 IMR90_MCPyV_ST_8_1 IMR90_MCPyV_ST_8_2 IMR90_MCPyV_ST_8_3 IMR90_MCPyV_ST_16_1 IMR90_MCPyV_ST_16_2 IMR90_MCPyV_ST_16_3 IMR90_MCPyV_ST_24_1 IMR90_MCPyV_ST_24_2 IMR90_MCPyV_ST_24_3 IMR90_MCPyV_ST_32_1 IMR90_MCPyV_ST_32_2 IMR90_MCPyV_ST_32_3 IMR90_MCPyV_ST_40_1 IMR90_MCPyV_ST_40_2 IMR90_MCPyV_ST_40_3 IMR90_MCPyV_ST_48_1 IMR90_MCPyV_ST_48_2 IMR90_MCPyV_ST_48_3 IMR90_MCPyV_ST_56_1 IMR90_MCPyV_ST_56_2 IMR90_MCPyV_ST_56_3 IMR90_MCPyV_ST_64_1 IMR90_MCPyV_ST_64_2 IMR90_MCPyV_ST_64_3 IMR90_MCPyV_ST_72_1 IMR90_MCPyV_ST_72_2 IMR90_MCPyV_ST_72_3 IMR90_MCPyV_ST_80_1 IMR90_MCPyV_ST_80_2 IMR90_MCPyV_ST_80_3 IMR90_MCPyV_ST_88_1 IMR90_MCPyV_ST_88_2 IMR90_MCPyV_ST_88_3 IMR90_MCPyV_ST_96_1 IMR90_MCPyV_ST_96_2 IMR90_MCPyV_ST_96_3; do \
+        java -jar /home/jhuang/Tools/Trimmomatic-0.36/trimmomatic-0.36.jar SE -threads 16 ../Raw_Data/${sample_id}.fastq.gz ${sample_id}.fastq.gz ILLUMINACLIP:/home/jhuang/Tools/Trimmomatic-0.36/adapters/TruSeq3-SE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 AVGQUAL:20; \
+done 2>trimmomatic.log
+
+# see read_biotype_assignment: https://github.com/ewels/ngi_visualizations/tree/master/ngi_visualizations/biotypes
+Running twice, once without biotype using UCSC  --> get the results which comparable to ChIPSeq-data, since they both using UCSC-gtf -->1
+               once with biotype using ENSEMBLE reference --> get images of biotypes and as controls -->2
+
+#--1--
+## since in UCSC-gtf, there is no gene_biotype, we use gene_id in --fcGroupFeaturesType; NOTE that bed-file and HISAT-index are generated on site!
+#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"  #--singleEnd -profile standard --aligner hisat2 --fcGroupFeaturesType gene_id --outdir results_nfcore -w work_nfcore -resume
+## when using already generated genes.bed and HISAT2Index
+#--hisat2_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/HISAT2Index/" --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
+#
+#--2--
+## default type of --fcGroupFeaturesType is 'gene_biotype' if using Ensembl-gtf
+#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/#Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner hisat2      -resume
 
 
 
+#### prefer to use STARIndex, since HISAT2 needs memory of 120GB, otherwise it does not work for splicing mapping.
+--1--
+# since in UCSC-gtf, there is no gene_biotype, we use gene_id in --fcGroupFeaturesType; NOTE that bed-file and HISAT-index are generated on site!
+#DEBUG: An example of attributes included in your GTF annotation is 'gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";'
+#---- SUCCESSFUL using STAR ----
+ln -s /home/jhuang/Tools/rnaseq rnaseq
+nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Denise_RNASeq_plus_GSE79958/trimmed/*.fastq.gz" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
 
+#set pbs as the process executors.
+nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
 
+#when using already generated genes.bed and *Index
+--hisat2_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/HISAT2Index/" (todo)   --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"
+--star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"
+
+--2--
+#default type of --fcGroupFeaturesType is 'gene_biotype' if using Ensembl-gtf
+nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner star   --outdir results_gr_gene_biotype -w work_gr_gene_biotype   -resume
+#when using already generated genes.bed and *Index
+--hisat2_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/HISAT2Index/" --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
+--star_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/" (todo)    --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
+
+#CONSOLE
+cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
+```
 
 ################################################################################################################
 ##### STEP1: pca and heatmap_clusters, remove batch effects, intercept assay(rld), then removeBatchEffect  #####
