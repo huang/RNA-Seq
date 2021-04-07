@@ -13,15 +13,14 @@ response to infection based on an enriched pathway analysis and the literature. 
 
 
 
-# -------------- convert bam to bigwig using deepTools by feeding inverse of DESeq’s size Factor -------------- 
+## 1, convert bam to bigwig using deepTools by feeding inverse of DESeq’s size Factor
 You can read the details laid out by ATpoint about how to use a scale factor with deepTools. He specified it for ATAC-seq/ChIP-seq, but the principles are the same for RNA-seq: calculate a scaling factor with DESeq2 and supply the inverse (!) to bamCoverage --scaleFactor.
 
 https://www.biostars.org/p/317023/
-
 https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html
 
 
-## Create DESeq2Dataset object
+#Create DESeq2Dataset object
 dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
 sizeFactors(dds)
 View(counts(dds))
@@ -39,17 +38,13 @@ bamCoverage --bam a.bam -o a.SeqDepthNorm.bw \
 
 Sure, you can use the DESeq2 scale factor. I don't recall whether DESeq2 is dividing by the scale factor or multiplying by it. If it's doing the latter then you don't need to invert (just compare a normalized and raw count in DESeq2 to be sure).
 
-
 –skipNonCoveredRegions –binSize 10 –scaleFactor 1/DESeq's size factor”.
-
 
 #https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3941356
 BamCoverage from deepTools (version 3.0.2) was used to generate bigwig tracks with parameters “--skipNonCoveredRegions --binSize 10 --scaleFactor 1/DESeq’s size Factor”.
 
 
-
-
-# -------------- Mapping on the p602, p604, and p605 (MCPyV) ----------------
+## 2(optional), mapping on the p602, p604, and p605 (MCPyV) ----------------
 ./damian_extended/main.rb --host human3 --type dna --ref_db MCPyV.fa --external_ref MCPyV.fa --external_groupref MCPyV.fa --min_contiglength 200  -u trimmed/V_8_4_2_p602_d8_DonorI.fastq.gz  --sample p602_on_MCPyV   --no_anno_groupref   --threads 15 --force
 
 for rna_sample in p602_d8_DonorI p602_d8_DonorII p604_d8_DonorI p604_d8_DonorII p605_d8_DonorI p605_d8_DonorII; do
