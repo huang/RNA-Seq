@@ -1,6 +1,18 @@
 # RNA-Seq
 
 
+
+In this study, performed by Holzer et al. (2016), 
+(1) total RNA from a human HuH7 cell line and a fruit bat cell line (R06E-J; Rousettus aegyptiacs) infected with either the Ebola or Marburg virus (EBOV, MARV) was harvested 3, 7, and 23 h postinfection, depleted of ribosomal RNA and sequenced on an Illumina HiSeq2500. The bat RNA was further pooled and additionally sequenced on an Illumina MiSeq system. Initial quality control and trimming of the raw data were conducted with FastQC (Andrews, 2010) and PRINSEQ (Schmieder and Edwards, 2011). 
+(2) For bat RNA, a de novo transcriptome assembly was constructed by combining MiSeq and HiSeq data using Velvet/Oases (Schulz et al., 2012; Zerbino and Birney, 2008), ABySS/Trans-ABySS (Birol et al., 2009; Simpson et al., 2009), SOAPdenovo-Trans (Luo et al., 2012), Trinity (Grabherr et al., 2011), and Mira (Chevreux et al., 2004) with default parameters and multiple k-mer values, if possible. 
+(3) The mapping of the RNA-Seq short-reads was performed for Mock-, EBOV-, and MARV-treated cells onto human/bat genomes and the bat transcriptome with Segemehl (Hoffmann et al., 2014) and TopHat (Kim et al., 2013). 
+(4) A differential gene expression analysis was performed by counting uniquely mapped reads with HTSeq-count (Anders et al., 2015) and applying a DESeq (Love et al., 2014) analysis in R. The results were further used for clustering and scatter/group plot analyzes.
+(5) A homology search in bats was performed for all significantly differential expressed genes from (4) and for the genes assumed to be involved in the
+response to infection based on an enriched pathway analysis and the literature. The Rousettus aegyptiacus genome and coding sequences from Pteropus vampyrus, a closely related bat species, were used to validate but also to detect homologous sequences in the bat transcriptome. Detected homologs were employed for the differential gene expression analysis. 
+(6) One huge advantage of this comprehensive study was the manual inspection of ~7.5 % of the human genes. Each candidate gene was manually investigated in the IGV (Thorvaldsdóttir et al., 2013) and UCSC (Dreszer et al., 2012) browsers for the human and bat samples from all time points. Single-nucleotide modifications (differential SNPs, posttranscriptional modifications), intronic transcripts and regulators, alternative splicing and isoforms, as well as upstream and downstream transcript characteristics were described.
+
+
+
 # -------------- convert bam to bigwig using deepTools by feeding inverse of DESeq’s size Factor -------------- 
 You can read the details laid out by ATpoint about how to use a scale factor with deepTools. He specified it for ATAC-seq/ChIP-seq, but the principles are the same for RNA-seq: calculate a scaling factor with DESeq2 and supply the inverse (!) to bamCoverage --scaleFactor.
 
