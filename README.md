@@ -31,6 +31,56 @@ cat SRR_Acc_List.txt | xargs -n 1 bash get_SRR_data.sh
 gzip *.fastq
 
 # with own data: RNASeq batch 1 --> good_quality
+#RNASeq V.8.0
+ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf207/8_0_mock_NHDF_Donor_I_P9_S11_R1_001.fastq.gz  V_8_0_mock_DonorI.fastq.gz
+ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf208/8_0_mock_NHDF_Donor_II_P9_S12_R1_001.fastq.gz V_8_0_mock_DonorII.fastq.gz
+#RNASeq V.8.1.5
+ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf135/8_1_5_p601_d3_S1_R1_001.fastq.gz V_8_1_5_p601_d3_DonorII.fastq.gz
+ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf136/8_1_5_p604_d3_S2_R1_001.fastq.gz V_8_1_5_p604_d3_DonorII.fastq.gz
+ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf137/8_1_5_p601_d8_S3_R1_001.fastq.gz V_8_1_5_p601_d8_DonorII.fastq.gz
+ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf138/8_1_5_p604_d8_S4_R1_001.fastq.gz V_8_1_5_p604_d8_DonorII.fastq.gz
+#RNASeq V.8.1.3 (should be V.8.1.6)
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf29/8_1_3_p601_d3_S1_R1_001.fastq.gz   V_8_1_6_p601_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf30/8_1_3_p601_d8_S2_R1_001.fastq.gz   V_8_1_6_p601_d8_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf31/_8_1_3_p604_d3_S3_R1_001.fastq.gz  V_8_1_6_p604_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf32/8_1_3_p604_d8_S4_R1_001.fastq.gz   V_8_1_6_p604_d8_DonorI.fastq.gz
+#RNASeq V.8.2.3
+ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf139/8_2_3_p600_d3_S20_R1_001.fastq.gz V_8_2_3_p600_d3_DonorII.fastq.gz
+ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf140/8_2_3_p605_d3_S21_R1_001.fastq.gz V_8_2_3_p605_d3_DonorII.fastq.gz
+ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf141/8_2_3_p600_d8_S22_R1_001.fastq.gz V_8_2_3_p600_d8_DonorII.fastq.gz
+ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf142/8_2_3_p605_d8_S23_R1_001.fastq.gz V_8_2_3_p605_d8_DonorII.fastq.gz
+#RNASeq V.8.2.1 (should be V.8.2.4)
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf33/8_2_1_p600_d3_S5_R1_001.fastq.gz   V_8_2_4_p600_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf34/8_2_1_p600_d8_S6_R1_001.fastq.gz   V_8_2_4_p600_d8_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf35/8_2_1_p605_d3_S7_R1_001.fastq.gz   V_8_2_4_p605_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf36/8_2_1_p605_d8_S8_R1_001.fastq.gz   V_8_2_4_p605_d8_DonorI.fastq.gz
+#RNASeq V.8.4.1 (Note V_8_4_2 should be V_8_4_1)
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf298/V_8_4_1_p602_Donor_II_d8_S12_R1_001.fastq.gz V_8_4_1_p602_d8_DonorII.fastq.gz
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf297/V_8_4_2_p602_Donor_I_d8_S11_R1_001.fastq.gz  V_8_4_1_p602_d8_DonorI.fastq.gz
+#RNASeq V.8.4.2
+ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf613/V842_NHDF_Donor_1_LT_d3_S19_R1_001.fastq.gz  V_8_4_2_p602_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf614/V842_NHDF_Donor_2_LT_d3_S20_R1_001.fastq.gz  V_8_4_2_p602_d3_DonorII.fastq.gz
+#RNASeq V.8.3.1 (Note that 8_2_3 should be V_8_3_1)
+ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf209/8_3_1_p600and601_d12_S13_R1_001.fastq.gz    V_8_3_1_p600and601_d12_DonorI.fastq.gz
+ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf210/8_2_3_p604and605_d12_S14_R1_001.fastq.gz    V_8_3_1_p604and605_d12_DonorI.fastq.gz
+#RNASeq V.8.3.2
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf299/V_8_3_2_p600_601_Donor_II_d9_S13_R1_001.fastq.gz  V_8_3_2_p600and601_d9_DonorII.fastq.gz
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf300/V_8_3_2_p604_605_Donor_II_d9_S14_R1_001.fastq.gz  V_8_3_2_p604and605_d9_DonorII.fastq.gz
+
+#---- to compare ----
+P600 vs untreated / mock (donor 1+2)
+P601 vs untreated / mock (donor 1+2)
+P604 d3 vs p601 d3 (Donor 1+2)
+P604 d8 vs p601 d8 (donor 1+2)
+P605 d3 vs p600 d3 (donor 1+2)
+P605 d8 vs p600 d8 (donor 1+2)
+(These were already analysed)
+
+What is new:
+P602 d8 vs p600 d8 (donor 1+2)
+P604+605 d9/12 vs p600+601 d9/12 (donor 1+2)
+P602 d3 vs p600 d3 (donor 1+2)
+
 ./190228_NB501882_0102_AHYJJ2BGX9/nf32/8_1_3_p604_d8_S4_R1_001.fastq.gz
 ./190228_NB501882_0102_AHYJJ2BGX9/nf29/8_1_3_p601_d3_S1_R1_001.fastq.gz
 ./190228_NB501882_0102_AHYJJ2BGX9/nf31/_8_1_3_p604_d3_S3_R1_001.fastq.gz
@@ -64,8 +114,6 @@ mv 8_2_3_p600_d3_S20_R1_001.fastq.gz mock_truncLT_d3_r2.fastq.gz
 mv 8_2_3_p600_d8_S22_R1_001.fastq.gz mock_truncLT_d8_r2.fastq.gz
 mv 8_2_3_p605_d3_S21_R1_001.fastq.gz truncLT_d3_r2.fastq.gz
 mv 8_2_3_p605_d8_S23_R1_001.fastq.gz truncLT_d8_r2.fastq.gz
-
-cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
 ```
 
 
@@ -116,6 +164,50 @@ nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fast
 #when using already generated genes.bed and *Index
 --hisat2_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/HISAT2Index/" --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
 --star_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/" (todo)    --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
+
+
+
+#-- BUGs while preparing gtf and bed --
+#under ngi_chipseq_ac2 using HISAT2
+#--star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/HISAT2Index/" --> DEBUG3
+nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz'  --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed" --singleEnd -profile standard --aligner hisat2  -resume
+#under ngi_chipseq_ac2 using STAR
+#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz'  --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"  --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed" --singleEnd -profile standard     -resume
+--downloadGTF 
+https://www.ensembl.org/info/data/ftp/index.html
+http://hgdownload.cse.ucsc.edu/goldenpath/hg19/database/
+http://genome.ucsc.edu/cgi-bin/hgTables
+#DEBUG1
+conda install -c bioconda bioconductor-rsubread
+conda install -c bioconda subread
+conda install -c bioconda stringtie
+conda install -c bioconda hisat2
+conda update hisat2
+conda install -c bioconda preseq
+# installed Rsubread under ~/anaconda3/envs/ngi_chipseq_ac2/lib/R/library
+BiocManager::install(c("Rsubread", "dupRadar", "limma", "lattice", "locfit", "edgeR", "chron", "data.table", "gtools", "gdata", "bitops", "caTools", "gplots", "markdown"))
+#DEBUG2
+ ERROR: failed to find the gene identifier attribute in the 9th column of the provided GTF file.
+  The specified gene identifier attribute is 'gene_biotype'
+  An example of attributes included in your GTF annotation is 'gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";'
+  The program has to terminate.
+featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n 7 > tmp_file
+cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
+#needs the gtf of ENSEMBLE, since it includes "gene_biotype" and "gene_id"
+# ENSEMBLE (874M) 9th colum
+1 processed_transcript                transcript  11869 14409 . + . gene_id "ENSG00000223972"; transcript_id "ENST00000456328"; gene_name "DDX11L1"; gene_sourc e "havana"; gene_biotype "transcribed_unprocessed_pseudogene"; transcript_name "DDX11L1-002"; transcript_source "havana";
+# UCSC (136M) 9th column
+gene_id "WASH7P"; gene_name "WASH7P"; transcript_id "NR_024540"; tss_id "TSS8568";
+diff /ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa /media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa
+cut -f1-2 /ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa.fai | sort > hg19_UCSC.fa_length
+cut -f1-2 /media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa.fai | sort > hg19_Ensemble.fa_length
+cut -f2 hg19_UCSC.fa_length > hg19_UCSC.fa_length_
+cut -f2 hg19_Ensemble.fa_length > hg19_Ensemble.fa_length_
+
+
 
 #CONSOLE
 cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
@@ -488,9 +580,8 @@ dev.off()
 ```
 
 
-## 8, select the differentially expressed genes
+## 8, select the differentially expressed genes (sT)
 ```sh
-#sT
 #p600and601_d9or12
 #p600_d3
 #p601_d3
@@ -828,7 +919,7 @@ p602_d3_vs_p600_d3-down.txt \
 ```
 
 
-## 9, prepare IPA tables
+## 9, prepare IPA tables (sT)
 ```sh
 # First thing: commenting the 4 lines in the for-loop above.
 cut -d',' -f1-1 mock_sT_d8_vs_mock_sT_d3_background.txt > symbol1.txt
@@ -867,7 +958,7 @@ done
 ```
 
 
-## 10, KEGG pathway enrichments
+## 10, KEGG pathway enrichments (sT)
 ```sh
 ##--- load the temporary results and pathways_KEGG calculation (https://yulab-smu.github.io/clusterProfiler-book/chapter6.html) ----
 # under CONSOLE
@@ -909,7 +1000,7 @@ cd pathways_KEGG
 ```
 
 
-## 11, MSigDB pathway enrichments
+## 11, MSigDB pathway enrichments (sT)
 ```sh
 ##--- load the temporary results and pathways_MSigDB calculation on the sT-RNASeq (https://yulab-smu.github.io/clusterProfiler-book/chapter7.html) ----
 #https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp
@@ -943,7 +1034,7 @@ cd pathways_MSigDB
 ```
 
 
-## 12, clustering the genes and draw heatmap
+## 12, clustering the genes and draw heatmap (sT)
 ```sh
 # -- prepare all_genes --
 #rld <- rlogTransformation(dds)
@@ -1051,19 +1142,8 @@ mv genelist_clusters.xls ../degenes/
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-############################################################
-####################### truncLT ############################
+## 13(optional), repeat steps 8-12 for truncLT
+```sh
 ##### STEP2: select the differentially expressed genes #####
 
 #mock_truncLT_d3 mock_truncLT_d8 truncLT_d3 truncLT_d8
@@ -1316,769 +1396,4 @@ mv gene_expression_* ../degenes/
 mv DEGs_heatmap.png ../degenes/
 mv cluster*.txt ../degenes/
 mv genelist_clusters.xls ../degenes/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#under ngi_chipseq_ac2 using HISAT2
-#--star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/HISAT2Index/" --> DEBUG3
-nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz'  --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed" --singleEnd -profile standard --aligner hisat2  -resume
-
-#under ngi_chipseq_ac2 using STAR
-#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz'  --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"  --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed" --singleEnd -profile standard     -resume
-
-
-#### WARNING while running HISAT2 ####
-[HISAT2 index build] Available memory: 60 GB
-[HISAT2 index build] Less than 200 GB available, so NOT using splice sites and exons in HISAT2 index.
-
-
---downloadGTF 
-https://www.ensembl.org/info/data/ftp/index.html
-http://hgdownload.cse.ucsc.edu/goldenpath/hg19/database/
-http://genome.ucsc.edu/cgi-bin/hgTables
-
-
-#DEBUG1
-
-conda install -c bioconda bioconductor-rsubread
-conda install -c bioconda subread
-conda install -c bioconda stringtie
-conda install -c bioconda hisat2
-conda update hisat2
-conda install -c bioconda preseq
-# installed Rsubread under ~/anaconda3/envs/ngi_chipseq_ac2/lib/R/library
-BiocManager::install(c("Rsubread", "dupRadar", "limma", "lattice", "locfit", "edgeR", "chron", "data.table", "gtools", "gdata", "bitops", "caTools", "gplots", "markdown"))
-
-
-#DEBUG2
- ERROR: failed to find the gene identifier attribute in the 9th column of the provided GTF file.
-  The specified gene identifier attribute is 'gene_biotype'
-  An example of attributes included in your GTF annotation is 'gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";'
-  The program has to terminate.
-  
-featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-
-    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
-    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n 7 > tmp_file
-    cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
-
-    
-
-
-
-
-#needs the gtf of ENSEMBLE, since it includes "gene_biotype" and "gene_id"
-# ENSEMBLE (874M) 9th colum
-1 processed_transcript                transcript  11869 14409 . + . gene_id "ENSG00000223972"; transcript_id "ENST00000456328"; gene_name "DDX11L1"; gene_sourc e "havana"; gene_biotype "transcribed_unprocessed_pseudogene"; transcript_name "DDX11L1-002"; transcript_source "havana";
-
-# UCSC (136M) 9th column
-gene_id "WASH7P"; gene_name "WASH7P"; transcript_id "NR_024540"; tss_id "TSS8568";
-
-
-diff /ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa /media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa
-
-cut -f1-2 /ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa.fai | sort > hg19_UCSC.fa_length
-cut -f1-2 /media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa.fai | sort > hg19_Ensemble.fa_length
-cut -f2 hg19_UCSC.fa_length > hg19_UCSC.fa_length_
-cut -f2 hg19_Ensemble.fa_length > hg19_Ensemble.fa_length_
---->
-23c23
-< 16571
----
-> 16569
-
-
-
-
-
-#################################################
-############### START FROM HERE #################
-#http://genome.ucsc.edu/FAQ/FAQformat.html#format4
-
--rw-rw-r-- 1 jhuang jhuang  987M Mär  5  2019 mock_sT_d3.fastq.gz
--rw-rw-r-- 1 jhuang jhuang  829M Mär  5  2019 mock_sT_d8.fastq.gz
--rw-rw-r-- 1 jhuang jhuang 1010M Mär  5  2019 sT_d3.fastq.gz
--rw-rw-r-- 1 jhuang jhuang 1021M Mär  5  2019 sT_d8.fastq.gz
--rw-rw-r-- 1 jhuang jhuang  1,1G Mär  5  2019 mock_truncLT_d3.fastq.gz
--rw-rw-r-- 1 jhuang jhuang  904M Mär  5  2019 mock_truncLT_d8.fastq.gz
--rw-rw-r-- 1 jhuang jhuang 1007M Mär  5  2019 truncLT_d3.fastq.gz
--rw-rw-r-- 1 jhuang jhuang  1,2G Mär  5  2019 truncLT_d8.fastq.gz
-
--rwxrwxrwx 1 jhuang jhuang  710M Okt 21  2019 truncLT_d8_r2.fastq.gz
--rwxrwxrwx 1 jhuang jhuang  842M Okt 21  2019 mock_truncLT_d3_r2.fastq.gz
--rwxrwxrwx 1 jhuang jhuang  733M Okt 21  2019 truncLT_d3_r2.fastq.gz
--rwxrwxrwx 1 jhuang jhuang  657M Okt 21  2019 mock_truncLT_d8_r2.fastq.gz
--rwxrwxrwx 1 jhuang jhuang  743M Okt 21  2019 sT_d8_r2.fastq.gz
--rwxrwxrwx 1 jhuang jhuang  780M Okt 21  2019 mock_sT_d3_r2.fastq.gz
--rwxrwxrwx 1 jhuang jhuang  764M Okt 21  2019 sT_d3_r2.fastq.gz
--rwxrwxrwx 1 jhuang jhuang  772M Okt 21  2019 mock_sT_d8_r2.fastq.gz
-
--rwxrwxr-x 1 jhuang jhuang  651M Mai  7 10:57 untreated_r1.fastq.gz
--rwxrwxr-x 1 jhuang jhuang  902M Mai  7 10:57 untreated_r2.fastq.gz
-
-
-Raw_Data2
-rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_202003_202007/200420_NB501882_0195_AHJCNWBGXF.zip ./
-rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_201904_202002/190927_NB501882_0150_AHC2MHBGXC_single.zip ./
-rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_until_201904/d_ohnezeit/190228_NB501882_0102_AHYJJ2BGX9 ./
-rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_201904_202002/191008_NB501882_0151_AHC235BGXC.zip ./
-rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_until_201904/d_ohnezeit/190228_NB501882_0102_AHYJJ2BGX9  ./
-rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_202007_202012/200817_NB501882_0221_AHFMVLBGXG ./
-
-
-
-#RNASeq V.8.0
-ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf207/8_0_mock_NHDF_Donor_I_P9_S11_R1_001.fastq.gz  V_8_0_mock_DonorI.fastq.gz
-ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf208/8_0_mock_NHDF_Donor_II_P9_S12_R1_001.fastq.gz V_8_0_mock_DonorII.fastq.gz
-#RNASeq V.8.1.5
-ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf135/8_1_5_p601_d3_S1_R1_001.fastq.gz V_8_1_5_p601_d3_DonorII.fastq.gz
-ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf136/8_1_5_p604_d3_S2_R1_001.fastq.gz V_8_1_5_p604_d3_DonorII.fastq.gz
-ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf137/8_1_5_p601_d8_S3_R1_001.fastq.gz V_8_1_5_p601_d8_DonorII.fastq.gz
-ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf138/8_1_5_p604_d8_S4_R1_001.fastq.gz V_8_1_5_p604_d8_DonorII.fastq.gz
-#RNASeq V.8.1.3 (should be V.8.1.6)
-ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf29/8_1_3_p601_d3_S1_R1_001.fastq.gz   V_8_1_6_p601_d3_DonorI.fastq.gz
-ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf30/8_1_3_p601_d8_S2_R1_001.fastq.gz   V_8_1_6_p601_d8_DonorI.fastq.gz
-ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf31/_8_1_3_p604_d3_S3_R1_001.fastq.gz  V_8_1_6_p604_d3_DonorI.fastq.gz
-ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf32/8_1_3_p604_d8_S4_R1_001.fastq.gz   V_8_1_6_p604_d8_DonorI.fastq.gz
-#RNASeq V.8.2.3
-ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf139/8_2_3_p600_d3_S20_R1_001.fastq.gz V_8_2_3_p600_d3_DonorII.fastq.gz
-ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf140/8_2_3_p605_d3_S21_R1_001.fastq.gz V_8_2_3_p605_d3_DonorII.fastq.gz
-ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf141/8_2_3_p600_d8_S22_R1_001.fastq.gz V_8_2_3_p600_d8_DonorII.fastq.gz
-ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf142/8_2_3_p605_d8_S23_R1_001.fastq.gz V_8_2_3_p605_d8_DonorII.fastq.gz
-#RNASeq V.8.2.1 (should be V.8.2.4)
-ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf33/8_2_1_p600_d3_S5_R1_001.fastq.gz   V_8_2_4_p600_d3_DonorI.fastq.gz
-ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf34/8_2_1_p600_d8_S6_R1_001.fastq.gz   V_8_2_4_p600_d8_DonorI.fastq.gz
-ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf35/8_2_1_p605_d3_S7_R1_001.fastq.gz   V_8_2_4_p605_d3_DonorI.fastq.gz
-ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf36/8_2_1_p605_d8_S8_R1_001.fastq.gz   V_8_2_4_p605_d8_DonorI.fastq.gz
-#RNASeq V.8.4.1 (Note V_8_4_2 should be V_8_4_1)
-ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf298/V_8_4_1_p602_Donor_II_d8_S12_R1_001.fastq.gz V_8_4_1_p602_d8_DonorII.fastq.gz
-ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf297/V_8_4_2_p602_Donor_I_d8_S11_R1_001.fastq.gz  V_8_4_1_p602_d8_DonorI.fastq.gz
-#RNASeq V.8.4.2
-ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf613/V842_NHDF_Donor_1_LT_d3_S19_R1_001.fastq.gz  V_8_4_2_p602_d3_DonorI.fastq.gz
-ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf614/V842_NHDF_Donor_2_LT_d3_S20_R1_001.fastq.gz  V_8_4_2_p602_d3_DonorII.fastq.gz
-#RNASeq V.8.3.1 (Note that 8_2_3 should be V_8_3_1)
-ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf209/8_3_1_p600and601_d12_S13_R1_001.fastq.gz    V_8_3_1_p600and601_d12_DonorI.fastq.gz
-ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf210/8_2_3_p604and605_d12_S14_R1_001.fastq.gz    V_8_3_1_p604and605_d12_DonorI.fastq.gz
-#RNASeq V.8.3.2
-ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf299/V_8_3_2_p600_601_Donor_II_d9_S13_R1_001.fastq.gz  V_8_3_2_p600and601_d9_DonorII.fastq.gz
-ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf300/V_8_3_2_p604_605_Donor_II_d9_S14_R1_001.fastq.gz  V_8_3_2_p604and605_d9_DonorII.fastq.gz
-
-
-
-#---- to compare ----
-P600 vs untreated / mock (donor 1+2)
-
-P601 vs untreated / mock (donor 1+2)
-
-P604 d3 vs p601 d3 (Donor 1+2)
-
-P604 d8 vs p601 d8 (donor 1+2)
-
-P605 d3 vs p600 d3 (donor 1+2)
-
-P605 d8 vs p600 d8 (donor 1+2)
-
-(These were already analysed)
-
-
-What is new:
-
-P602 d8 vs p600 d8 (donor 1+2)
-
-P604+605 d9/12 vs p600+601 d9/12 (donor 1+2)
-
-P602 d3 vs p600 d3 (donor 1+2)
-
-
-
---0--
-mkdir trimmed; 
-cd trimmed;
-for sample_id in V_8_0_mock_DonorI        V_8_1_6_p601_d8_DonorI   V_8_2_4_p600_d3_DonorI         V_8_3_2_p604and605_d9_DonorII  V_8_0_mock_DonorII       V_8_1_6_p604_d3_DonorI   V_8_2_4_p600_d8_DonorI         V_8_4_1_p602_d8_DonorI  V_8_1_5_p601_d3_DonorII  V_8_1_6_p604_d8_DonorI   V_8_2_4_p605_d3_DonorI         V_8_4_1_p602_d8_DonorII  V_8_1_5_p601_d8_DonorII  V_8_2_3_p600_d3_DonorII  V_8_2_4_p605_d8_DonorI         V_8_4_2_p602_d3_DonorI  V_8_1_5_p604_d3_DonorII  V_8_2_3_p600_d8_DonorII  V_8_3_1_p600and601_d12_DonorI  V_8_4_2_p602_d3_DonorII  V_8_1_5_p604_d8_DonorII  V_8_2_3_p605_d3_DonorII  V_8_3_1_p604and605_d12_DonorI  V_8_1_6_p601_d3_DonorI   V_8_2_3_p605_d8_DonorII  V_8_3_2_p600and601_d9_DonorII; do \
-        java -jar /home/jhuang/Tools/Trimmomatic-0.36/trimmomatic-0.36.jar SE -threads 16 ../Raw_Data/${sample_id}.fastq.gz ${sample_id}.fastq.gz ILLUMINACLIP:/home/jhuang/Tools/Trimmomatic-0.36/adapters/TruSeq3-SE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 AVGQUAL:20; \
-done 2>trimmomatic.log
-
-# see read_biotype_assignment: https://github.com/ewels/ngi_visualizations/tree/master/ngi_visualizations/biotypes
-Running twice, once without biotype using UCSC  --> get the results which comparable to ChIPSeq-data, since they both using UCSC-gtf -->1
-               once with biotype using ENSEMBLE reference --> get images of biotypes and as controls -->2
-
-#--1--
-## since in UCSC-gtf, there is no gene_biotype, we use gene_id in --fcGroupFeaturesType; NOTE that bed-file and HISAT-index are generated on site!
-#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"  #--singleEnd -profile standard --aligner hisat2 --fcGroupFeaturesType gene_id --outdir results_nfcore -w work_nfcore -resume
-## when using already generated genes.bed and HISAT2Index
-#--hisat2_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/HISAT2Index/" --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
-#
-#--2--
-## default type of --fcGroupFeaturesType is 'gene_biotype' if using Ensembl-gtf
-#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/#Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner hisat2      -resume
-
-
-
-
-
-#### prefer to use STARIndex, since HISAT2 needs memory of 120GB, otherwise it does not work for splicing mapping.
---1--
-# since in UCSC-gtf, there is no gene_biotype, we use gene_id in --fcGroupFeaturesType; NOTE that bed-file and HISAT-index are generated on site!
-#DEBUG: An example of attributes included in your GTF annotation is 'gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";'
-#---- SUCCESSFUL using STAR ----
-nextflow run rnaseq --reads '/mnt/Seagate_Corona/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
-
-#rerun save bams 
-nextflow run rnaseq --reads '/mnt/Seagate_Corona/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta /ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa --gtf /ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf --star_index /ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/ --bed12 /ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id -resume --saveAlignedIntermediates
-
-
-#-->Geneid  gene_name       V_8_2_3_p600_d3_DonorIIAligned.sortedByCoord.out.bam    V_8_2_1_p600_d8_DonorIAligned.sortedByCoord.out.bam     V_8_2_3_p605_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_2_1_p605_d8_DonorIAligned.sortedByCoord.out.bam     V_8_1_3_p604_d8_DonorIAligned.sortedByCoord.out.bam     V_8_1_5_p604_d3_DonorIIAligned.sortedByCoord.out.bam    V_8_2_1_p600_d3_DonorIAligned.sortedByCoord.out.bam     V_8_2_3_p605_d3_DonorIIAligned.sortedByCoord.out.bam    V_8_3_2_p600and601_d9_DonorIIAligned.sortedByCoord.out.bam      V_8_0_mock_DonorIAligned.sortedByCoord.out.bam  V_8_1_5_p601_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_3_1_p600and601_d12_DonorIAligned.sortedByCoord.out.bam      V_8_3_1_p604and605_d12_DonorIAligned.sortedByCoord.out.bam      V_8_2_1_p605_d3_DonorIAligned.sortedByCoord.out.bam     V_8_4_2_p602_d8_DonorIAligned.sortedByCoord.out.bam     V_8_1_5_p604_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_2_3_p600_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_0_mock_DonorIIAligned.sortedByCoord.out.bam V_8_1_3_p601_d8_DonorIAligned.sortedByCoord.out.bam     V_8_1_5_p601_d3_DonorIIAligned.sortedByCoord.out.bam    V_8_1_3_p601_d3_DonorIAligned.sortedByCoord.out.bam     V_8_3_2_p604and605_d9_DonorIIAligned.sortedByCoord.out.bam      V_8_4_1_p602_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_1_3_p604_d3_DonorIAligned.sortedByCoord.out.bam
-
-
-
-
-# when using already generated genes.bed and *Index
---hisat2_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/HISAT2Index/" (todo)   --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"
---star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"
-
-
-
---2--
-# default type of --fcGroupFeaturesType is 'gene_biotype' if using Ensembl-gtf
-nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner star   --outdir results_gr_gene_biotype -w work_gr_gene_biotype   -resume
-# when using already generated genes.bed and *Index
---hisat2_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/HISAT2Index/" --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
---star_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/" (todo)    --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
-
-
-
-
-
-###################################################################################
-#################### RNASeq #######################################################
-################################################################################################################
-##### STEP1: pca and heatmap_clusters, remove batch effects, intercept assay(rld), then removeBatchEffect  #####
-#BiocManager::install(c("DESeq2"))
-requiredPackages1 <-c("AnnotationDbi","clusterProfiler","ReactomePA","org.Hs.eg.db","DESeq2", "gplots", "RColorBrewer")
-ipak <- function(pkg){
-        new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-        if (length(new.pkg))
-                install.packages(new.pkg, dependencies = TRUE)
-        sapply(pkg, require, character.only = TRUE)
-}
-ipak(requiredPackages1)
-#requiredPackages2 <- c("tidyverse")
-#ipak(requiredPackages2)
-
-
-Loading required package: tidyverse
-── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
-✔ ggplot2 3.1.0     ✔ purrr   0.3.0
-✔ tibble  2.0.1     ✔ dplyr   0.7.8
-✔ tidyr   0.8.2     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::collapse()   masks IRanges::collapse()
-✖ dplyr::combine()    masks Biobase::combine(), BiocGenerics::combine()
-✖ dplyr::count()      masks matrixStats::count()
-✖ dplyr::desc()       masks IRanges::desc()
-✖ tidyr::expand()     masks S4Vectors::expand()
-✖ dplyr::filter()     masks stats::filter()
-✖ dplyr::first()      masks S4Vectors::first()
-✖ dplyr::lag()        masks stats::lag()
-✖ ggplot2::Position() masks BiocGenerics::Position(), base::Position()
-✖ purrr::reduce()     masks GenomicRanges::reduce(), IRanges::reduce()
-✖ dplyr::rename()     masks S4Vectors::rename()
-✖ dplyr::select()     masks AnnotationDbi::select()
-✖ purrr::simplify()   masks DelayedArray::simplify(), clusterProfiler::simplify()
-✖ dplyr::slice()      masks IRanges::slice()
-tidyverse 
-     TRUE 
-
-
-setwd("~/DATA/Data_Denise_RNASeq/results/featureCounts")
-
-####-- dataset 16 samples --
-d.raw<- read.delim2("merged_gene_counts_f2.txt",sep="\t", header=TRUE, row.names=1)
-d.raw_pseudo <- d.raw + 1
-d.raw_c <- cbind(d.raw, d.raw_pseudo)
-colnames(d.raw_c) <- as.factor(c("mock_sT_d8", "sT_d3", "sT_d8","LTtrunc_d3", "LTtrunc_d8", "mock_sT_d3", "mock_LTtrunc_d3", "mock_LTtrunc_d8", "mock_sT_d8_p", "sT_d3_p", "sT_d8_p","LTtrunc_d3_p", "LTtrunc_d8_p", "mock_sT_d3_p", "mock_LTtrunc_d3_p", "mock_LTtrunc_d8_p"))
-
-#d<- d.raw_c[rowSums(d.raw_c>3)>2,]    #15713
-#replicates = as.factor(c("mock_sT_d8", "sT_d3", "sT_d8","LTtrunc_d3", "LTtrunc_d8", "mock_sT_d3", "mock_LTtrunc_d3", "mock_LTtrunc_d8", "mock_sT_d8", "sT_d3", "sT_d8","LTtrunc_d3", "LTtrunc_d8", "mock_sT_d3", "mock_LTtrunc_d3", "mock_LTtrunc_d8"))
-#ids = as.factor(c("mock_sT_d8_r1", "sT_d3_r1", "sT_d8_r1","LTtrunc_d3_r1", "LTtrunc_d8_r1", "mock_sT_d3_r1", "mock_LTtrunc_d3_r1", "mock_LTtrunc_d8_r1", "mock_sT_d8_r2", "sT_d3_r2", "sT_d8_r2","LTtrunc_d3_r2", "LTtrunc_d8_r2", "mock_sT_d3_r2", "mock_LTtrunc_d3_r2", "mock_LTtrunc_d8_r2"))
-#cData = data.frame(row.names=colnames(d), replicates=replicates, ids=ids)
-#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~replicates)
-##vsd <- vst(dds)
-#rld <- rlogTransformation(dds)
-
-## -- pca --
-#png("pca.png", 1200, 800)
-#plotPCA(rld, intgroup = c("replicates"))
-#dev.off()
-
-## -- heatmap --
-### generate the pairwise comparison between samples
-#png("heatmap.png", 1200, 800)
-#distsRL <- dist(t(assay(rld)))
-#mat <- as.matrix(distsRL)
-##rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
-#rownames(mat) <- colnames(mat) <- with(colData(dds),replicates)
-#hc <- hclust(distsRL)
-#hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
-#heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
-#dev.off()
-
-
-
-
-
-
-
-#################################################
-##### for LTtrunc ####################
-#################################################
-#LTtrunc.raw <- d.raw_c %>% select(contains("LTtrunc")) # needs dplyr-package
--- LTtrunc --
-LTtrunc.raw <- d.raw_c[,c("LTtrunc_d3", "LTtrunc_d8", "mock_LTtrunc_d3", "mock_LTtrunc_d8", "LTtrunc_d3_p", "LTtrunc_d8_p", "mock_LTtrunc_d3_p", "mock_LTtrunc_d8_p")]
-
-
-
-
-LTtrunc<- LTtrunc.raw[rowSums(LTtrunc.raw>3)>2,]    #15945
-#[1] LTtrunc_d3        LTtrunc_d8        mock_LTtrunc_d3   mock_LTtrunc_d8  
-#[5] LTtrunc_d3_p      LTtrunc_d8_p      mock_LTtrunc_d3_p mock_LTtrunc_d8_p
-colnames(LTtrunc) = as.factor(c("LTtrunc_d3_r1", "LTtrunc_d8_r1", "mock_d3_r1", "mock_d8_r1", "LTtrunc_d3_r2", "LTtrunc_d8_r2", "mock_d3_r2", "mock_d8_r2"))
-
-replicates = as.factor(c("LTtrunc_d3", "LTtrunc_d8", "mock_d3", "mock_d8", "LTtrunc_d3", "LTtrunc_d8", "mock_d3", "mock_d8"))
-ids = as.factor(c("LTtrunc_d3_r1", "LTtrunc_d8_r1", "mock_d3_r1", "mock_d8_r1", "LTtrunc_d3_r2", "LTtrunc_d8_r2", "mock_d3_r2", "mock_d8_r2"))
-cData = data.frame(row.names=colnames(LTtrunc), replicates=replicates, ids=ids)
-dds<-DESeqDataSetFromMatrix(countData=LTtrunc, colData=cData, design=~replicates)
-#vsd <- vst(dds)
-rld <- rlogTransformation(dds)
-
-
-#under KONSOLE
-mkdir degenes_LTtrunc
-setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/degenes_LTtrunc")
-
-
-# -- pca --
-png("pca_LTtrunc.png", 1200, 800)
-plotPCA(rld, intgroup = c("replicates"))
-dev.off()
-
-# -- heatmap --
-## generate the pairwise comparison between samples
-png("heatmap_LTtrunc.png", 1200, 800)
-distsRL <- dist(t(assay(rld)))
-mat <- as.matrix(distsRL)
-#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
-rownames(mat) <- colnames(mat) <- with(colData(dds),replicates)
-hc <- hclust(distsRL)
-hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
-heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
-dev.off()
-
-
-####################################################################
-##### STEP2: select the differentially expressed genes #####
-
-#---- relevel to mock ----
-dds$replicates <- relevel(dds$replicates, "mock_d3")
-dds = DESeq(dds, betaPrior=FALSE)
-resultsNames(dds)
-#[1] "Intercept"                        "replicates_LTtrunc_d3_vs_mock_d3"
-#[3] "replicates_LTtrunc_d8_vs_mock_d3" "replicates_mock_d8_vs_mock_d3"   
-clist <- c("LTtrunc_d3_vs_mock_d3","LTtrunc_d8_vs_mock_d3","mock_d8_vs_mock_d3")
-
-dds$replicates <- relevel(dds$replicates, "mock_d8")
-dds = DESeq(dds, betaPrior=FALSE)
-clist <- c("LTtrunc_d3_vs_mock_d8", "LTtrunc_d8_vs_mock_d8")
-
-dds$replicates <- relevel(dds$replicates, "LTtrunc_d3")
-dds = DESeq(dds, betaPrior=FALSE)
-clist <- c("LTtrunc_d8_vs_LTtrunc_d3")
-
-
-for (i in clist) {
-  contrast = paste("replicates", i, sep="_")
-  res = results(dds, name=contrast)
-  res <- res[!is.na(res$log2FoldChange),]
-  geness <- AnnotationDbi::select(org.Hs.eg.db, keys = rownames(res), keytype = "SYMBOL", columns = c("ENSEMBL", "ENTREZID", "SYMBOL", "GENENAME"))
-  geness <- geness[!duplicated(geness$SYMBOL), ]
-  res$SYMBOL = rownames(res)
-  rownames(geness) <- geness$SYMBOL
-  identical(rownames(res), rownames(geness))
-  res_df <- as.data.frame(res)
-  geness_res <- merge(geness, res_df)
-  dim(geness_res)
-  write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "background", sep="_"))
-  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
-  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-2)
-  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="_"))
-  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="_"))
-}
-
-#under DIR degenes under KONSOLE
-~/Tools/csv2xls-0.4/csv_to_xls.py *.txt -d$',' -o LTtrunc_degenes.xls
-
-
-
-
-
-##--- load the temporary results and save the pathways ----
-# under CONSOLE
-mkdir pathways_KEGG_LTtrunc
-setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/pathways_KEGG_LTtrunc")
-
-#--continue from SAVED FILES--
-for sample_id in "LTtrunc_d3_vs_mock_d3" "LTtrunc_d8_vs_mock_d3" "mock_d8_vs_mock_d3" "LTtrunc_d3_vs_mock_d8" "LTtrunc_d8_vs_mock_d8" "LTtrunc_d8_vs_LTtrunc_d3"; do \
-echo "${sample_id}_up <- read.csv(\"../degenes_LTtrunc/${sample_id}_up.txt\", row.names=1)"
-echo "${sample_id}_down <- read.csv(\"../degenes_LTtrunc/${sample_id}_down.txt\", row.names=1)"
-echo "${sample_id}_sig <- rbind(${sample_id}_up, ${sample_id}_down)"        
-echo "${sample_id}_KEGG <- enrichKEGG(${sample_id}_sig\$ENTREZID, pvalueCutoff =  0.01)"
-echo "write.table(as.data.frame(${sample_id}_KEGG), file = \"${sample_id}_KEGG.txt\", sep = \"\t\", row.names = FALSE)"
-done
-
-
-png("pathways_KEGG_LTtrunc.png",width=1200, height=800)
-merged_list <- merge_result(list('LTtrunc_d3_vs_mock_d3'=LTtrunc_d3_vs_mock_d3_KEGG, 'LTtrunc_d8_vs_mock_d3'=LTtrunc_d8_vs_mock_d3_KEGG, 'mock_d8_vs_mock_d3'=mock_d8_vs_mock_d3_KEGG, 'LTtrunc_d3_vs_mock_d8'=LTtrunc_d3_vs_mock_d8_KEGG,  'LTtrunc_d8_vs_mock_d8'=LTtrunc_d8_vs_mock_d8_KEGG,'LTtrunc_d8_vs_LTtrunc_d3'=LTtrunc_d8_vs_LTtrunc_d3_KEGG))
-dotplot(merged_list, showCategory=30)
-dev.off()
-
-
-# under CONSOLE
-cd pathways_KEGG_LTtrunc
-~/Tools/csv2xls-0.4/csv_to_xls.py *.txt -d$'\t' -o pathways_KEGG_LTtrunc.xls
-
-
-
-
-
-###################################################################
-##### STEP3: prepare all_genes #####
-
-RNASeq.NoCellLine <- assay(rld)
-## reorder the columns
-#colnames(RNASeq.NoCellLine) = c("DoA_WAC6h_Indra", "DoA_WAP6h_Indra", "DoA_mock_Indra","DoII_WAC6h_Indra", "DoII_WAP6h_Indra", "DoII_mock_Indra", "DonorIII_WAP6h_Laura","DonorIII_deltaM6h_Laura","DonorIII_deltaP6h_Laura","DonorIII_mock6h_Laura" ,"DonorII_WAP6h_Laura" ,"DonorII_deltaM6h_Laura","DonorII_deltaP6h_Laura" ,"DonorII_mock6h_Laura")
-col.order <-  c("LTtrunc_d3_r1", "LTtrunc_d3_r2", "LTtrunc_d8_r1","LTtrunc_d8_r2","mock_d3_r1","mock_d3_r2","mock_d8_r1","mock_d8_r2")
-RNASeq.NoCellLine <- RNASeq.NoCellLine[,col.order]
-
-
-#Option3: as paper described, A heatmap showing expression values of all DEGs which are significant between any pair conditions.
-all_genes <- c(LTtrunc_d3_vs_mock_d3_sig$SYMBOL,LTtrunc_d3_vs_mock_d3_sig$SYMBOL,mock_d8_vs_mock_d3_sig$SYMBOL,LTtrunc_d3_vs_mock_d8_sig$SYMBOL,LTtrunc_d8_vs_mock_d8_sig$SYMBOL,LTtrunc_d8_vs_LTtrunc_d3_sig$SYMBOL)
-all_genes <- unique(all_genes)   #786
-
-RNASeq.NoCellLine_  <- RNASeq.NoCellLine[all_genes,]
-
-#RNASeq.NoCellLine_ <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
-RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, LTtrunc_d3 = rowMeans(RNASeq.NoCellLine_[, 1:2]))
-RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, LTtrunc_d8 = rowMeans(RNASeq.NoCellLine_[, 3:4]))
-RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_d3 = rowMeans(RNASeq.NoCellLine_[, 5:6]))
-RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_d8 = rowMeans(RNASeq.NoCellLine_[, 7:8]))
-RNASeq.NoCellLine_ <- RNASeq.NoCellLine_[,c(-1:-8)]  
-
-setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/pathways_KEGG_LTtrunc")
-write.csv(as.data.frame(RNASeq.NoCellLine_ ), file ="gene_expression_LTtrunc.txt")
-# convert the txt to xlsx-format
-
-
-
-######################################################################
-##### STEP4: clustering the genes and draw heatmap #####
-#clustering methods: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).  pearson or spearman
-datamat = RNASeq.NoCellLine_
-hr <- hclust(as.dist(1-cor(t(datamat), method="pearson")), method="complete")
-hc <- hclust(as.dist(1-cor(datamat, method="spearman")), method="complete")
-mycl = cutree(hr, h=max(hr$height)/1.05)
-mycol = c("YELLOW", "BLUE", "ORANGE", "MAGENTA", "CYAN", "RED", "GREEN", "MAROON", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN", "LIGHTRED", "LIGHTGREEN");
-mycol = mycol[as.vector(mycl)]
-png("DEGs_heatmap.png", width=900, height=1000)
-heatmap.2(as.matrix(datamat),Rowv=as.dendrogram(hr),Colv = NA, dendrogram = 'row',
-            scale='row',trace='none',col=bluered(75), 
-            RowSideColors = mycol, labRow="", srtCol=15)
-#heatmap.2(datamat,Rowv=as.dendrogram(hr),Colv=as.dendrogram(hc),
-            scale='row',trace='none',col=bluered(75),
-            RowSideColors = mycol, labRow="",
-            ColSideColors = sampleCols,
-            main=sprintf('%s', "RNA-Seq for all DEGs"), srtCol=30)
-heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none", margin=c(5,5), sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none', labRow="", srtCol=30, lhei=c(0.1,2))
-dev.off()
-
-
-#### cluster members #####
-#mycol = c("YELLOW", "BLUE", "ORANGE", "MAGENTA", "CYAN", "RED", "GREEN", "MAROON", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN", "LIGHTRED", "LIGHTGREEN");
-write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '1')),],file='cluster1_YELLOW.txt')  #1765
-write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '2')),],file='cluster2_BLUE.txt')  #322
-write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '3')),],file='cluster3_ORANGE.txt')  #127
-write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '4')),],file='cluster4_MAGENTA.txt')  #514
-#~/Tools/csv2xls-0.4/csv_to_xls.py cluster*.txt -d',' -o genelist_clusters.xls
-
-
-#### pathway plot ####
-library("clusterProfiler")
-library("ReactomePA")
-#The cutoff of pathway enrichment is padj <=  0.01 .
-cluster1_genes <- read.csv("cluster1_YELLOW.txt")
-geness <- select(org.Hs.eg.db, keys = as.vector(cluster1_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
-cluster1_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05, pAdjustMethod="BH")  
-write.table(as.data.frame(cluster1_pathways), file = "pathway_YELLOW.txt", sep = "\t", row.names = FALSE)
-cluster2_genes <- read.csv("cluster2_BLUE.txt")
-geness <- select(org.Hs.eg.db, keys = as.vector(cluster2_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
-cluster2_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
-write.table(as.data.frame(cluster2_pathways), file = "pathway_BLUE.txt", sep = "\t", row.names = FALSE)
-cluster3_genes <- read.csv("cluster3_ORANGE.txt")
-geness <- select(org.Hs.eg.db, keys = as.vector(cluster3_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
-cluster3_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
-write.table(as.data.frame(cluster3_pathways), file = "pathway_ORANGE.txt", sep = "\t", row.names = FALSE)
-cluster4_genes <- read.csv("cluster4_MAGENTA.txt")
-geness <- select(org.Hs.eg.db, keys = as.vector(cluster4_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
-cluster4_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
-write.table(as.data.frame(cluster4_pathways), file = "pathway_MAGENTA.txt", sep = "\t", row.names = FALSE)
-
-png(file= 'pathways_cluster.png', width=510, height=1040)
-merged_list <- merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways, MAGENTA=cluster4_pathways, CYAN=cluster5_pathways)) 
-#merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways)) %>% plot(., showCategory=29, font.size = 16)
-dotplot(merged_list, showCategory=29, font.size = 16)
-#dotplot(merged_list, showCategory=30,)
-dev.off()
-#~/Tools/csv2xls-0.4/csv_to_xls.py pathway_*.txt -d$'\t' -o pathways_clusters.xls
-
-
-#rm *_KEGG.txt cluster*_*.txt
-mv DEGs_heatmap.png ../degenes_LTtrunc/
-mv genelist_clusters.xls ../degenes_LTtrunc/
-mv gene_expression_LTtrunc.* ../degenes_LTtrunc/
-#under degenes_LTtrunc
-rm *.txt
-mv *_background ../background
-
-
-
-
-#################################################
-##### for sT ####################
-#################################################
--- sT --
-sT.raw <- d.raw_c[,c("mock_sT_d8", "sT_d3", "sT_d8", "mock_sT_d3", "mock_sT_d8_p", "sT_d3_p", "sT_d8_p", "mock_sT_d3_p")]
-
-
-
-sT<- sT.raw[rowSums(sT.raw>3)>2,]    #15976
-#[1] mock_sT_d8   sT_d3        sT_d8        mock_sT_d3   mock_sT_d8_p
-#[6] sT_d3_p      sT_d8_p      mock_sT_d3_p
-colnames(sT) = as.factor(c("mock_d8_r1", "sT_d3_r1", "sT_d8_r1", "mock_d3_r1", "mock_d8_r2", "sT_d3_r2", "sT_d8_r2", "mock_d3_r2"))
-replicates = as.factor(c("mock_d8", "sT_d3", "sT_d8", "mock_d3", "mock_d8", "sT_d3", "sT_d8", "mock_d3"))
-ids = as.factor(c("mock_d8_r1", "sT_d3_r1", "sT_d8_r1", "mock_d3_r1", "mock_d8_r2", "sT_d3_r2", "sT_d8_r2", "mock_d3_r2"))
-cData = data.frame(row.names=colnames(sT), replicates=replicates, ids=ids)
-dds<-DESeqDataSetFromMatrix(countData=sT, colData=cData, design=~replicates)
-#vsd <- vst(dds)
-rld <- rlogTransformation(dds)
-
-
-#under KONSOLE
-mkdir degenes_sT
-setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/degenes_sT")
-
-
-# -- pca --
-png("pca_sT.png", 1200, 800)
-plotPCA(rld, intgroup = c("replicates"))
-dev.off()
-
-# -- heatmap --
-## generate the pairwise comparison between samples
-png("heatmap_sT.png", 1200, 800)
-distsRL <- dist(t(assay(rld)))
-mat <- as.matrix(distsRL)
-#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
-rownames(mat) <- colnames(mat) <- with(colData(dds),replicates)
-hc <- hclust(distsRL)
-hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
-heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
-dev.off()
-
-
-####################################################################
-##### STEP2: select the differentially expressed genes #####
-
-#---- relevel to mock ----
-dds$replicates <- relevel(dds$replicates, "mock_d3")
-dds = DESeq(dds, betaPrior=FALSE)
-resultsNames(dds)
-#[1] "Intercept"                        "replicates_sT_d3_vs_mock_d3"
-#[3] "replicates_sT_d8_vs_mock_d3" "replicates_mock_d8_vs_mock_d3"   
-clist <- c("sT_d3_vs_mock_d3","sT_d8_vs_mock_d3","mock_d8_vs_mock_d3")
-
-dds$replicates <- relevel(dds$replicates, "mock_d8")
-dds = DESeq(dds, betaPrior=FALSE)
-clist <- c("sT_d3_vs_mock_d8", "sT_d8_vs_mock_d8")
-
-dds$replicates <- relevel(dds$replicates, "sT_d3")
-dds = DESeq(dds, betaPrior=FALSE)
-clist <- c("sT_d8_vs_sT_d3")
-
-
-for (i in clist) {
-  contrast = paste("replicates", i, sep="_")
-  res = results(dds, name=contrast)
-  res <- res[!is.na(res$log2FoldChange),]
-  geness <- AnnotationDbi::select(org.Hs.eg.db, keys = rownames(res), keytype = "SYMBOL", columns = c("ENSEMBL", "ENTREZID", "SYMBOL", "GENENAME"))
-  geness <- geness[!duplicated(geness$SYMBOL), ]
-  res$SYMBOL = rownames(res)
-  rownames(geness) <- geness$SYMBOL
-  identical(rownames(res), rownames(geness))
-  res_df <- as.data.frame(res)
-  geness_res <- merge(geness, res_df)
-  dim(geness_res)
-  write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "background", sep="_"))
-  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
-  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-2)
-  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="_"))
-  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="_"))
-}
-
-#under DIR degenes under KONSOLE
-~/Tools/csv2xls-0.4/csv_to_xls.py *.txt -d$',' -o sT_degenes.xls
-
-
-
-
-
-##--- load the temporary results and save the pathways ----
-# under CONSOLE
-mkdir pathways_KEGG_sT
-setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/pathways_KEGG_sT")
-
-#--continue from SAVED FILES--
-for sample_id in "sT_d3_vs_mock_d3" "sT_d8_vs_mock_d3" "mock_d8_vs_mock_d3" "sT_d3_vs_mock_d8" "sT_d8_vs_mock_d8" "sT_d8_vs_sT_d3"; do \
-echo "${sample_id}_up <- read.csv(\"../degenes_sT/${sample_id}_up.txt\", row.names=1)"
-echo "${sample_id}_down <- read.csv(\"../degenes_sT/${sample_id}_down.txt\", row.names=1)"
-echo "${sample_id}_sig <- rbind(${sample_id}_up, ${sample_id}_down)"        
-echo "${sample_id}_KEGG <- enrichKEGG(${sample_id}_sig\$ENTREZID, pvalueCutoff =  0.01)"
-echo "write.table(as.data.frame(${sample_id}_KEGG), file = \"${sample_id}_KEGG.txt\", sep = \"\t\", row.names = FALSE)"
-done
-
-
-png("pathways_KEGG_sT.png",width=1200, height=800)
-merged_list <- merge_result(list('sT_d3_vs_mock_d3'=sT_d3_vs_mock_d3_KEGG, 'sT_d8_vs_mock_d3'=sT_d8_vs_mock_d3_KEGG, 'mock_d8_vs_mock_d3'=mock_d8_vs_mock_d3_KEGG, 'sT_d3_vs_mock_d8'=sT_d3_vs_mock_d8_KEGG,  'sT_d8_vs_mock_d8'=sT_d8_vs_mock_d8_KEGG,'sT_d8_vs_sT_d3'=sT_d8_vs_sT_d3_KEGG))
-dotplot(merged_list, showCategory=30)
-dev.off()
-
-
-# under CONSOLE
-cd pathways_KEGG_sT
-~/Tools/csv2xls-0.4/csv_to_xls.py *.txt -d$'\t' -o pathways_KEGG_sT.xls
-
-
-
-
-
-###################################################################
-##### STEP3: prepare all_genes #####
-
-RNASeq.NoCellLine <- assay(rld)
-## reorder the columns
-#colnames(RNASeq.NoCellLine) = c("DoA_WAC6h_Indra", "DoA_WAP6h_Indra", "DoA_mock_Indra","DoII_WAC6h_Indra", "DoII_WAP6h_Indra", "DoII_mock_Indra", "DonorIII_WAP6h_Laura","DonorIII_deltaM6h_Laura","DonorIII_deltaP6h_Laura","DonorIII_mock6h_Laura" ,"DonorII_WAP6h_Laura" ,"DonorII_deltaM6h_Laura","DonorII_deltaP6h_Laura" ,"DonorII_mock6h_Laura")
-col.order <-  c("sT_d3_r1", "sT_d3_r2", "sT_d8_r1","sT_d8_r2","mock_d3_r1","mock_d3_r2","mock_d8_r1","mock_d8_r2")
-RNASeq.NoCellLine <- RNASeq.NoCellLine[,col.order]
-
-
-#Option3: as paper described, A heatmap showing expression values of all DEGs which are significant between any pair conditions.
-all_genes <- c(sT_d3_vs_mock_d3_sig$SYMBOL,sT_d3_vs_mock_d3_sig$SYMBOL,mock_d8_vs_mock_d3_sig$SYMBOL,sT_d3_vs_mock_d8_sig$SYMBOL,sT_d8_vs_mock_d8_sig$SYMBOL,sT_d8_vs_sT_d3_sig$SYMBOL)
-all_genes <- unique(all_genes)   #1024
-
-RNASeq.NoCellLine_  <- RNASeq.NoCellLine[all_genes,]
-
-#RNASeq.NoCellLine_ <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
-RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, sT_d3 = rowMeans(RNASeq.NoCellLine_[, 1:2]))
-RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, sT_d8 = rowMeans(RNASeq.NoCellLine_[, 3:4]))
-RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_d3 = rowMeans(RNASeq.NoCellLine_[, 5:6]))
-RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_d8 = rowMeans(RNASeq.NoCellLine_[, 7:8]))
-RNASeq.NoCellLine_ <- RNASeq.NoCellLine_[,c(-1:-8)]  
-
-setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/pathways_KEGG_sT")
-write.csv(as.data.frame(RNASeq.NoCellLine_ ), file ="gene_expression_sT.txt")
-# convert the txt to xlsx-format
-
-
-
-######################################################################
-##### STEP4: clustering the genes and draw heatmap #####
-#clustering methods: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).  pearson or spearman
-datamat = RNASeq.NoCellLine_
-hr <- hclust(as.dist(1-cor(t(datamat), method="pearson")), method="complete")
-hc <- hclust(as.dist(1-cor(datamat, method="spearman")), method="complete")
-mycl = cutree(hr, h=max(hr$height)/1.04)
-mycol = c("YELLOW", "BLUE", "ORANGE", "MAGENTA", "CYAN", "RED", "GREEN", "MAROON", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN", "LIGHTRED", "LIGHTGREEN");
-mycol = mycol[as.vector(mycl)]
-png("DEGs_heatmap.png", width=900, height=1000)
-heatmap.2(as.matrix(datamat),Rowv=as.dendrogram(hr),Colv = NA, dendrogram = 'row',
-            scale='row',trace='none',col=bluered(75), 
-            RowSideColors = mycol, labRow="", srtCol=15)
-dev.off()
-
-
-#### cluster members #####
-#mycol = c("YELLOW", "BLUE", "ORANGE", "MAGENTA", "CYAN", "RED", "GREEN", "MAROON", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN", "LIGHTRED", "LIGHTGREEN");
-write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '1')),],file='cluster1_YELLOW.txt')  #1765
-write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '2')),],file='cluster2_BLUE.txt')  #322
-write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '3')),],file='cluster3_ORANGE.txt')  #127
-write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '4')),],file='cluster4_MAGENTA.txt')  #514
-#~/Tools/csv2xls-0.4/csv_to_xls.py cluster*.txt -d',' -o genelist_clusters.xls
-
-
-#### pathway plot ####
-library("clusterProfiler")
-library("ReactomePA")
-#The cutoff of pathway enrichment is padj <=  0.01 .
-cluster1_genes <- read.csv("cluster1_YELLOW.txt")
-geness <- select(org.Hs.eg.db, keys = as.vector(cluster1_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
-cluster1_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05, pAdjustMethod="BH")  
-write.table(as.data.frame(cluster1_pathways), file = "pathway_YELLOW.txt", sep = "\t", row.names = FALSE)
-cluster2_genes <- read.csv("cluster2_BLUE.txt")
-geness <- select(org.Hs.eg.db, keys = as.vector(cluster2_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
-cluster2_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
-write.table(as.data.frame(cluster2_pathways), file = "pathway_BLUE.txt", sep = "\t", row.names = FALSE)
-cluster3_genes <- read.csv("cluster3_ORANGE.txt")
-geness <- select(org.Hs.eg.db, keys = as.vector(cluster3_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
-cluster3_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
-write.table(as.data.frame(cluster3_pathways), file = "pathway_ORANGE.txt", sep = "\t", row.names = FALSE)
-cluster4_genes <- read.csv("cluster4_MAGENTA.txt")
-geness <- select(org.Hs.eg.db, keys = as.vector(cluster4_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
-cluster4_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
-write.table(as.data.frame(cluster4_pathways), file = "pathway_MAGENTA.txt", sep = "\t", row.names = FALSE)
-
-png(file= 'pathways_cluster.png', width=510, height=1040)
-merged_list <- merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways, MAGENTA=cluster4_pathways, CYAN=cluster5_pathways)) 
-#merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways)) %>% plot(., showCategory=29, font.size = 16)
-dotplot(merged_list, showCategory=29, font.size = 16)
-#dotplot(merged_list, showCategory=30,)
-dev.off()
-#~/Tools/csv2xls-0.4/csv_to_xls.py pathway_*.txt -d$'\t' -o pathways_clusters.xls
-
-
-
-
-
-#rm *_KEGG.txt cluster*_*.txt
-mv DEGs_heatmap.png ../degenes_sT/
-mv genelist_clusters.xls ../degenes_sT/
-mv gene_expression_sT.* ../degenes_sT/
-#under degenes_sT
-rm *.txt
-mv *_background ../background
- 
+```
