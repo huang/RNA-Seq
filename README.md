@@ -26,7 +26,7 @@ done
 
 ## 2, raw data (from genbank or with own data)
 ```sh
-# from genbank
+# from genbank (see downloading_fastq_GEO.pdf)
 cat SRR_Acc_List.txt | xargs -n 1 bash get_SRR_data.sh
 gzip *.fastq
 
