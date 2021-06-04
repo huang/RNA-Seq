@@ -474,6 +474,11 @@ V_8_3_2_p600and601_d9_DonorII V_8_3_2_p604and605_d9_DonorII
                     1.2432898                     1.0176785 
        V_8_4_2_p602_d3_DonorI       V_8_4_2_p602_d3_DonorII 
                     0.8947267                     1.0892385 
+> sizeFactors(dds)
+    V_8_1_6_p601_d3_Donor1              V_8_1_5_p601_d3_Donor2 
+                 2,0908056 (1,2743873)     1,5683920 (should 0,9301130) 
+V_8_5_1_sTplusLT_d3_Donor1              V_8_5_2_sTplusLT_d3_Donor2 
+                 0,6055365 (0,369086454)   0,5366269 (0,327084692)
 
 normalized_counts <- counts(dds, normalized=TRUE)
 write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
