@@ -117,15 +117,15 @@ mv 8_2_3_p605_d8_S23_R1_001.fastq.gz truncLT_d8_r2.fastq.gz
 ```
 
 
-## 3, trimming + nextflow
+## 3, trimming (included in nextflow, not necessary) + nextflow
 ```sh
 #http://genome.ucsc.edu/FAQ/FAQformat.html#format4
 --0--
-mkdir trimmed; 
-cd trimmed;
-for sample_id in mock_sT_d3 mock_sT_d8 sT_d3 sT_d8 mock_truncLT_d3 mock_truncLT_d8 truncLT_d3 truncLT_d8 truncLT_d8_r2 mock_truncLT_d3_r2 truncLT_d3_r2 mock_truncLT_d8_r2 sT_d8_r2 mock_sT_d3_r2 sT_d3_r2 mock_sT_d8_r2    IMR90_GFP_0_1 IMR90_GFP_0_2 IMR90_GFP_0_3 IMR90_GFP_8_1 IMR90_GFP_8_2 IMR90_GFP_8_3 IMR90_GFP_16_1 IMR90_GFP_16_2 IMR90_GFP_16_3 IMR90_GFP_24_1 IMR90_GFP_24_2 IMR90_GFP_24_3 IMR90_GFP_32_1 IMR90_GFP_32_2 IMR90_GFP_32_3 IMR90_GFP_40_1 IMR90_GFP_40_2 IMR90_GFP_40_3 IMR90_GFP_48_1 IMR90_GFP_48_2 IMR90_GFP_48_3 IMR90_GFP_56_1 IMR90_GFP_56_2 IMR90_GFP_56_3 IMR90_GFP_64_1 IMR90_GFP_64_2 IMR90_GFP_64_3 IMR90_GFP_72_1 IMR90_GFP_72_2 IMR90_GFP_72_3 IMR90_GFP_80_1 IMR90_GFP_80_2 IMR90_GFP_80_3 IMR90_GFP_88_1 IMR90_GFP_88_2 IMR90_GFP_88_3 IMR90_GFP_96_1 IMR90_GFP_96_2 IMR90_GFP_96_3 IMR90_MCPyV_ST_0_1 IMR90_MCPyV_ST_0_2 IMR90_MCPyV_ST_0_3 IMR90_MCPyV_ST_8_1 IMR90_MCPyV_ST_8_2 IMR90_MCPyV_ST_8_3 IMR90_MCPyV_ST_16_1 IMR90_MCPyV_ST_16_2 IMR90_MCPyV_ST_16_3 IMR90_MCPyV_ST_24_1 IMR90_MCPyV_ST_24_2 IMR90_MCPyV_ST_24_3 IMR90_MCPyV_ST_32_1 IMR90_MCPyV_ST_32_2 IMR90_MCPyV_ST_32_3 IMR90_MCPyV_ST_40_1 IMR90_MCPyV_ST_40_2 IMR90_MCPyV_ST_40_3 IMR90_MCPyV_ST_48_1 IMR90_MCPyV_ST_48_2 IMR90_MCPyV_ST_48_3 IMR90_MCPyV_ST_56_1 IMR90_MCPyV_ST_56_2 IMR90_MCPyV_ST_56_3 IMR90_MCPyV_ST_64_1 IMR90_MCPyV_ST_64_2 IMR90_MCPyV_ST_64_3 IMR90_MCPyV_ST_72_1 IMR90_MCPyV_ST_72_2 IMR90_MCPyV_ST_72_3 IMR90_MCPyV_ST_80_1 IMR90_MCPyV_ST_80_2 IMR90_MCPyV_ST_80_3 IMR90_MCPyV_ST_88_1 IMR90_MCPyV_ST_88_2 IMR90_MCPyV_ST_88_3 IMR90_MCPyV_ST_96_1 IMR90_MCPyV_ST_96_2 IMR90_MCPyV_ST_96_3; do \
-        java -jar /home/jhuang/Tools/Trimmomatic-0.36/trimmomatic-0.36.jar SE -threads 16 ../Raw_Data/${sample_id}.fastq.gz ${sample_id}.fastq.gz ILLUMINACLIP:/home/jhuang/Tools/Trimmomatic-0.36/adapters/TruSeq3-SE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 AVGQUAL:20; \
-done 2>trimmomatic.log
+#mkdir trimmed; 
+#cd trimmed;
+#for sample_id in mock_sT_d3 mock_sT_d8 sT_d3 sT_d8 mock_truncLT_d3 mock_truncLT_d8 truncLT_d3 truncLT_d8 truncLT_d8_r2 mock_truncLT_d3_r2 truncLT_d3_r2 mock_truncLT_d8_r2 sT_d8_r2 mock_sT_d3_r2 sT_d3_r2 mock_sT_d8_r2    IMR90_GFP_0_1 IMR90_GFP_0_2 IMR90_GFP_0_3 IMR90_GFP_8_1 IMR90_GFP_8_2 IMR90_GFP_8_3 IMR90_GFP_16_1 IMR90_GFP_16_2 IMR90_GFP_16_3 IMR90_GFP_24_1 IMR90_GFP_24_2 IMR90_GFP_24_3 IMR90_GFP_32_1 IMR90_GFP_32_2 IMR90_GFP_32_3 IMR90_GFP_40_1 IMR90_GFP_40_2 IMR90_GFP_40_3 IMR90_GFP_48_1 IMR90_GFP_48_2 IMR90_GFP_48_3 IMR90_GFP_56_1 IMR90_GFP_56_2 IMR90_GFP_56_3 IMR90_GFP_64_1 IMR90_GFP_64_2 IMR90_GFP_64_3 IMR90_GFP_72_1 IMR90_GFP_72_2 IMR90_GFP_72_3 IMR90_GFP_80_1 IMR90_GFP_80_2 IMR90_GFP_80_3 IMR90_GFP_88_1 IMR90_GFP_88_2 IMR90_GFP_88_3 IMR90_GFP_96_1 IMR90_GFP_96_2 IMR90_GFP_96_3 IMR90_MCPyV_ST_0_1 IMR90_MCPyV_ST_0_2 IMR90_MCPyV_ST_0_3 IMR90_MCPyV_ST_8_1 IMR90_MCPyV_ST_8_2 IMR90_MCPyV_ST_8_3 IMR90_MCPyV_ST_16_1 IMR90_MCPyV_ST_16_2 IMR90_MCPyV_ST_16_3 IMR90_MCPyV_ST_24_1 IMR90_MCPyV_ST_24_2 IMR90_MCPyV_ST_24_3 IMR90_MCPyV_ST_32_1 IMR90_MCPyV_ST_32_2 IMR90_MCPyV_ST_32_3 IMR90_MCPyV_ST_40_1 IMR90_MCPyV_ST_40_2 IMR90_MCPyV_ST_40_3 IMR90_MCPyV_ST_48_1 IMR90_MCPyV_ST_48_2 IMR90_MCPyV_ST_48_3 IMR90_MCPyV_ST_56_1 IMR90_MCPyV_ST_56_2 IMR90_MCPyV_ST_56_3 IMR90_MCPyV_ST_64_1 IMR90_MCPyV_ST_64_2 IMR90_MCPyV_ST_64_3 IMR90_MCPyV_ST_72_1 IMR90_MCPyV_ST_72_2 IMR90_MCPyV_ST_72_3 IMR90_MCPyV_ST_80_1 IMR90_MCPyV_ST_80_2 IMR90_MCPyV_ST_80_3 IMR90_MCPyV_ST_88_1 IMR90_MCPyV_ST_88_2 IMR90_MCPyV_ST_88_3 IMR90_MCPyV_ST_96_1 IMR90_MCPyV_ST_96_2 IMR90_MCPyV_ST_96_3; do \
+#        java -jar /home/jhuang/Tools/Trimmomatic-0.36/trimmomatic-0.36.jar SE -threads 16 ../Raw_Data/${sample_id}.fastq.gz ${sample_id}.fastq.gz ILLUMINACLIP:/home/jhuang/Tools/Trimmomatic-0.36/adapters/TruSeq3-SE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 AVGQUAL:20; \
+#done 2>trimmomatic.log
 
 # see read_biotype_assignment: https://github.com/ewels/ngi_visualizations/tree/master/ngi_visualizations/biotypes
 #Running twice, once without biotype using UCSC  --> get the results which comparable to ChIPSeq-data, since they both using UCSC-gtf -->1
@@ -133,13 +133,13 @@ done 2>trimmomatic.log
 
 #--1--
 ## since in UCSC-gtf, there is no gene_biotype, we use gene_id in --fcGroupFeaturesType; NOTE that bed-file and HISAT-index are generated on site!
-#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"  #--singleEnd -profile standard --aligner hisat2 --fcGroupFeaturesType gene_id --outdir results_nfcore -w work_nfcore -resume
+#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz' --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"  #--singleEnd -profile standard --aligner hisat2 --fcGroupFeaturesType gene_id --outdir results_nfcore -w work_nfcore -resume
 ## when using already generated genes.bed and HISAT2Index
 #--hisat2_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/HISAT2Index/" --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
 #
 #--2--
 ## default type of --fcGroupFeaturesType is 'gene_biotype' if using Ensembl-gtf
-#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/#Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner hisat2      -resume
+#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/#Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner hisat2      -resume
 
 
 
@@ -149,10 +149,10 @@ done 2>trimmomatic.log
 #DEBUG: An example of attributes included in your GTF annotation is 'gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";'
 #---- SUCCESSFUL using STAR ----
 ln -s /home/jhuang/Tools/rnaseq rnaseq
-nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Denise_RNASeq_plus_GSE79958/trimmed/*.fastq.gz" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
+nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Denise_RNASeq_plus_GSE79958/Raw_Data/*.fastq.gz" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
 
 #set pbs as the process executors.
-nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
+nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
 
 #when using already generated genes.bed and *Index
 --hisat2_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/HISAT2Index/" (todo)   --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"
@@ -160,7 +160,7 @@ nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fast
 
 --2--
 #default type of --fcGroupFeaturesType is 'gene_biotype' if using Ensembl-gtf
-nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner star   --outdir results_gr_gene_biotype -w work_gr_gene_biotype   -resume
+nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner star   --outdir results_gr_gene_biotype -w work_gr_gene_biotype   -resume
 #when using already generated genes.bed and *Index
 --hisat2_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/HISAT2Index/" --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
 --star_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/" (todo)    --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
