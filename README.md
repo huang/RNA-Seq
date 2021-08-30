@@ -145,10 +145,12 @@ mv 8_2_3_p605_d8_S23_R1_001.fastq.gz truncLT_d8_r2.fastq.gz
 
 #### prefer to use STARIndex, since HISAT2 needs memory of 120GB, otherwise it does not work for splicing mapping.
 --1--
-# since in UCSC-gtf, there is no gene_biotype, we use gene_id in --fcGroupFeaturesType; NOTE that bed-file and HISAT-index are generated on site!
+# since in UCSC-gtf, there is no gene_biotype, we use gene_id in --fcGroupFeaturesType --> NOTE that bed-file and HISAT-index are generated on site!
 #DEBUG: An example of attributes included in your GTF annotation is 'gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";'
 #---- SUCCESSFUL using STAR ----
 ln -s /home/jhuang/Tools/rnaseq rnaseq
+nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Ute_RNASeq/Raw_Data/*.fastq.gz" --fasta "/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_biotype  -resume
+
 nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Denise_RNASeq_plus_GSE79958/Raw_Data/*.fastq.gz" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
 
 #set pbs as the process executors.
