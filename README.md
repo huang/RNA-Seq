@@ -218,6 +218,13 @@ cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
 ```
 
 
+## 3.5, rerun multiqc
+```sh
+ln -s ~/Tools/rnaseq/assets/multiqc_config.yaml multiqc_config.yaml
+multiqc -f --config multiqc_config.yaml . 2>&1
+```
+
+
 ## 4, load and clean data, and construct DESeqDataSet
 ```sh
 library("AnnotationDbi")
