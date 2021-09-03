@@ -153,8 +153,6 @@ nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Anastasia_RNASeq/Raw_Data/*.
 
 nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Ute_RNASeq/Raw_Data/*.fastq.gz" --fasta "/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_biotype --skip_genebody_coverage -resume
 
-nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Ute_RNASeq/Raw_Data/*.fastq.gz" --fasta "/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_biotype  -resume
-
 nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Denise_RNASeq_plus_GSE79958/Raw_Data/*.fastq.gz" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
 
 #set pbs as the process executors.
