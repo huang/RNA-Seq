@@ -222,6 +222,7 @@ cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
 ```sh
 ln -s ~/Tools/rnaseq/assets/multiqc_config.yaml multiqc_config.yaml
 multiqc -f --config multiqc_config.yaml . 2>&1
+rm multiqc_config.yaml
 ```
 
 
