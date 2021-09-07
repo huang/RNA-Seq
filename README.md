@@ -222,7 +222,13 @@ cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
 ```sh
 mv MultiQC .. 
 mv pipeline_info .. 
-mv featureCounts/gene_count_summaries ..
+mv STAR ..
+mv rseqc/read_distribution ..
+mv markDuplicates/metrics ..
+#Note that sequence counts occurs twice in the results, featureCounts (16,9m/68.0%=24,85m), Biotype_Counts(17 m) and FastQC/Sequence_Counts (16,03m/74,8%=21,4m after quality control and filtering).
+#Note Dups only use the FastQC-results
+cp ~/DATA/results_description.html ./
+
 ln -s ~/Tools/rnaseq/assets/multiqc_config.yaml multiqc_config.yaml
 multiqc -f --config multiqc_config.yaml . 2>&1
 rm multiqc_config.yaml
