@@ -510,6 +510,7 @@ for sample in V_8_0_mock_DonorI            V_8_0_mock_DonorII       V_8_1_5_p601
   echo "bamCoverage --bam ${sample}Aligned.sortedByCoord.out.bam -o ../bigWigs/${sample}_norm.bw --binSize 10 --scaleFactor 1/0.5695507 --effectiveGenomeSize 2864785220"
 done
 
+bamCoverage --bam ${sample}Aligned.sortedByCoord.out.bam -o ../bigWigs/${sample}_norm.bw --binSize 10 --scaleFactor 1/DESeqs_size_factor --effectiveGenomeSize 2864785220
 bamCoverage --bam V_8_0_mock_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_0_mock_DonorI_norm.bw --binSize 10 --scaleFactor 1.755769942869002 --effectiveGenomeSize 2864785220
 bamCoverage --bam V_8_0_mock_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_0_mock_DonorII_norm.bw --binSize 10 --scaleFactor 1.2654795034714001 --effectiveGenomeSize 2864785220
 bamCoverage --bam V_8_1_5_p601_d3_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_1_5_p601_d3_DonorII_norm.bw --binSize 10 --scaleFactor 1.0798579813977185 --effectiveGenomeSize 2864785220
