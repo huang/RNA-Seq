@@ -282,47 +282,47 @@ col_order <- c("V_8_0_mock_DonorI","V_8_0_mock_DonorII","V_8_1_5_p601_d3_DonorII
 reordered.raw <- d.raw[,col_order]
 #reordered.raw <- subset(d.raw, select=col_order)
 
-# OPTION1: sT
-d.raw_sT <- subset(d.raw, select=c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
-d <- d.raw_sT[rowSums(d.raw_sT>3)>2,]
-replicates = as.factor(c("mock_sT_d3","mock_sT_d8","sT_d3","sT_d8","mock_sT_d3","sT_d3","mock_sT_d8","sT_d8"))
-batch = as.factor(c("r2","r1","r1","r2","r1","r2","r2","r1"))
-ids = as.factor(c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
-cData = data.frame(row.names=colnames(d), replicates=replicates, batch=batch, ids=ids)
-dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batch+replicates)
+## OPTION1: sT
+#d.raw_sT <- subset(d.raw, select=c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
+#d <- d.raw_sT[rowSums(d.raw_sT>3)>2,]
+#replicates = as.factor(c("mock_sT_d3","mock_sT_d8","sT_d3","sT_d8","mock_sT_d3","sT_d3","mock_sT_d8","sT_d8"))
+#batch = as.factor(c("r2","r1","r1","r2","r1","r2","r2","r1"))
+#ids = as.factor(c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
+#cData = data.frame(row.names=colnames(d), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batch+replicates)
 
-# OPTION2: truncLT
-d.raw_truncLT <- subset(d.raw, select=c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
-d <- d.raw_truncLT[rowSums(d.raw_truncLT>3)>2,]
-replicates = as.factor(c("truncLT_d8","truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3","truncLT_d8"))
-batch = as.factor(c("r2","r1","r2","r2","r1","r1","r2","r1"))
-ids = as.factor(c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
-cData = data.frame(row.names=colnames(d), replicates=replicates, batch=batch, ids=ids)
-dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batch+replicates)
+## OPTION2: truncLT
+#d.raw_truncLT <- subset(d.raw, #select=c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
+#d <- d.raw_truncLT[rowSums(d.raw_truncLT>3)>2,]
+#replicates = as.factor(c("truncLT_d8","truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3","truncLT_d8"))
+#batch = as.factor(c("r2","r1","r2","r2","r1","r1","r2","r1"))
+#ids = as.factor(c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
+#cData = data.frame(row.names=colnames(d), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batch+replicates)
 
-# OPTION3: IPA sT
-d.raw_sT <- subset(d.raw, select=c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
-replicates = as.factor(c("mock_sT_d3","mock_sT_d8","sT_d3","sT_d8","mock_sT_d3","sT_d3","mock_sT_d8","sT_d8"))
-batch = as.factor(c("r2","r1","r1","r2","r1","r2","r2","r1"))
-ids = as.factor(c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
-cData = data.frame(row.names=colnames(d.raw_sT), replicates=replicates, batch=batch, ids=ids)
-dds<-DESeqDataSetFromMatrix(countData=d.raw_sT, colData=cData, design=~batch+replicates)
+## OPTION3: IPA sT
+#d.raw_sT <- subset(d.raw, select=c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
+#replicates = as.factor(c("mock_sT_d3","mock_sT_d8","sT_d3","sT_d8","mock_sT_d3","sT_d3","mock_sT_d8","sT_d8"))
+#batch = as.factor(c("r2","r1","r1","r2","r1","r2","r2","r1"))
+#ids = as.factor(c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
+#cData = data.frame(row.names=colnames(d.raw_sT), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d.raw_sT, colData=cData, design=~batch+replicates)
 
-# OPTION4: IPA truncLT
-d.raw_truncLT <- subset(d.raw, select=c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
-replicates = as.factor(c("truncLT_d8","truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3","truncLT_d8"))
-batch = as.factor(c("r2","r1","r2","r2","r1","r1","r2","r1"))
-ids = as.factor(c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
-cData = data.frame(row.names=colnames(d.raw_truncLT), replicates=replicates, batch=batch, ids=ids)
-dds<-DESeqDataSetFromMatrix(countData=d.raw_truncLT, colData=cData, design=~batch+replicates)
+## OPTION4: IPA truncLT
+#d.raw_truncLT <- subset(d.raw, #select=c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
+#replicates = as.factor(c("truncLT_d8","truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3","truncLT_d8"))
+#batch = as.factor(c("r2","r1","r2","r2","r1","r1","r2","r1"))
+#ids = as.factor(c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
+#cData = data.frame(row.names=colnames(d.raw_truncLT), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d.raw_truncLT, colData=cData, design=~batch+replicates)
 
-# OPTION5: sT vs untreated or LTtr vs untreated
-d.raw_mock_untreated <- subset(d.raw, select=c("mock_sT_d3_r2","mock_sT_d8_r1","mock_sT_d8_r2","mock_truncLT_d8_r2","mock_truncLT_d3_r1","mock_truncLT_d8_r1","mock_truncLT_d3_r2","mock_sT_d3_r1","untreated_r1","untreated_r2"))
-replicates = as.factor(c("sT_mock_d3","sT_mock_d8","sT_mock_d8","LTtr_mock_d8","LTtr_mock_d3","LTtr_mock_d8","LTtr_mock_d3","sT_mock_d3","untreated","untreated"))
-batch = as.factor(c("r2","r1","r2","r2","r1","r1","r2","r1","r3","r3"))
-ids = as.factor(c("sT_mock_d3_r2","sT_mock_d8_r1","sT_mock_d8_r2","LTtr_mock_d8_r2","LTtr_mock_d3_r1","LTtr_mock_d8_r1","LTtr_mock_d3_r2","sT_mock_d3_r1","untreated_r1","untreated_r2"))
-cData = data.frame(row.names=colnames(d.raw_mock_untreated), replicates=replicates, batch=batch, ids=ids)
-dds<-DESeqDataSetFromMatrix(countData=d.raw_mock_untreated, colData=cData, design=~batch+replicates)
+## OPTION5: sT vs untreated or LTtr vs untreated
+#d.raw_mock_untreated <- subset(d.raw, select=c("mock_sT_d3_r2","mock_sT_d8_r1","mock_sT_d8_r2","mock_truncLT_d8_r2","mock_truncLT_d3_r1","mock_truncLT_d8_r1","mock_truncLT_d3_r2","mock_sT_d3_r1","untreated_r1","untreated_r2"))
+#replicates = as.factor(c("sT_mock_d3","sT_mock_d8","sT_mock_d8","LTtr_mock_d8","LTtr_mock_d3","LTtr_mock_d8","LTtr_mock_d3","sT_mock_d3","untreated","untreated"))
+#batch = as.factor(c("r2","r1","r2","r2","r1","r1","r2","r1","r3","r3"))
+#ids = as.factor(c("sT_mock_d3_r2","sT_mock_d8_r1","sT_mock_d8_r2","LTtr_mock_d8_r2","LTtr_mock_d3_r1","LTtr_mock_d8_r1","LTtr_mock_d3_r2","sT_mock_d3_r1","untreated_r1","untreated_r2"))
+#cData = data.frame(row.names=colnames(d.raw_mock_untreated), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d.raw_mock_untreated, colData=cData, design=~batch+replicates)
 
 # OPTION6: sT vs untreated or LTtr vs untreated
 #P602 d8 vs p600 d8 (donor 1+2)
@@ -341,6 +341,7 @@ replicates = as.factor(c("untreated","untreated","p601_d3","p604_d3",     "p601_
 batch = as.factor(c("200420", "200420", "190927", "190927",    "190927", "190927", "190228", "190228",    "190228", "190228", "191008", "191008",    "191008", "191008", "190228", "190228",     "190228", "190228", "200817", "200817",       "200420", "200420", "200817", "200817"))
 ids = as.factor(c("untreated_DonorI","untreated_DonorII", "p601_d3_DonorII","p604_d3_DonorII", "p601_d8_DonorII","p604_d8_DonorII",   "p601_d3_DonorI","p604_d3_DonorI","p601_d8_DonorI","p604_d8_DonorI",  "p600_d3_DonorII","p605_d3_DonorII","p600_d8_DonorII", "p605_d8_DonorII",  "p600_d3_DonorI","p605_d3_DonorI","p600_d8_DonorI","p605_d8_DonorI",  "p602_d8_DonorII","p602_d8_DonorI",  "p600and601_d12_DonorI", "p604and605_d12_DonorI","p600and601_d9_DonorII","p604and605_d9_DonorII"))
 donor = as.factor(c("DonorI","DonorII", "DonorII","DonorII", "DonorII","DonorII",   "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorII","DonorII", "DonorII",  "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorI",  "DonorI", "DonorI","DonorII","DonorII"))
+#Note that we need reordered.raw
 cData = data.frame(row.names=colnames(reordered.raw), replicates=replicates, donor=donor, batch=batch, ids=ids)
 dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~donor+replicates)  #batch+
 ```
