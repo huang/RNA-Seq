@@ -1,0 +1,829 @@
+#Once you are back next week, we should talk about a few projects. One is the project of Ute and the exosome cargo characterization. I usually meet with Ute Friday Morning at 9am. If you have time you could join next Friday and we can discuss this project.
+
+#--------- Vorgabe ------------
+ER vs RNA
+
+VENN diagram
+Heatmap
+Volcano plot
+
+GO tree/term analysis
+KEGG pathway analysis
+
+#List of TFEB 471 target genes
+#List of 891 lysosomal and autophagy related genes
+#List of verified lysosomal genes
+#-----------------------------------------
+
+
+
+#### -------
+setwd("/home/jhuang/DATA/Data_Ute_RNASeq/results/featureCounts")
+
+library("AnnotationDbi")
+library("clusterProfiler")
+library("ReactomePA")
+#library("org.Mm.eg.db")
+library(DESeq2)
+library(gplots)
+
+
+ [1] gene_name                                   
+ [2] MKL1_RNA       
+ [3] MKL1_EV_RNA_87 
+ [4] WaGa_EV_RNA_2  
+ [5] MKL1_RNA_118   
+ [6] MKL1_RNA_147   
+ [7] WaGa_EV_RNA    
+ [8] WaGa_RNA_147   
+ [9] MKL1_EV_RNA_118
+[10] MKL1_EV_RNA_2  
+[11] WaGa_RNA_118   
+[12] MKL1_EV_RNA    
+[13] WaGa_EV_RNA_226
+[14] WaGa_EV_RNA_147
+[15] WaGa_EV_RNA_118
+[16] WaGa_RNA       
+[17] MKL1_EV_RNA_27 
+
+
+#TODO: draw a heatmap as done for Susanne (WaGa_RNA, MKL1_RNA, WaGa_EV_RNA, MKL1_EV_RNA), "WaGa_EV_RNA_147" and "MKL1_EV_RNA" will be outliers and consider to delete them!, giving the sample names at the bottom!
+
+d.raw<- read.delim2("merged_gene_counts.txt",sep="\t", header=TRUE, row.names=1)
+colnames(d.raw)<- c("gene_name","MKL1_RNA","MKL1_EV_RNA_87","WaGa_EV_RNA_2","MKL1_RNA_118","MKL1_RNA_147","WaGa_EV_RNA","WaGa_RNA_147","MKL1_EV_RNA_118","MKL1_EV_RNA_2","WaGa_RNA_118","MKL1_EV_RNA","WaGa_EV_RNA_226","WaGa_EV_RNA_147","WaGa_EV_RNA_118","WaGa_RNA","MKL1_EV_RNA_27")
+
+col_order <- c("gene_name",  "WaGa_RNA","WaGa_RNA_118","WaGa_RNA_147",  "MKL1_RNA","MKL1_RNA_118","MKL1_RNA_147",  "WaGa_EV_RNA","WaGa_EV_RNA_2","WaGa_EV_RNA_118","WaGa_EV_RNA_147","WaGa_EV_RNA_226",  "MKL1_EV_RNA","MKL1_EV_RNA_2","MKL1_EV_RNA_27","MKL1_EV_RNA_87","MKL1_EV_RNA_118")
+reordered.raw <- d.raw[,col_order]
+reordered.raw$gene_name <- NULL
+#IMPORTANT that we should filter the data with the counts in the STEP!
+d <- reordered.raw[rowSums(reordered.raw>3)>2,]
+
+
+replicates = as.factor(c("WaGa_RNA","WaGa_RNA","WaGa_RNA",  "MKL1_RNA","MKL1_RNA","MKL1_RNA",  "WaGa_EV_RNA","WaGa_EV_RNA","WaGa_EV_RNA","WaGa_EV_RNA","WaGa_EV_RNA",  "MKL1_EV_RNA","MKL1_EV_RNA","MKL1_EV_RNA","MKL1_EV_RNA","MKL1_EV_RNA"))
+#replicates2 = as.factor(c("RNA","RNA","RNA",  "RNA","RNA","RNA",  "EV_RNA","EV_RNA","EV_RNA","EV_RNA","EV_RNA",  "EV_RNA","EV_RNA","EV_RNA","EV_RNA","EV_RNA"))
+ids = as.factor(c("WaGa_RNA","WaGa_RNA_118","WaGa_RNA_147",  "MKL1_RNA","MKL1_RNA_118","MKL1_RNA_147",  "WaGa_EV_RNA","WaGa_EV_RNA_2","WaGa_EV_RNA_118","WaGa_EV_RNA_147","WaGa_EV_RNA_226",  "MKL1_EV_RNA","MKL1_EV_RNA_2","MKL1_EV_RNA_27","MKL1_EV_RNA_87","MKL1_EV_RNA_118"))
+
+#IMPORTANT: using d instead of reordered.raw.
+#cData = data.frame(row.names=colnames(d), replicates=replicates,  batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batch+replicates)
+cData = data.frame(row.names=colnames(d), replicates=replicates, ids=ids)
+dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~replicates)
+
+
+rld <- rlogTransformation(dds)
+
+
+
+
+
+# -- before pca --
+png("pca.png", 1200, 800)
+plotPCA(rld, intgroup=c("replicates"))
+#plotPCA(rld, intgroup = c("replicates", "batch"))
+#plotPCA(rld, intgroup = c("replicates", "ids"))
+#plotPCA(rld, "batch")
+dev.off()
+
+
+# -- before heatmap --
+## generate the pairwise comparison between samples
+library(gplots) 
+library("RColorBrewer")
+png("heatmap.png", 1200, 800)
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+#paste( rld$dex, rld$cell, sep="-" )
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,ids, sep=":"))
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+
+
+
+#convert bam to bigwig using deepTools by feeding inverse of DESeq’s size Factor
+sizeFactors(dds)
+#NULL
+dds <- estimateSizeFactors(dds)
+> sizeFactors(dds)
+       WaGa_RNA    WaGa_RNA_118    WaGa_RNA_147        MKL1_RNA    MKL1_RNA_118 
+      2.0166446       1.6628150       1.6248232       2.4517165       1.5324974 
+   MKL1_RNA_147     WaGa_EV_RNA   WaGa_EV_RNA_2 WaGa_EV_RNA_118 WaGa_EV_RNA_147 
+      1.8755575       0.5767131       1.2884569       0.4498485       0.5954206 
+WaGa_EV_RNA_226     MKL1_EV_RNA   MKL1_EV_RNA_2  MKL1_EV_RNA_27  MKL1_EV_RNA_87 
+      0.5259610       1.5456946       1.4540214       0.4061039       0.7086400 
+MKL1_EV_RNA_118 
+      0.6475681 
+
+raw_counts <- counts(dds)
+normalized_counts <- counts(dds, normalized=TRUE)
+#write.table(raw_counts, file="raw_counts.txt", sep="\t", quote=F, col.names=NA)
+#write.table(normalized_counts, file="normalized_counts.txt", sep="\t", quote=F, col.names=NA)
+
+
+# ---- draw normalization before and after ----
+### Let's implement such a function
+### cds is a countDataset
+estimSf <- function (cds){
+    # Get the count matrix
+    cts <- counts(cds)
+    
+    # Compute the geometric mean
+    geomMean <- function(x) prod(x)^(1/length(x))
+
+    # Compute the geometric mean over the line
+    gm.mean  <-  apply(cts, 1, geomMean)
+    
+    # Zero values are set to NA (avoid subsequentcdsdivision by 0)
+    gm.mean[gm.mean == 0] <- NA
+    
+    # Divide each line by its corresponding geometric mean
+    # sweep(x, MARGIN, STATS, FUN = "-", check.margin = TRUE, ...)
+    # MARGIN: 1 or 2 (line or columns)
+    # STATS: a vector of length nrow(x) or ncol(x), depending on MARGIN
+    # FUN: the function to be applied
+    cts <- sweep(cts, 1, gm.mean, FUN="/")
+    
+    # Compute the median over the columns
+    med <- apply(cts, 2, median, na.rm=TRUE)
+    
+    # Return the scaling factor
+    return(med)
+}
+#https://dputhier.github.io/ASG/practicals/rnaseq_diff_Snf2/rnaseq_diff_Snf2.html
+#http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization
+#https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html
+#https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html
+#https://genviz.org/module-04-expression/0004/02/01/DifferentialExpression/
+#DESeq2’s median of ratios [1]
+#EdgeR’s trimmed mean of M values (TMM) [2]
+#http://www.nathalievialaneix.eu/doc/html/TP1_normalization.html  #very good website!
+test_normcount <- sweep(raw_counts, 2, sizeFactors(dds), "/")
+sum(test_normcount != normalized_counts)
+
+head(estimSf(dds))
+all(round(estimSf(dds),6) == round(sizeFactors(dds), 6))
+## Checking the normalization
+png("normalization.png", width=800, height=600)
+epsilon <- 1 # pseudo-count to avoid problems with log(0)
+par(mfrow=c(1,2),cex.lab=0.7)
+boxplot(log2(raw_counts+epsilon), cex.axis=0.7, las=1, xlab="log2(raw counts)", horizontal=TRUE, main="Raw counts")
+boxplot(log2(normalized_counts+epsilon), cex.axis=0.7, las=1, xlab="log2(normalized counts)", horizontal=TRUE, main="Normalized counts") 
+#boxplot(log10(assays(dds)[["cooks"]]), range=0, las=2)
+#plotDensity(log2(counts(dds.norm)+epsilon),  col=col.pheno.selected, 
+#            xlab="log2(counts)", cex.lab=0.7, panel.first=grid()) 
+#plotDensity(log2(counts(dds.norm, normalized=TRUE)+epsilon), col=col.pheno.selected, 
+#            xlab="log2(normalized counts)", cex.lab=0.7, panel.first=grid()) 
+dev.off()
+
+
+# since we Gene-level differential expression analysis with DESeq2, the splicing plays no role in the analysis!
+# 用nanopore 可以 compare transcript length distribution. 有可能之前很长，后面很短!
+
+library(ggplot2)
+library(gridExtra)
+library(reshape2)
+library(mixOmics)
+library(RColorBrewer)
+library(DESeq)
+library(edgeR)
+library(VennDiagram)
+library(devtools)
+raw_counts_wn <- raw_counts[rowSums(raw_counts) > 0, ]
+dim(raw_counts_wn)
+
+#--Raw counts--
+pseudo_counts <- log2(raw_counts_wn + 1)
+head(pseudo_counts)
+df_raw <- melt(pseudo_counts, id = rownames(raw_counts_wn))
+names(df_raw)[1:2]<- c("id", "sample")
+df_raw$method <- rep("Raw counts", nrow(df_raw))  
+head(df_raw)
+
+#--DESeq--
+cData = data.frame(row.names=colnames(raw_counts_wn), replicates=replicates, ids=ids)
+dge<-DESeqDataSetFromMatrix(countData=raw_counts_wn, colData=cData, design=~replicates)
+dge <- estimateSizeFactors(dge)
+sizeFactors(dge)
+deseq_normcount <- counts(dge, normalized = TRUE)
+test_normcount <- sweep(raw_counts_wn, 2, sizeFactors(dge), "/")
+sum(test_normcount != deseq_normcount)
+pseudo_deseq <- log2(deseq_normcount + 1)
+df_deseq <- melt(pseudo_deseq, id = rownames(raw_counts_wn))
+names(df_deseq)[1:2]<- c("id", "sample")
+df_deseq$method <- rep("DESeq (RLE)", nrow(df_raw))  
+
+#--edgeR--
+dge2 <- DGEList(raw_counts_wn)
+dge2
+dge2$samples
+
+#--Total count--
+pseudo_TC <- log2(cpm(dge2) + 1)
+df_TC <- melt(pseudo_TC, id = rownames(raw_counts_wn))
+names(df_TC)[1:2] <- c ("id", "sample")
+df_TC$method <- rep("TC", nrow(df_TC))
+
+##--RPKM--
+#gene_lengths_wn <- gene_lengths[rowSums(raw_counts) > 0]
+#pseudo_RPKM <- log2(rpkm(dge2, gene.length = gene_lengths_wn) + 1)
+#df_RPKM <- melt(pseudo_RPKM, id = rownames(raw_counts_wn))
+#names(df_RPKM)[1:2] <- c ("id", "sample")
+#df_RPKM$method <- rep("RPKM", nrow(df_RPKM))
+
+#--Upper quartile--
+dge2 <- calcNormFactors(dge2, method = "upperquartile")
+dge2$samples
+test_normcount <- sweep(dge2$counts, 2,
+                        dge2$samples$lib.size*dge2$samples$norm.factors / 10^6,
+                        "/")
+range(as.vector(test_normcount - cpm(dge2)))
+pseudo_UQ <- log2(cpm(dge2) + 1)
+
+df_UQ <- melt(pseudo_UQ, id = rownames(raw_counts_wn))
+names(df_UQ)[1:2] <- c ("id", "sample")
+df_UQ$method <- rep("UQ", nrow(df_UQ))
+
+#--TMM--
+dge2 <- calcNormFactors(dge2, method = "TMM")
+dge2$samples
+pseudo_TMM <- log2(cpm(dge2) + 1)
+df_TMM <- melt(pseudo_TMM, id = rownames(raw_counts_wn))
+names(df_TMM)[1:2] <- c ("id", "sample")
+#MODIFIED!
+df_TMM$method <- rep("DESeq (RLE)", nrow(df_TMM))  #TMM
+
+#--Comparison--
+png("normalization.png", width=800, height=600)
+#df_allnorm <- rbind(df_raw, df_deseq, df_TC, df_UQ, df_TMM)
+#df_allnorm$method <- factor(df_allnorm$method, levels = c("Raw counts", "DESeq (RLE)", "TC",  "TMM", "UQ"))
+df_allnorm <- rbind(df_raw, df_TMM)
+df_allnorm$method <- factor(df_allnorm$method, levels = c("Raw counts", "DESeq (RLE)"))
+p <- ggplot(data=df_allnorm, aes(x=sample, y=value, fill=method))
+p <- p + geom_boxplot()  
+p <- p + theme_bw()
+p <- p + ggtitle("Boxplots of normalized pseudo counts\n
+for all samples by normalization methods")
+p <- p + facet_grid(. ~ method) 
+p <- p + ylab(expression(log[2] ~ (normalized ~ count + 1))) + xlab("")
+p <- p + theme(title = element_text(size=10), axis.text.x = element_blank(), 
+               axis.ticks.x = element_blank())
+print(p)
+dev.off()
+
+ 
+> 1/2.0166446
+[1] 0.4958732
+> 1/1.6628150
+[1] 0.6013898
+> 1/1.6248232
+[1] 0.6154516
+
+> 1/2.4517165
+[1] 0.4078775
+> 1/1.5324974
+[1] 0.6525297
+> 1/1.8755575
+[1] 0.5331748
+
+> 1/0.5767131
+[1] 1.733964
+> 1/1.2884569
+[1] 0.7761222
+> 1/0.4498485
+[1] 2.222971
+> 1/0.5954206
+[1] 1.679485
+> 1/0.5259610
+[1] 1.901282
+
+> 1/1.5456946
+[1] 0.6469583
+> 1/1.4540214
+[1] 0.6877478
+> 1/0.4061039
+[1] 2.462424
+> 1/0.7086400
+[1] 1.411154
+> 1/0.6475681
+[1] 1.544239
+> 
+
+
+#bamCoverage --bam ../markDuplicates/${sample}Aligned.sortedByCoord.out.bam -o ${sample}_norm.bw --binSize 10 --scaleFactor  --effectiveGenomeSize 2864785220
+
+bamCoverage --bam ../markDuplicates/WaGa_RNAAligned.sortedByCoord.out.markDups.bam -o WaGa_RNA.bw --binSize 10 --scaleFactor 0.4958732    --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WaGa_RNA_118Aligned.sortedByCoord.out.markDups.bam -o WaGa_RNA_118.bw --binSize 10 --scaleFactor 0.6013898        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WaGa_RNA_147Aligned.sortedByCoord.out.markDups.bam -o WaGa_RNA_147.bw --binSize 10 --scaleFactor 0.6154516      --effectiveGenomeSize 2864785220
+
+bamCoverage --bam ../markDuplicates/MKL1_RNAAligned.sortedByCoord.out.markDups.bam -o MKL1_RNA.bw --binSize 10 --scaleFactor  0.4078775      --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/MKL1_RNA_118Aligned.sortedByCoord.out.markDups.bam -o MKL1_RNA_118.bw --binSize 10 --scaleFactor 0.6525297       --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/MKL1_RNA_147Aligned.sortedByCoord.out.markDups.bam -o MKL1_RNA_147.bw --binSize 10 --scaleFactor 0.5331748       --effectiveGenomeSize 2864785220
+
+bamCoverage --bam ../markDuplicates/WaGa_EV_RNAAligned.sortedByCoord.out.markDups.bam -o WaGa_EV_RNA.bw --binSize 10 --scaleFactor 1.733964       --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WaGa_EV_RNA_2Aligned.sortedByCoord.out.markDups.bam -o WaGa_EV_RNA_2.bw --binSize 10 --scaleFactor  0.7761222      --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WaGa_EV_RNA_118Aligned.sortedByCoord.out.markDups.bam -o WaGa_EV_RNA_118.bw --binSize 10 --scaleFactor  2.222971      --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WaGa_EV_RNA_147Aligned.sortedByCoord.out.markDups.bam -o WaGa_EV_RNA_147.bw --binSize 10 --scaleFactor  1.679485     --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WaGa_EV_RNA_226Aligned.sortedByCoord.out.markDups.bam -o WaGa_EV_RNA_226.bw --binSize 10 --scaleFactor  1.901282     --effectiveGenomeSize 2864785220
+
+bamCoverage --bam ../markDuplicates/MKL1_EV_RNAAligned.sortedByCoord.out.markDups.bam -o MKL1_EV_RNA.bw --binSize 10 --scaleFactor 0.6469583       --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/MKL1_EV_RNA_2Aligned.sortedByCoord.out.markDups.bam -o MKL1_EV_RNA_2.bw --binSize 10 --scaleFactor 0.6877478       --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/MKL1_EV_RNA_27Aligned.sortedByCoord.out.markDups.bam -o MKL1_EV_RNA_27.bw --binSize 10 --scaleFactor 2.462424       --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/MKL1_EV_RNA_87Aligned.sortedByCoord.out.markDups.bam -o MKL1_EV_RNA_87.bw --binSize 10 --scaleFactor 1.411154       --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/MKL1_EV_RNA_118Aligned.sortedByCoord.out.markDups.bam -o MKL1_EV_RNA_118.bw --binSize 10 --scaleFactor 1.544239       --effectiveGenomeSize 2864785220
+
+
+
+
+
+
+#"control_r1",
+#"control_r2",
+#"control_r3", 
+#"WT_3hdox21hchase_r1","WT_3hdox21hchase_r2","WT_3hdox21hchase_r3", "WT_24hdox_r1","WT_24hdox_r2","WT_24hdox_r3", "K3R_3hdox21hchase_r1","K3R_3hdox21hchase_r2","K3R_3hdox21hchase_r3", #"K3R_24hdox_r1","K3R_24hdox_r2","K3R_24hdox_r3"
+
+
+
+# - WT_3hdox21hchase_vs_control
+# - WT_24hdox_vs_control
+# - K3R_3hdox21hchase_vs_control
+# - K3R_24hdox_vs_control
+
+# - K3R_24hdox_vs_K3R_3hdox21hchase
+# - WT_3hdox21hchase_vs_K3R_3hdox21hchase
+
+# - WT_24hdox_vs_K3R_24hdox
+# - WT_24hdox_vs_WT_3hdox21hchase
+
+
+#------ LETTER ------
+As shown in the PCR-figure and heatmap xxx, we can divide the samples into 4 groups. WaGa_RNA, MKL1_RNA, WaGa_EV_RNA, MKL1_EV_RNA
+I do perfom the differential analyses between WaGa_EV_RNA vs MKL1_EV_RNA,  WaGa_RNA vs MKL1_RNA,  WaGa_EV_RNA vs WaGa_RNA,  MKL1_EV_RNA vs MKL1_RNA.
+
+The difference of WaGa_RNA and MKL1_RNA are not so big than 
+
+
+# ----------------- Differential Expression ------------------
+#A central method for exploring differences between groups of segments or samples is to perform differential gene expression analysis. 
+
+
+setwd("/home/jhuang/DATA/Data_Ute_RNASeq/results/featureCounts/degenes")
+#---- * to untreated ----
+dds$replicates <- relevel(dds$replicates, "MKL1_RNA")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("WaGa_RNA_vs_MKL1_RNA","MKL1_EV_RNA_vs_MKL1_RNA")
+
+dds$replicates <- relevel(dds$replicates, "MKL1_EV_RNA")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("WaGa_EV_RNA_vs_MKL1_EV_RNA")
+
+dds$replicates <- relevel(dds$replicates, "WaGa_RNA")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("WaGa_EV_RNA_vs_WaGa_RNA")
+
+
+
+
+##https://bioconductor.statistik.tu-dortmund.de/packages/3.7/data/annotation/
+#BiocManager::install("EnsDb.Mmusculus.v79")
+#library(EnsDb.Mmusculus.v79)
+#edb <- EnsDb.Mmusculus.v79
+
+
+#https://bioconductor.org/packages/release/bioc/vignettes/biomaRt/inst/doc/accessing_ensembl.html#selecting-an-ensembl-biomart-database-and-dataset
+#https://bioconductor.org/packages/release/bioc/vignettes/biomaRt/inst/doc/accessing_ensembl.html#selecting-an-ensembl-biomart-database-and-dataset
+library(biomaRt)
+listEnsembl()
+listMarts()
+#ensembl <- useEnsembl(biomart = "genes", mirror="asia")  # default is Mouse strains 104
+#ensembl <- useEnsembl(biomart = "ensembl", dataset = "mmusculus_gene_ensembl", mirror = "www")
+#ensembl = useMart("ensembl_mart_44", dataset="hsapiens_gene_ensembl",archive=TRUE, mysql=TRUE)
+#ensembl <- useEnsembl(biomart = "ensembl", dataset = "mmusculus_gene_ensembl", version="104")
+#ensembl <- useEnsembl(biomart = "ensembl", dataset = "hsapiens_gene_ensembl", version="86")
+#ensembl <- useEnsembl(biomart = "ensembl", dataset = "hsapiens_gene_ensembl", version="GRCh37")
+#--> total 69, 27  GRCh38.p7 and 39  GRCm38.p4
+ensembl <- useEnsembl(biomart = "ensembl", dataset = "hsapiens_gene_ensembl", version="104")
+datasets <- listDatasets(ensembl)
+#--> total 202   80                         GRCh38.p13         107                            GRCm39
+#80           hsapiens_gene_ensembl                                      Human genes (GRCh38.p13)                         GRCh38.p13
+#107         mmusculus_gene_ensembl                                        Mouse genes (GRCm39)                            GRCm39
+
+
+
+> listEnsemblArchives()
+             name     date                                url version
+1  Ensembl GRCh37 Feb 2014          http://grch37.ensembl.org  GRCh37  *
+2     Ensembl 104 May 2021 http://may2021.archive.ensembl.org     104  *
+3     Ensembl 103 Feb 2021 http://feb2021.archive.ensembl.org     103
+4     Ensembl 102 Nov 2020 http://nov2020.archive.ensembl.org     102
+
+attributes = listAttributes(ensembl)
+attributes[1:25,]
+
+
+
+for (i in clist) {
+#i<-clist[1]
+  contrast = paste("replicates", i, sep="_")
+  res = results(dds, name=contrast)
+  res <- res[!is.na(res$log2FoldChange),]
+  #geness <- AnnotationDbi::select(edb86, keys = rownames(res), keytype = "GENEID", columns = c("ENTREZID","EXONID","GENEBIOTYPE","GENEID","GENENAME","PROTEINDOMAINSOURCE","PROTEINID","SEQNAME","SEQSTRAND","SYMBOL","TXBIOTYPE","TXID","TXNAME","UNIPROTID"))
+  #geness <- AnnotationDbi::select(edb86, keys = rownames(res), keytype = "GENEID", columns = c("GENEID", "ENTREZID", "SYMBOL", "GENENAME","GENEBIOTYPE","TXBIOTYPE","SEQSTRAND","UNIPROTID"))
+  # In the ENSEMBL-database, GENEID is ENSEMBL-ID.
+  #geness <- AnnotationDbi::select(edb86, keys = rownames(res), keytype = "GENEID", columns = c("GENEID", "SYMBOL", "GENEBIOTYPE"))  #  "ENTREZID", "TXID","TXBIOTYPE","TXSEQSTART","TXSEQEND"
+  #geness <- geness[!duplicated(geness$GENEID), ]
+  
+  #using getBM replacing AnnotationDbi::select
+  #filters = 'ensembl_gene_id' means the records should always have a valid ensembl_gene_ids.
+  geness <- getBM(attributes = c('ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'entrezgene_id', 'chromosome_name', 'start_position', 'end_position', 'strand', 'description'),
+      filters = 'ensembl_gene_id',
+      values = rownames(res), 
+      mart = ensembl)
+  geness_uniq <- distinct(geness, ensembl_gene_id, .keep_all= TRUE)
+  
+  #merge by column by common colunmn name, in the case "GENEID"
+  res$ENSEMBL = rownames(res)
+  identical(rownames(res), rownames(geness_uniq))
+  res_df <- as.data.frame(res)
+  geness_res <- merge(geness_uniq, res_df, by.x="ensembl_gene_id", by.y="ENSEMBL")
+  dim(geness_res)
+  rownames(geness_res) <- geness_res$ensembl_gene_id
+  geness_res$ensembl_gene_id <- NULL
+  write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "all.txt", sep="-"))
+  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
+  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-2)
+  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="-"))
+  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="-"))
+}
+
+
+
+
+
+# --------------------------------------------------------
+# ---- Volcano Plots with automatically finding top_g ----
+#A canonical visualization for interpreting differential gene expression results is the volcano plot.
+library(ggrepel) 
+
+geness_res <- read.csv(file = paste("WaGa_EV_RNA_vs_WaGa_RNA", "all.txt", sep="-"), row.names=1)
+geness_res$Color <- "NS or log2FC < 2.0"
+geness_res$Color[geness_res$pvalue < 0.05] <- "P < 0.05"
+geness_res$Color[geness_res$padj < 0.05] <- "P-adj < 0.05"
+geness_res$Color[geness_res$padj < 0.001] <- "P-adj < 0.001"
+geness_res$Color[abs(geness_res$log2FoldChange) < 2.0] <- "NS or log2FC < 2.0"
+geness_res$Color <- factor(geness_res$Color,
+                        levels = c("NS or log2FC < 2.0", "P < 0.05",
+                                   "P-adj < 0.05", "P-adj < 0.001"))
+
+geness_res$invert_P <- (-log10(geness_res$pvalue)) * sign(geness_res$log2FoldChange)
+top_g <- c()
+top_g <- c(top_g, geness_res[, 'external_gene_name'][order(geness_res[, 'invert_P'], decreasing = TRUE)[1:200]], geness_res[, 'external_gene_name'][order(geness_res[, 'invert_P'], decreasing = FALSE)[1:200]])
+top_g <- unique(top_g)
+geness_res <- geness_res[, -1*ncol(geness_res)]  #remove invert_P from matrix
+
+
+png("WaGa_EV_RNA_vs_WaGa_RNA.png",width=1400, height=1000)
+ggplot(geness_res,
+       aes(x = log2FoldChange, y = -log10(pvalue),
+           color = Color, label = external_gene_name)) +
+  geom_vline(xintercept = c(2.0, -2.0), lty = "dashed") +
+  geom_hline(yintercept = -log10(0.05), lty = "dashed") +
+  geom_point() +
+  labs(x = "log2(FC)",
+       y = "Significance, -log10(P)",
+       color = "Significance") +
+  scale_color_manual(values = c(`P-adj < 0.001` = "dodgerblue",
+                                `P-adj < 0.05` = "lightblue",
+                                `P < 0.05` = "orange2",
+                                `NS or log2FC < 2.0` = "gray"),
+                     guide = guide_legend(override.aes = list(size = 4))) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  geom_text_repel(data = subset(geness_res, external_gene_name %in% top_g & pvalue < 0.05 & (abs(geness_res$log2FoldChange) >= 2.0)),
+                  size = 4, point.padding = 0.15, color = "black",
+                  min.segment.length = .1, box.padding = .2, lwd = 2) +
+  theme_bw(base_size = 16) +
+  theme(legend.position = "bottom")
+dev.off()
+
+
+#sed -i -e 's/Color/Category/g' *_Category.csv
+
+
+
+
+
+
+
+#x <- data.frame(k1 = c(NA,3,4,5,2), k2 = c(1,NA,4,5,2), data = 6:10)
+#merge(x, y, by = "k2")
+
+#TODO next week from here!
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WaGa_RNA_vs_MKL1_RNA-all.txt \
+WaGa_RNA_vs_MKL1_RNA-up.txt \
+WaGa_RNA_vs_MKL1_RNA-down.txt \
+-d$',' -o WaGa_RNA_vs_MKL1_RNA.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+MKL1_EV_RNA_vs_MKL1_RNA-all.txt \
+MKL1_EV_RNA_vs_MKL1_RNA-up.txt \
+MKL1_EV_RNA_vs_MKL1_RNA-down.txt \
+-d$',' -o MKL1_EV_RNA_vs_MKL1_RNA.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WaGa_EV_RNA_vs_MKL1_EV_RNA-all.txt \
+WaGa_EV_RNA_vs_MKL1_EV_RNA-up.txt \
+WaGa_EV_RNA_vs_MKL1_EV_RNA-down.txt \
+-d$',' -o WaGa_EV_RNA_vs_MKL1_EV_RNA.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WaGa_EV_RNA_vs_WaGa_RNA-all.txt \
+WaGa_EV_RNA_vs_WaGa_RNA-up.txt \
+WaGa_EV_RNA_vs_WaGa_RNA-down.txt \
+-d$',' -o WaGa_EV_RNA_vs_WaGa_RNA.xls;
+
+
+
+
+
+# --------------------------------------------------------
+# -- clustering the genes and draw heatmap --
+install.packages("gplots")
+library("gplots")
+
+#Option3: as paper described, A heatmap showing expression values of all DEGs which are significant between any pair conditions.
+all_genes <- c(rownames(mock_sT_d8_vs_mock_sT_d3_sig),rownames(sT_d3_vs_mock_sT_d3_sig),rownames(sT_d8_vs_mock_sT_d8_sig),rownames(sT_d8_vs_sT_d3_sig))     #873
+all_genes <- unique(all_genes)   #663
+#all_genes2 <- c(rownames(WAC_vs_mock_sig),rownames(WAP_vs_mock_sig),rownames(WAC_vs_WAP_sig))   #3917
+#all_genes2 <- unique(all_genes2)   #2608
+#intersected_genes <- intersect(all_genes, all_genes2)  # 2608
+#RNASeq.NoCellLine <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
+RNASeq.NoCellLine_  <- RNASeq.NoCellLine[all_genes,]
+write.csv(as.data.frame(RNASeq.NoCellLine_), file ="gene_expression_keeping_replicates.txt")
+
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_sT_d3 = rowMeans(RNASeq.NoCellLine_[, 1:2]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_sT_d8 = rowMeans(RNASeq.NoCellLine_[, 3:4]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, sT_d3 = rowMeans(RNASeq.NoCellLine_[, 5:6]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, sT_d8 = rowMeans(RNASeq.NoCellLine_[, 7:8]))
+RNASeq.NoCellLine_ <- RNASeq.NoCellLine_[,c(-1:-8)]        #663x4
+#RNASeq.NoCellLine__ <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
+write.csv(as.data.frame(RNASeq.NoCellLine_), file ="gene_expression_merging_replicates.txt")
+
+
+
+cut -d',' -f1-1 WaGa_RNA_vs_MKL1_RNA-up.txt > WaGa_RNA_vs_MKL1_RNA-up.id
+cut -d',' -f1-1 WaGa_RNA_vs_MKL1_RNA-down.txt > WaGa_RNA_vs_MKL1_RNA-down.id
+cut -d',' -f1-1 MKL1_EV_RNA_vs_MKL1_RNA-up.txt > MKL1_EV_RNA_vs_MKL1_RNA-up.id
+cut -d',' -f1-1 MKL1_EV_RNA_vs_MKL1_RNA-down.txt > MKL1_EV_RNA_vs_MKL1_RNA-down.id
+cut -d',' -f1-1 WaGa_EV_RNA_vs_MKL1_EV_RNA-up.txt > WaGa_EV_RNA_vs_MKL1_EV_RNA-up.id
+cut -d',' -f1-1 WaGa_EV_RNA_vs_MKL1_EV_RNA-down.txt > WaGa_EV_RNA_vs_MKL1_EV_RNA-down.id
+cut -d',' -f1-1 WaGa_EV_RNA_vs_WaGa_RNA-up.txt > WaGa_EV_RNA_vs_WaGa_RNA-up.id
+cut -d',' -f1-1 WaGa_EV_RNA_vs_WaGa_RNA-down.txt > WaGa_EV_RNA_vs_WaGa_RNA-down.id
+
+   571 MKL1_EV_RNA_vs_MKL1_RNA-down.id
+ 16443 MKL1_EV_RNA_vs_MKL1_RNA-up.id
+    92 WaGa_EV_RNA_vs_MKL1_EV_RNA-down.id
+   114 WaGa_EV_RNA_vs_MKL1_EV_RNA-up.id
+   324 WaGa_EV_RNA_vs_WaGa_RNA-down.id
+ 19911 WaGa_EV_RNA_vs_WaGa_RNA-up.id
+   690 WaGa_RNA_vs_MKL1_RNA-down.id
+   761 WaGa_RNA_vs_MKL1_RNA-up.id
+ 38906 total
+38906 ids
+
+ 
+
+#add Gene_Id in the first line.
+GOI <- read.csv("ids")$Gene_Id
+RNASeq.NoCellLine <- assay(rld)
+
+#clustering methods: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).  pearson or spearman
+datamat = RNASeq.NoCellLine[GOI, ]
+hr <- hclust(as.dist(1-cor(t(datamat), method="pearson")), method="complete")
+hc <- hclust(as.dist(1-cor(datamat, method="spearman")), method="complete")
+mycl = cutree(hr, h=max(hr$height)/1.05)
+mycol = c("YELLOW", "DARKBLUE", "DARKORANGE", "DARKMAGENTA", "DARKCYAN", "DARKRED",  "MAROON", "DARKGREEN", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN","LIGHTGREEN", "BLUE", "ORANGE", "CYAN", "RED", "GREEN");
+
+mycol = mycol[as.vector(mycl)]
+sampleCols <- rep('GREY',ncol(datamat))
+names(sampleCols) <- c("WaGa_RNA","WaGa_RNA_118","WaGa_RNA_147",  "MKL1_RNA","MKL1_RNA_118","MKL1_RNA_147",  "WaGa_EV_RNA","WaGa_EV_RNA_2","WaGa_EV_RNA_118","WaGa_EV_RNA_147","WaGa_EV_RNA_226",  "MKL1_EV_RNA","MKL1_EV_RNA_2","MKL1_EV_RNA_27","MKL1_EV_RNA_87","MKL1_EV_RNA_118")
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,4)=='mock'] <- 'GREY'
+
+sampleCols["WaGa_RNA"] <- 'DARKBLUE'
+sampleCols["WaGa_RNA_118"] <- 'DARKBLUE'
+sampleCols["WaGa_RNA_147"] <- 'DARKBLUE'
+
+sampleCols["MKL1_RNA"] <- 'DARKRED'
+sampleCols["MKL1_RNA_118"] <- 'DARKRED'
+sampleCols["MKL1_RNA_147"] <- 'DARKRED'
+
+sampleCols["WaGa_EV_RNA"] <- 'DARKORANGE'
+sampleCols["WaGa_EV_RNA_2"] <- 'DARKORANGE'
+sampleCols["WaGa_EV_RNA_118"] <- 'DARKORANGE'
+sampleCols["WaGa_EV_RNA_147"] <- 'DARKORANGE'
+sampleCols["WaGa_EV_RNA_226"] <- 'DARKORANGE'
+
+sampleCols["MKL1_EV_RNA"] <- 'DARKGREEN'
+sampleCols["MKL1_EV_RNA_2"] <- 'DARKGREEN'
+sampleCols["MKL1_EV_RNA_27"] <- 'DARKGREEN'
+sampleCols["MKL1_EV_RNA_87"] <- 'DARKGREEN'
+sampleCols["MKL1_EV_RNA_118"] <- 'DARKGREEN'
+
+png("DEGs_heatmap.png", width=1000, height=1200)
+heatmap.2(as.matrix(datamat),Rowv=as.dendrogram(hr),Colv = NA, dendrogram = 'row',
+            scale='row',trace='none',col=bluered(75), 
+            RowSideColors = mycol, ColSideColors = sampleCols, labRow="", margins=c(22,10), cexRow=8, cexCol=2, srtCol=45, lwid=c(1,7), lhei = c(1, 8))
+legend("top", title = "",legend=c("WaGa_RNA","MKL1_RNA","WaGa_EV_RNA","MKL1_EV_RNA"), fill=c("DARKBLUE","DARKRED","DARKORANGE","DARKGREEN"), cex=0.8, box.lty=0)
+dev.off()
+
+
+
+
+
+#-- cluster members --
+#c("YELLOW", "DARKBLUE", "DARKORANGE", "DARKMAGENTA", "DARKCYAN", "DARKRED",  "MAROON", "DARKGREEN", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN","LIGHTGREEN", "BLUE", "ORANGE", "CYAN", "RED", "GREEN");
+write.csv(names(subset(mycl, mycl == '1')),file='cluster1_YELLOW.txt')
+write.csv(names(subset(mycl, mycl == '2')),file='cluster2_DARKBLUE.txt') 
+write.csv(names(subset(mycl, mycl == '3')),file='cluster3_DARKORANGE.txt')  
+write.csv(names(subset(mycl, mycl == '4')),file='cluster4_DARKMAGENTA.txt') 
+write.csv(names(subset(mycl, mycl == '5')),file='cluster5_DARKCYAN.txt')  
+#~/Tools/csv2xls-0.4/csv_to_xls.py cluster*.txt -d',' -o genelist_clusters.xls
+
+
+
+
+
+
+# --------------------------------------------------------
+# ---- Pathways ----
+mkdir pathways
+
+#--continue from BREAK POINT--
+##
+#source("https://bioconductor.org/biocLite.R") 
+#biocLite("AnnotationDbi")
+library("clusterProfiler")
+library("ReactomePA")
+setwd("~/DATA/Data_Anastasia_RNASeq/results/featureCounts/pathways")
+
+for sample in WaGa_RNA_vs_MKL1_RNA MKL1_EV_RNA_vs_MKL1_RNA WaGa_EV_RNA_vs_MKL1_EV_RNA WaGa_EV_RNA_vs_WaGa_RNA; do \
+echo "${sample}_up <- read.csv('../degenes/${sample}-up.txt', row.names=1)"
+echo "${sample}_up_KEGG <- enrichKEGG(${sample}_up\$entrezgene_id)"
+echo "write.table(as.data.frame(${sample}_up_KEGG), file = '${sample}_up_KEGG.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_down <- read.csv('../degenes/${sample}-down.txt', row.names=1)"
+echo "${sample}_down_KEGG <- enrichKEGG(${sample}_down\$entrezgene_id)"
+echo "write.table(as.data.frame(${sample}_down_KEGG), file = '${sample}_down_KEGG.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_sig <- rbind(${sample}_up, ${sample}_down)"
+echo "${sample}_sig_KEGG <- enrichKEGG(${sample}_sig\$entrezgene_id)"
+echo "write.table(as.data.frame(${sample}_sig_KEGG), file = '${sample}_sig_KEGG.txt', sep = '\t', row.names = FALSE)"
+done
+
+
+WaGa_RNA_vs_MKL1_RNA_up <- read.csv('../degenes/WaGa_RNA_vs_MKL1_RNA-up.txt', row.names=1)                                                                                                               
+WaGa_RNA_vs_MKL1_RNA_up_KEGG <- enrichKEGG(WaGa_RNA_vs_MKL1_RNA_up$entrezgene_id)                                                                                                                        
+write.table(as.data.frame(WaGa_RNA_vs_MKL1_RNA_up_KEGG), file = 'WaGa_RNA_vs_MKL1_RNA_up_KEGG.txt', sep = '\t', row.names = FALSE)                                                                       
+WaGa_RNA_vs_MKL1_RNA_down <- read.csv('../degenes/WaGa_RNA_vs_MKL1_RNA-down.txt', row.names=1)                                                                                                           
+WaGa_RNA_vs_MKL1_RNA_down_KEGG <- enrichKEGG(WaGa_RNA_vs_MKL1_RNA_down$entrezgene_id)                                                                                                                    
+write.table(as.data.frame(WaGa_RNA_vs_MKL1_RNA_down_KEGG), file = 'WaGa_RNA_vs_MKL1_RNA_down_KEGG.txt', sep = '\t', row.names = FALSE)                                                                   
+WaGa_RNA_vs_MKL1_RNA_sig <- rbind(WaGa_RNA_vs_MKL1_RNA_up, WaGa_RNA_vs_MKL1_RNA_down)
+WaGa_RNA_vs_MKL1_RNA_sig_KEGG <- enrichKEGG(WaGa_RNA_vs_MKL1_RNA_sig$entrezgene_id)
+write.table(as.data.frame(WaGa_RNA_vs_MKL1_RNA_sig_KEGG), file = 'WaGa_RNA_vs_MKL1_RNA_sig_KEGG.txt', sep = '\t', row.names = FALSE)
+MKL1_EV_RNA_vs_MKL1_RNA_up <- read.csv('../degenes/MKL1_EV_RNA_vs_MKL1_RNA-up.txt', row.names=1)
+MKL1_EV_RNA_vs_MKL1_RNA_up_KEGG <- enrichKEGG(MKL1_EV_RNA_vs_MKL1_RNA_up$entrezgene_id)
+write.table(as.data.frame(MKL1_EV_RNA_vs_MKL1_RNA_up_KEGG), file = 'MKL1_EV_RNA_vs_MKL1_RNA_up_KEGG.txt', sep = '\t', row.names = FALSE)
+MKL1_EV_RNA_vs_MKL1_RNA_down <- read.csv('../degenes/MKL1_EV_RNA_vs_MKL1_RNA-down.txt', row.names=1)
+MKL1_EV_RNA_vs_MKL1_RNA_down_KEGG <- enrichKEGG(MKL1_EV_RNA_vs_MKL1_RNA_down$entrezgene_id)
+write.table(as.data.frame(MKL1_EV_RNA_vs_MKL1_RNA_down_KEGG), file = 'MKL1_EV_RNA_vs_MKL1_RNA_down_KEGG.txt', sep = '\t', row.names = FALSE)
+MKL1_EV_RNA_vs_MKL1_RNA_sig <- rbind(MKL1_EV_RNA_vs_MKL1_RNA_up, MKL1_EV_RNA_vs_MKL1_RNA_down)
+MKL1_EV_RNA_vs_MKL1_RNA_sig_KEGG <- enrichKEGG(MKL1_EV_RNA_vs_MKL1_RNA_sig$entrezgene_id)
+write.table(as.data.frame(MKL1_EV_RNA_vs_MKL1_RNA_sig_KEGG), file = 'MKL1_EV_RNA_vs_MKL1_RNA_sig_KEGG.txt', sep = '\t', row.names = FALSE)
+WaGa_EV_RNA_vs_MKL1_EV_RNA_up <- read.csv('../degenes/WaGa_EV_RNA_vs_MKL1_EV_RNA-up.txt', row.names=1)
+WaGa_EV_RNA_vs_MKL1_EV_RNA_up_KEGG <- enrichKEGG(WaGa_EV_RNA_vs_MKL1_EV_RNA_up$entrezgene_id)
+write.table(as.data.frame(WaGa_EV_RNA_vs_MKL1_EV_RNA_up_KEGG), file = 'WaGa_EV_RNA_vs_MKL1_EV_RNA_up_KEGG.txt', sep = '\t', row.names = FALSE)
+WaGa_EV_RNA_vs_MKL1_EV_RNA_down <- read.csv('../degenes/WaGa_EV_RNA_vs_MKL1_EV_RNA-down.txt', row.names=1)
+WaGa_EV_RNA_vs_MKL1_EV_RNA_down_KEGG <- enrichKEGG(WaGa_EV_RNA_vs_MKL1_EV_RNA_down$entrezgene_id)
+write.table(as.data.frame(WaGa_EV_RNA_vs_MKL1_EV_RNA_down_KEGG), file = 'WaGa_EV_RNA_vs_MKL1_EV_RNA_down_KEGG.txt', sep = '\t', row.names = FALSE)
+WaGa_EV_RNA_vs_MKL1_EV_RNA_sig <- rbind(WaGa_EV_RNA_vs_MKL1_EV_RNA_up, WaGa_EV_RNA_vs_MKL1_EV_RNA_down)
+WaGa_EV_RNA_vs_MKL1_EV_RNA_sig_KEGG <- enrichKEGG(WaGa_EV_RNA_vs_MKL1_EV_RNA_sig$entrezgene_id)
+write.table(as.data.frame(WaGa_EV_RNA_vs_MKL1_EV_RNA_sig_KEGG), file = 'WaGa_EV_RNA_vs_MKL1_EV_RNA_sig_KEGG.txt', sep = '\t', row.names = FALSE)
+WaGa_EV_RNA_vs_WaGa_RNA_up <- read.csv('../degenes/WaGa_EV_RNA_vs_WaGa_RNA-up.txt', row.names=1)
+WaGa_EV_RNA_vs_WaGa_RNA_up_KEGG <- enrichKEGG(WaGa_EV_RNA_vs_WaGa_RNA_up$entrezgene_id)
+write.table(as.data.frame(WaGa_EV_RNA_vs_WaGa_RNA_up_KEGG), file = 'WaGa_EV_RNA_vs_WaGa_RNA_up_KEGG.txt', sep = '\t', row.names = FALSE)
+WaGa_EV_RNA_vs_WaGa_RNA_down <- read.csv('../degenes/WaGa_EV_RNA_vs_WaGa_RNA-down.txt', row.names=1)
+WaGa_EV_RNA_vs_WaGa_RNA_down_KEGG <- enrichKEGG(WaGa_EV_RNA_vs_WaGa_RNA_down$entrezgene_id)
+write.table(as.data.frame(WaGa_EV_RNA_vs_WaGa_RNA_down_KEGG), file = 'WaGa_EV_RNA_vs_WaGa_RNA_down_KEGG.txt', sep = '\t', row.names = FALSE)
+WaGa_EV_RNA_vs_WaGa_RNA_sig <- rbind(WaGa_EV_RNA_vs_WaGa_RNA_up, WaGa_EV_RNA_vs_WaGa_RNA_down)
+WaGa_EV_RNA_vs_WaGa_RNA_sig_KEGG <- enrichKEGG(WaGa_EV_RNA_vs_WaGa_RNA_sig$entrezgene_id)
+write.table(as.data.frame(WaGa_EV_RNA_vs_WaGa_RNA_sig_KEGG), file = 'WaGa_EV_RNA_vs_WaGa_RNA_sig_KEGG.txt', sep = '\t', row.names = FALSE)
+
+
+png("pathways_KEGG.png",width=1260, height=1000)
+merged_list <- merge_result(list('WaGa_RNA vs MKL1_RNA'=WaGa_RNA_vs_MKL1_RNA_sig_KEGG, 'MKL1_EV_RNA vs MKL1_RNA'=MKL1_EV_RNA_vs_MKL1_RNA_sig_KEGG, 'WaGa_EV_RNA vs MKL1_EV_RNA'=WaGa_EV_RNA_vs_MKL1_EV_RNA_sig_KEGG, 'WaGa_EV_RNA vs WaGa_RNA'=WaGa_EV_RNA_vs_WaGa_RNA_sig_KEGG))
+dotplot(merged_list, showCategory=1000)    #, font.size=6, srt = 35
+dev.off()
+
+
+# under CONSOLE
+cd pathways_KEGG
+~/Tools/csv2xls-0.4/csv_to_xls.py WaGa_RNA_vs_MKL1_RNA_sig_KEGG.txt MKL1_EV_RNA_vs_MKL1_RNA_sig_KEGG.txt WaGa_EV_RNA_vs_MKL1_EV_RNA_sig_KEGG.txt WaGa_EV_RNA_vs_WaGa_RNA_sig_KEGG.txt -d$'\t' -o pathways_KEGG.xls
+
+
+
+
+Dear Nicole, dear Ute,
+
+Attached are the results of RNASeq and smallRNA-seq. 
+The results of RNASeq is comprehensive. The most important parts are in 
+- multiqc_report.html (quality report)
+- R_scripts (plots and tables)
+- bigWigs (for IGV, the reference is hg38)
+
+I will explain the results in more detail tomorrow.
+
+Best,
+Jiabin
+
+
+
+(rnaseq) jhuang@hamburg:~/DATA/Data_Ute_RNASeq/degenes_38_all$ wc -l *-up.id
+ 16443 MKL1_EV_RNA_vs_MKL1_RNA-up.id
+   114 WaGa_EV_RNA_vs_MKL1_EV_RNA-up.id
+ 19911 WaGa_EV_RNA_vs_WaGa_RNA-up.id
+   761 WaGa_RNA_vs_MKL1_RNA-up.id
+ 37229 total
+(rnaseq) jhuang@hamburg:~/DATA/Data_Ute_RNASeq/degenes_38_all$ wc -l *-down.id
+  571 MKL1_EV_RNA_vs_MKL1_RNA-down.id
+   92 WaGa_EV_RNA_vs_MKL1_EV_RNA-down.id
+  324 WaGa_EV_RNA_vs_WaGa_RNA-down.id
+  690 WaGa_RNA_vs_MKL1_RNA-down.id
+ 1677 total
+(rnaseq) jhuang@hamburg:~/DATA/Data_Ute_RNASeq/degenes_38_all$ wc -l ids
+23228 ids
+inspiration
+
+#crystallography
+
+quality report of the RNASeq data.
+
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WaGa_EV_miRNA.fastq.stats \
+WaGa_EV_miRNA.fastq.qcResult \
+MKL1_EV_miRNA.fastq.stats \
+MKL1_EV_miRNA.fastq.qcResult \
+-d$'\t' -o EV_miRNA_overview.xls;
+
+
+
+
+
+
+setwd("~/DATA/Data_Anastasia_RNASeq/results/featureCounts/GOs")
+for sample in IKK1_vs_Cre IKK2_vs_Cre Nemo_vs_Cre NIK_vs_Cre; do \
+echo "${sample}_up <- read.csv('../degenes/${sample}-up.txt', row.names=1)"
+echo "${sample}_up_GO_BP <- enrichGO(${sample}_up\$entrezgene_id, 'org.Mm.eg.db', ont='BP')"
+echo "${sample}_up_GO_MF <- enrichGO(${sample}_up\$entrezgene_id, 'org.Mm.eg.db', ont='MF')"
+echo "${sample}_up_GO_CC <- enrichGO(${sample}_up\$entrezgene_id, 'org.Mm.eg.db', ont='CC')"
+#echo "${sample}_up_GO_ALL <- enrichGO(${sample}_up\$entrezgene_id, 'org.Mm.eg.db', ont='ALL')"
+echo "write.table(as.data.frame(${sample}_up_GO_BP), file = '${sample}_up_GO_BP.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_up_GO_MF), file = '${sample}_up_GO_MF.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_up_GO_CC), file = '${sample}_up_GO_CC.txt', sep = '\t', row.names = FALSE)"
+#echo "write.table(as.data.frame(${sample}_up_GO_ALL), file = '${sample}_up_GO_ALL.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_down <- read.csv('../degenes/${sample}-down.txt', row.names=1)"
+echo "${sample}_down_GO_BP <- enrichGO(${sample}_down\$entrezgene_id, 'org.Mm.eg.db', ont='BP')"
+echo "${sample}_down_GO_MF <- enrichGO(${sample}_down\$entrezgene_id, 'org.Mm.eg.db', ont='MF')"
+echo "${sample}_down_GO_CC <- enrichGO(${sample}_down\$entrezgene_id, 'org.Mm.eg.db', ont='CC')"
+#echo "${sample}_down_GO_ALL <- enrichGO(${sample}_down\$entrezgene_id, 'org.Mm.eg.db', ont='ALL')"
+echo "write.table(as.data.frame(${sample}_down_GO_BP), file = '${sample}_down_GO_BP.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_down_GO_MF), file = '${sample}_down_GO_MF.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_down_GO_CC), file = '${sample}_down_GO_CC.txt', sep = '\t', row.names = FALSE)"
+#echo "write.table(as.data.frame(${sample}_down_GO_ALL), file = '${sample}_down_GO_ALL.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_sig <- rbind(${sample}_up, ${sample}_down)"
+echo "${sample}_sig_GO_BP <- enrichGO(${sample}_sig\$entrezgene_id, 'org.Mm.eg.db', ont='BP')"
+echo "${sample}_sig_GO_MF <- enrichGO(${sample}_sig\$entrezgene_id, 'org.Mm.eg.db', ont='MF')"
+echo "${sample}_sig_GO_CC <- enrichGO(${sample}_sig\$entrezgene_id, 'org.Mm.eg.db', ont='CC')"
+#echo "${sample}_sig_GO_ALL <- enrichGO(${sample}_sig\$entrezgene_id, 'org.Mm.eg.db', ont='ALL')"
+echo "write.table(as.data.frame(${sample}_sig_GO_BP), file = '${sample}_sig_GO_BP.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_sig_GO_MF), file = '${sample}_sig_GO_MF.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_sig_GO_CC), file = '${sample}_sig_GO_CC.txt', sep = '\t', row.names = FALSE)"
+#echo "write.table(as.data.frame(${sample}_sig_GO_ALL), file = '${sample}_sig_GO_ALL.txt', sep = '\t', row.names = FALSE)"
+done
+
+png("GOs_BP.png",width=3000, height=24000)
+merged_list <- merge_result(list('IKK1_vs_Cre_up'=IKK1_vs_Cre_up_GO_BP, 'IKK1_vs_Cre_down'=IKK1_vs_Cre_down_GO_BP, 'IKK1_vs_Cre_sig'=IKK1_vs_Cre_sig_GO_BP, 'IKK2_vs_Cre_up'=IKK2_vs_Cre_up_GO_BP, 'IKK2_vs_Cre_down'=IKK2_vs_Cre_down_GO_BP, 'IKK2_vs_Cre_sig'=IKK2_vs_Cre_sig_GO_BP, 'Nemo_vs_Cre_up'= Nemo_vs_Cre_up_GO_BP, 'Nemo_vs_Cre_down'=Nemo_vs_Cre_down_GO_BP, 'Nemo_vs_Cre_sig'=Nemo_vs_Cre_sig_GO_BP, 'NIK_vs_Cre_up'=NIK_vs_Cre_up_GO_BP, 'NIK_vs_Cre_down'=NIK_vs_Cre_down_GO_BP, 'NIK_vs_Cre_sig'=NIK_vs_Cre_sig_GO_BP))
+dotplot(merged_list, showCategory=10000)
+dev.off()
+
+# under CONSOLE
+#   
+cd GOs
+~/Tools/csv2xls-0.4/csv_to_xls.py IKK1_vs_Cre_up_GO_BP.txt IKK1_vs_Cre_down_GO_BP.txt IKK1_vs_Cre_sig_GO_BP.txt  IKK2_vs_Cre_up_GO_BP.txt IKK2_vs_Cre_down_GO_BP.txt IKK2_vs_Cre_sig_GO_BP.txt  Nemo_vs_Cre_up_GO_BP.txt Nemo_vs_Cre_down_GO_BP.txt Nemo_vs_Cre_sig_GO_BP.txt  NIK_vs_Cre_up_GO_BP.txt NIK_vs_Cre_down_GO_BP.txt NIK_vs_Cre_sig_GO_BP.txt  -d$'\t' -o GOs_BP.xls
+~/Tools/csv2xls-0.4/csv_to_xls.py IKK1_vs_Cre_up_GO_MF.txt IKK1_vs_Cre_down_GO_MF.txt IKK1_vs_Cre_sig_GO_MF.txt  IKK2_vs_Cre_up_GO_MF.txt IKK2_vs_Cre_down_GO_MF.txt IKK2_vs_Cre_sig_GO_MF.txt  Nemo_vs_Cre_up_GO_MF.txt Nemo_vs_Cre_down_GO_MF.txt Nemo_vs_Cre_sig_GO_MF.txt  NIK_vs_Cre_up_GO_MF.txt NIK_vs_Cre_down_GO_MF.txt NIK_vs_Cre_sig_GO_MF.txt  -d$'\t' -o GOs_MF.xls
+~/Tools/csv2xls-0.4/csv_to_xls.py IKK1_vs_Cre_up_GO_CC.txt IKK1_vs_Cre_down_GO_CC.txt IKK1_vs_Cre_sig_GO_CC.txt  IKK2_vs_Cre_up_GO_CC.txt IKK2_vs_Cre_down_GO_CC.txt IKK2_vs_Cre_sig_GO_CC.txt  Nemo_vs_Cre_up_GO_CC.txt Nemo_vs_Cre_down_GO_CC.txt Nemo_vs_Cre_sig_GO_CC.txt  NIK_vs_Cre_up_GO_CC.txt NIK_vs_Cre_down_GO_CC.txt NIK_vs_Cre_sig_GO_CC.txt  -d$'\t' -o GOs_CC.xls
+
+
