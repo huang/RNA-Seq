@@ -1,0 +1,964 @@
+Dear Jiabin,
+
+I hope you are doing good, sorry for bothering you with this long email. I´m writing you because we have started analysing the results you sent us and there are a lot of datas (really interesting by the way!). Since the amount of data is so big, I´d like to ask you:
+
+In the excell file of "Volcan Plots" that you send us, is it possible to filter that list in order to create a new list only for lysosomal genes? (using the 891_lysosomalautophagy_relatedgenes file excell that you alrready have).
+
+And from the total gene list, is it possible to filter it only for TFEB target genes?  (using the 471_TFEB_genelist file excell).
+
+
+I don't know if this is too much work for you, but would it be possible to create a volcano plot in which only the lysosomal genes are shown? (and TFEB known target genes, maybe with another colour of the dots)
+
+common colors if they occur both on 891_lysosomal_genes (one color) and 471_TFEB_genes (another color).
+
+
+it would be very useful for us to start from this kind of lists as we are interested in the change  of lysosomes and TFEB genes target.
+
+
+# volcano list + plus chosen representative genes ()
+
+
+
+Hi Jiabin,
+
+sorry I just realize that I have written my second request in a wrong way:
+"And from this new list, is it possible to filter it only for TFEB target genes?  (using the 471_TFEB_genelist file excell)" it is not right, what I meant it is from the total gene list, can you filter it for TFEB target genes? (using the 471_TFEB_genelist file excell). 
+
+I hope it is understandable 😊
+Have a nice day,
+
+Anastasia
+
+
+
+
+
+HeLa_TO_1_S1_R1_001.fastq.gz          K3R_C8_3h_dox_plus_21h_chase_1_S4_R1_001.fastq.gz   tb30  tb36  WT_C8_24h_dox_1_S3_R1_001.fastq.gz                                 
+HeLa_TO_2_S6_R1_001.fastq.gz          K3R_C8_3h_dox_plus_21h_chase_2_S9_R1_001.fastq.gz   tb31  tb37  WT_C8_24h_dox_2_S8_R1_001.fastq.gz                                 
+HeLa_TO_3_S11_R1_001.fastq.gz         K3R_C8_3h_dox_plus_21h_chase_3_S14_R1_001.fastq.gz  tb32  tb38  WT_C8_24h_dox_3_S13_R1_001.fastq.gz                                
+K3R_C8_24h_dox_1_S5_R1_001.fastq.gz   tb27                                                tb33  tb39  WT_C8_3h_dox_plus_21h_chase_1_S2_R1_001.fastq.gz                   
+K3R_C8_24h_dox_2_S10_R1_001.fastq.gz  tb28                                                tb34  tb40  WT_C8_3h_dox_plus_21h_chase_2_S7_R1_001.fastq.gz                   
+K3R_C8_24h_dox_3_S15_R1_001.fastq.gz  tb29                                                tb35  tb41  WT_C8_3h_dox_plus_21h_chase_3_S12_R1_001.fastq.gz  
+
+
+ln -s ../Raw_Data_Orig/HeLa_TO_1_S1_R1_001.fastq.gz HeLa_TO_r1.fastq.gz                                                                                    
+ln -s ../Raw_Data_Orig/HeLa_TO_2_S6_R1_001.fastq.gz HeLa_TO_r2.fastq.gz                                                         
+ln -s ../Raw_Data_Orig/HeLa_TO_3_S11_R1_001.fastq.gz HeLa_TO_r3.fastq.gz                                                                                 
+
+ln -s ../Raw_Data_Orig/K3R_C8_24h_dox_1_S5_R1_001.fastq.gz      K3R_C8_24h_dox_r1.fastq.gz                                                                      
+ln -s ../Raw_Data_Orig/K3R_C8_24h_dox_2_S10_R1_001.fastq.gz     K3R_C8_24h_dox_r2.fastq.gz                                                                       
+ln -s ../Raw_Data_Orig/K3R_C8_24h_dox_3_S15_R1_001.fastq.gz     K3R_C8_24h_dox_r3.fastq.gz
+
+ln -s ../Raw_Data_Orig/K3R_C8_3h_dox_plus_21h_chase_1_S4_R1_001.fastq.gz   K3R_C8_3h_dox_plus_21h_chase_r1.fastq.gz
+ln -s ../Raw_Data_Orig/K3R_C8_3h_dox_plus_21h_chase_2_S9_R1_001.fastq.gz   K3R_C8_3h_dox_plus_21h_chase_r2.fastq.gz
+ln -s ../Raw_Data_Orig/K3R_C8_3h_dox_plus_21h_chase_3_S14_R1_001.fastq.gz  K3R_C8_3h_dox_plus_21h_chase_r3.fastq.gz
+
+ln -s ../Raw_Data_Orig/WT_C8_24h_dox_1_S3_R1_001.fastq.gz   WT_C8_24h_dox_r1.fastq.gz
+ln -s ../Raw_Data_Orig/WT_C8_24h_dox_2_S8_R1_001.fastq.gz   WT_C8_24h_dox_r2.fastq.gz
+ln -s ../Raw_Data_Orig/WT_C8_24h_dox_3_S13_R1_001.fastq.gz  WT_C8_24h_dox_r3.fastq.gz
+
+ln -s ../Raw_Data_Orig/WT_C8_3h_dox_plus_21h_chase_1_S2_R1_001.fastq.gz    WT_C8_3h_dox_plus_21h_chase_r1.fastq.gz
+ln -s ../Raw_Data_Orig/WT_C8_3h_dox_plus_21h_chase_2_S7_R1_001.fastq.gz    WT_C8_3h_dox_plus_21h_chase_r2.fastq.gz
+ln -s ../Raw_Data_Orig/WT_C8_3h_dox_plus_21h_chase_3_S12_R1_001.fastq.gz   WT_C8_3h_dox_plus_21h_chase_r3.fastq.gz
+
+
+ln -s /home/jhuang/Tools/rnaseq rnaseq
+nextflow run rnaseq --reads "/home/jhuang/DATA/Data_Anastasia_RNASeq/Raw_Data/*.fastq.gz" --fasta "/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_biotype  -resume
+
+
+### STAR   --runMode genomeGenerate   --runThreadN 10   --genomeDir star/   --genomeFastaFiles genome.fa      --sjdbGTFfile genes.gtf   --sjdbOverhang 149
+versionGenome   20201
+
+https://sydney-informatics-hub.github.io/training-RNAseq/02-BuildAGenomeIndex/index.html
+
+STAR --runThreadN 15 --runMode genomeGenerate --genomeDir /ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex --genomeFastaFiles /ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa --sjdbGTFfile /ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf
+
+
+/ref/Homo_sapiens/Ensembl/GRCh37/Sequence$ STAR --runThreadN 15 --runMode genomeGenerate --genomeDir /ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex --genomeFastaFiles /ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa --sjdbGTFfile /ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf
+
+/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta
+
+
+
+#------ the used command! ------
+nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Anastasia_RNASeq/Raw_Data/*.fastq.gz' --fasta /ref/Homo_sapiens/Ensembl/GRCh38/Sequence/WholeGenomeFasta/genome.fa --gtf /ref/Homo_sapiens/Ensembl/GRCh38/Annotation/Genes/genes.gtf --star_index /ref/Homo_sapiens/Ensembl/GRCh38/Sequence/STARIndex/ --bed12 /ref/Homo_sapiens/Ensembl/GRCh38/Annotation/Genes/genes.bed --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_biotype --skip_genebody_coverage -resume
+
+
+
+
+
+mv MultiQC ../results_38_deleted
+mv pipeline_info ../results_38_deleted
+mv STAR ../results_38_deleted
+mv rseqc/read_distribution ../results_38_deleted
+mv markDuplicates/metrics ../results_38_deleted
+mv fastqc ../results_38_deleted
+mv stringtieFPKM ../results_38_deleted
+#Note that sequence counts occurs twice in the results, featureCounts (16,9m/68.0%=24,85m), Biotype_Counts(17 m) and FastQC/Sequence_Counts (16,03m/74,8%=21,4m after quality control and filtering).
+#Note that Dups only uses the FastQC-results
+
+#cp ~/DATA/results_description.html ./
+
+
+#commented  Sequence Counts
+#commented  <div class="mqc-section mqc-section-fastqc">
+
+#Per Base Sequence Content
+
+ln -s ~/Tools/rnaseq/assets/multiqc_config.yaml multiqc_config.yaml
+multiqc -f --config multiqc_config.yaml . 2>&1
+rm multiqc_config.yaml
+
+
+
+
+
+#--------- Vorgabe ------------
+control vs. WT 3h dox + 21h chase
+control vs. WT 24h chase
+control vs. K3R 3h dox + 21h chase
+control vs. K3R 24h chase
+
+WT 3h dox + 21h chase vs. WT 24h
+K3R 3h dox + 21h chase vs. K3R 24h
+
+WT 3h dox + 21h chase vs. K3R 3h dox +  21 chase
+WT 24h dox vs K3R 24h dox
+
+
+VENN diagram
+Heatmap
+Volcano plot
+
+GO tree/term analysis
+KEGG pathway analysis
+
+
+List of TFEB 471 target genes
+List of 891 lysosomal and autophagy related genes
+List of verified lysosomal genes
+#-----------------------------------------
+
+
+#https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007940
+
+#### -------
+setwd("/home/jhuang/DATA/Data_Anastasia_RNASeq/results/featureCounts")
+
+library("AnnotationDbi")
+library("clusterProfiler")
+library("ReactomePA")
+#library("org.Hs.eg.db")
+library(DESeq2)
+library(gplots)
+
+
+
+#Once you are back next week, we should talk about a few projects. One is the project of Ute and the exosome cargo characterization. I usually meet with Ute Friday Morning at 9am. If you have time you could join next Friday and we can discuss this project.
+
+#The second project (involving mainly Susanne Pfefferle, Martin Aepfelbacher and a bit myself) is a SARS-CoV-2 project in which Susanne has performed spatial transcriptomics (Nanostring) with Carotis autopsy samples from SARS-CoV-2 infected and control patients. She recently received the results, very interesting data. However, although she can do lots of analysis using the Nanostring server and the software located on their server , I would feel much more confident with the data with your expertise integrated in the project/analysis.
+
+#The project is already ongoing for quite some time with ups and downs which would make a zoom meeting between Susanne, you and myself very helpful. Susanne can present the background of the project and more importantly what we are trying to answer with the nanostring spatial transcriptomics. To find a time for the zoom I will send a doodle….
+
+#The third project is the RSV project. I will look at the data this afternoon and will send you an update on this later.
+
+
+ 
+
+#colnames(d.raw)<- c("gene_name","WT_C8_24h_dox_r3","K3R_C8_3h_dox_plus_21h_chase_r1","K3R_C8_3h_dox_plus_21h_chase_r3","K3R_C8_24h_dox_r1","WT_C8_3h_dox_plus_21h_chase_r3","WT_C8_3h_dox_plus_21h_chase_r1","HeLa_TO_r1","WT_C8_24h_dox_r1","K3R_C8_3h_dox_plus_21h_chase_r2","WT_C8_24h_dox_r2","HeLa_TO_r2","K3R_C8_24h_dox_r3","WT_C8_3h_dox_plus_21h_chase_r2","K3R_C8_24h_dox_r2","HeLa_TO_r3")
+#col_order <- c("gene_name",  "HeLa_TO_r1","HeLa_TO_r2","HeLa_TO_r3",  "WT_C8_3h_dox_plus_21h_chase_r1","WT_C8_3h_dox_plus_21h_chase_r2","WT_C8_3h_dox_plus_21h_chase_r3",  "WT_C8_24h_dox_r1","WT_C8_24h_dox_r2","WT_C8_24h_dox_r3",  "K3R_C8_3h_dox_plus_21h_chase_r1","K3R_C8_3h_dox_plus_21h_chase_r2","K3R_C8_3h_dox_plus_21h_chase_r3",  "K3R_C8_24h_dox_r1","K3R_C8_24h_dox_r2","K3R_C8_24h_dox_r3")
+
+
+d.raw<- read.delim2("merged_gene_counts.txt",sep="\t", header=TRUE, row.names=1)
+colnames(d.raw)<- c("gene_name","WT_24hdox_r3","K3R_3hdox21hchase_r1","K3R_3hdox21hchase_r3","K3R_24hdox_r1","WT_3hdox21hchase_r3","WT_3hdox21hchase_r1","control_r1","WT_24hdox_r1","K3R_3hdox21hchase_r2","WT_24hdox_r2","control_r2","K3R_24hdox_r3","WT_3hdox21hchase_r2","K3R_24hdox_r2","control_r3")
+col_order <- c("gene_name",  "control_r1","control_r2","control_r3",  "WT_3hdox21hchase_r1","WT_3hdox21hchase_r2","WT_3hdox21hchase_r3",  "WT_24hdox_r1","WT_24hdox_r2","WT_24hdox_r3",  "K3R_3hdox21hchase_r1","K3R_3hdox21hchase_r2","K3R_3hdox21hchase_r3",  "K3R_24hdox_r1","K3R_24hdox_r2","K3R_24hdox_r3")
+reordered.raw <- d.raw[,col_order]
+reordered.raw$gene_name <- NULL
+#d <- d.raw[rowSums(reordered.raw>3)>2,]
+
+
+replicates = as.factor(c("control","control","control", "WT_3hdox21hchase","WT_3hdox21hchase","WT_3hdox21hchase", "WT_24hdox","WT_24hdox","WT_24hdox", "K3R_3hdox21hchase","K3R_3hdox21hchase","K3R_3hdox21hchase", "K3R_24hdox","K3R_24hdox","K3R_24hdox"))
+ids = as.factor(c("control_r1","control_r2","control_r3", "WT_3hdox21hchase_r1","WT_3hdox21hchase_r2","WT_3hdox21hchase_r3", "WT_24hdox_r1","WT_24hdox_r2","WT_24hdox_r3", "K3R_3hdox21hchase_r1","K3R_3hdox21hchase_r2","K3R_3hdox21hchase_r3", "K3R_24hdox_r1","K3R_24hdox_r2","K3R_24hdox_r3"))
+
+
+#cData = data.frame(row.names=colnames(reordered.raw), replicates=replicates,  batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~batch+replicates)
+cData = data.frame(row.names=colnames(reordered.raw), replicates=replicates, ids=ids)
+dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~replicates)
+
+rld <- rlogTransformation(dds)
+
+
+
+
+
+# -- before pca --
+png("pca.png", 1200, 800)
+plotPCA(rld, intgroup=c("replicates"))
+#plotPCA(rld, intgroup = c("replicates", "batch"))
+#plotPCA(rld, intgroup = c("replicates", "ids"))
+#plotPCA(rld, "batch")
+dev.off()
+
+
+# -- before heatmap --
+## generate the pairwise comparison between samples
+library(gplots) 
+library("RColorBrewer")
+png("heatmap.png", 1200, 800)
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+#paste( rld$dex, rld$cell, sep="-" )
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,ids, sep=":"))
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+
+
+#convert bam to bigwig using deepTools by feeding inverse of DESeq’s size Factor
+sizeFactors(dds)
+#NULL
+dds <- estimateSizeFactors(dds)
+> sizeFactors(dds)
+          control_r1           control_r2           control_r3 
+           0.9978755            1.1092227            0.9749052 
+ WT_3hdox21hchase_r1  WT_3hdox21hchase_r2  WT_3hdox21hchase_r3 
+           1.0446849            0.9870443            1.0740330 
+        WT_24hdox_r1         WT_24hdox_r2         WT_24hdox_r3 
+           1.0280976            1.0201326            0.9373142 
+K3R_3hdox21hchase_r1 K3R_3hdox21hchase_r2 K3R_3hdox21hchase_r3 
+           0.9888063            0.9202846            1.1429438 
+       K3R_24hdox_r1        K3R_24hdox_r2        K3R_24hdox_r3 
+           0.9036107            1.0896994            0.9036313 
+normalized_counts <- counts(dds, normalized=TRUE)
+#write.table(normalized_counts, file="normalized_counts.txt", sep="\t", quote=F, col.names=NA)
+
+#unter konsole
+#  control_r1  ...
+# 1/0.9978755  ... 
+ 
+ > sizeFactors(dds)
+                     HeLa_TO_r1                      HeLa_TO_r2 
+                      0.9978755                       1.1092227 
+                     HeLa_TO_r3  WT_C8_3h_dox_plus_21h_chase_r1 
+                      0.9749052                       1.0446849 
+ WT_C8_3h_dox_plus_21h_chase_r2  WT_C8_3h_dox_plus_21h_chase_r3 
+                      0.9870443                        
+               WT_C8_24h_dox_r1                WT_C8_24h_dox_r2 
+                                              
+               WT_C8_24h_dox_r3 K3R_C8_3h_dox_plus_21h_chase_r1 
+                                              
+K3R_C8_3h_dox_plus_21h_chase_r2 K3R_C8_3h_dox_plus_21h_chase_r3 
+                                              
+              K3R_C8_24h_dox_r1               K3R_C8_24h_dox_r2 
+                                              
+              K3R_C8_24h_dox_r3 
+                       
+ 
+1/0.9978755=1.002129023
+1/1.1092227=
+1/0.9749052=
+1/1.0446849=
+1/0.9870443=
+1/1.0740330=
+1/1.0280976=
+1/1.0201326=
+1/0.9373142=
+1/0.9888063=
+1/0.9202846=
+1/1.1429438=
+1/0.9036107=
+1/1.0896994=
+1/0.9036313=
+
+#bamCoverage --bam ../markDuplicates/${sample}Aligned.sortedByCoord.out.bam -o ${sample}_norm.bw --binSize 10 --scaleFactor  --effectiveGenomeSize 2864785220
+
+bamCoverage --bam ../markDuplicates/HeLa_TO_r1Aligned.sortedByCoord.out.markDups.bam -o HeLa_TO_r1.bw --binSize 10 --scaleFactor 1.002129023     --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/HeLa_TO_r2Aligned.sortedByCoord.out.markDups.bam -o HeLa_TO_r2.bw --binSize 10 --scaleFactor  0.901532217        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/HeLa_TO_r3Aligned.sortedByCoord.out.markDups.bam -o HeLa_TO_r3.bw --binSize 10 --scaleFactor  1.025740759        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WT_C8_3h_dox_plus_21h_chase_r1Aligned.sortedByCoord.out.markDups.bam -o WT_C8_3h_dox_plus_21h_chase_r1.bw --binSize 10 --scaleFactor  0.957226433        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WT_C8_3h_dox_plus_21h_chase_r2Aligned.sortedByCoord.out.markDups.bam -o WT_C8_3h_dox_plus_21h_chase_r2.bw --binSize 10 --scaleFactor  1.013125753        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WT_C8_3h_dox_plus_21h_chase_r3Aligned.sortedByCoord.out.markDups.bam -o WT_C8_3h_dox_plus_21h_chase_r3.bw --binSize 10 --scaleFactor  0.931070088        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WT_C8_24h_dox_r1Aligned.sortedByCoord.out.markDups.bam -o WT_C8_24h_dox_r1.bw --binSize 10 --scaleFactor 0.972670299         --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WT_C8_24h_dox_r2Aligned.sortedByCoord.out.markDups.bam -o WT_C8_24h_dox_r2.bw --binSize 10 --scaleFactor 0.980264722         --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/WT_C8_24h_dox_r3Aligned.sortedByCoord.out.markDups.bam -o WT_C8_24h_dox_r3.bw --binSize 10 --scaleFactor 1.066878108         --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/K3R_C8_3h_dox_plus_21h_chase_r1Aligned.sortedByCoord.out.markDups.bam -o K3R_C8_3h_dox_plus_21h_chase_r1.bw --binSize 10 --scaleFactor  1.011320417        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/K3R_C8_3h_dox_plus_21h_chase_r2Aligned.sortedByCoord.out.markDups.bam -o K3R_C8_3h_dox_plus_21h_chase_r2.bw --binSize 10 --scaleFactor  1.086620378        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/K3R_C8_3h_dox_plus_21h_chase_r3Aligned.sortedByCoord.out.markDups.bam -o K3R_C8_3h_dox_plus_21h_chase_r3.bw --binSize 10 --scaleFactor  0.874933658        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/K3R_C8_24h_dox_r1Aligned.sortedByCoord.out.markDups.bam -o K3R_C8_24h_dox_r1.bw --binSize 10 --scaleFactor  1.106671269        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/K3R_C8_24h_dox_r2Aligned.sortedByCoord.out.markDups.bam -o K3R_C8_24h_dox_r2.bw --binSize 10 --scaleFactor  0.917684271        --effectiveGenomeSize 2864785220
+bamCoverage --bam ../markDuplicates/K3R_C8_24h_dox_r3Aligned.sortedByCoord.out.markDups.bam -o K3R_C8_24h_dox_r3.bw --binSize 10 --scaleFactor  1.10664604        --effectiveGenomeSize 2864785220
+
+
+
+mv HeLa_TO_r1.bw  control_r1.bw
+mv HeLa_TO_r2.bw  control_r2.bw
+mv HeLa_TO_r3.bw  control_r3.bw
+mv WT_C8_3h_dox_plus_21h_chase_r1.bw  WT_3hdox21hchase_r1.bw
+mv WT_C8_3h_dox_plus_21h_chase_r2.bw  WT_3hdox21hchase_r2.bw
+mv WT_C8_3h_dox_plus_21h_chase_r3.bw  WT_3hdox21hchase_r3.bw
+mv WT_C8_24h_dox_r1.bw  WT_24hdox_r1.bw
+mv WT_C8_24h_dox_r2.bw  WT_24hdox_r2.bw
+mv WT_C8_24h_dox_r3.bw  WT_24hdox_r3.bw
+mv K3R_C8_3h_dox_plus_21h_chase_r1.bw  K3R_3hdox21hchase_r1.bw
+mv K3R_C8_3h_dox_plus_21h_chase_r2.bw  K3R_3hdox21hchase_r2.bw
+mv K3R_C8_3h_dox_plus_21h_chase_r3.bw  K3R_3hdox21hchase_r3.bw
+mv K3R_C8_24h_dox_r1.bw  K3R_24hdox_r1.bw
+mv K3R_C8_24h_dox_r2.bw  K3R_24hdox_r2.bw
+mv K3R_C8_24h_dox_r3.bw  K3R_24hdox_r3.bw
+
+#"control_r1",
+#"control_r2",
+#"control_r3", 
+#"WT_3hdox21hchase_r1","WT_3hdox21hchase_r2","WT_3hdox21hchase_r3", "WT_24hdox_r1","WT_24hdox_r2","WT_24hdox_r3", "K3R_3hdox21hchase_r1","K3R_3hdox21hchase_r2","K3R_3hdox21hchase_r3", #"K3R_24hdox_r1","K3R_24hdox_r2","K3R_24hdox_r3"
+
+
+
+# - WT_3hdox21hchase_vs_control
+# - WT_24hdox_vs_control
+# - K3R_3hdox21hchase_vs_control
+# - K3R_24hdox_vs_control
+
+# - K3R_24hdox_vs_K3R_3hdox21hchase
+# - WT_3hdox21hchase_vs_K3R_3hdox21hchase
+
+# - WT_24hdox_vs_K3R_24hdox
+# - WT_24hdox_vs_WT_3hdox21hchase
+
+
+
+
+# ----------------- Differential Expression ------------------
+#A central method for exploring differences between groups of segments or samples is to perform differential gene expression analysis. 
+
+
+setwd("/home/jhuang/DATA/Data_Anastasia_RNASeq/results/featureCounts/degenes")
+#---- * to untreated ----
+dds$replicates <- relevel(dds$replicates, "control")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("WT_3hdox21hchase_vs_control","WT_24hdox_vs_control","K3R_3hdox21hchase_vs_control","K3R_24hdox_vs_control")
+
+dds$replicates <- relevel(dds$replicates, "K3R_3hdox21hchase")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("K3R_24hdox_vs_K3R_3hdox21hchase", "WT_3hdox21hchase_vs_K3R_3hdox21hchase")
+
+dds$replicates <- relevel(dds$replicates, "K3R_24hdox")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("WT_24hdox_vs_K3R_24hdox")
+
+dds$replicates <- relevel(dds$replicates, "WT_3hdox21hchase")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("WT_24hdox_vs_WT_3hdox21hchase")
+
+
+
+##https://bioconductor.statistik.tu-dortmund.de/packages/3.7/data/annotation/
+#BiocManager::install("EnsDb.Mmusculus.v79")
+#library(EnsDb.Mmusculus.v79)
+#edb <- EnsDb.Mmusculus.v79
+
+
+#https://bioconductor.org/packages/release/bioc/vignettes/biomaRt/inst/doc/accessing_ensembl.html#selecting-an-ensembl-biomart-database-and-dataset
+#https://bioconductor.org/packages/release/bioc/vignettes/biomaRt/inst/doc/accessing_ensembl.html#selecting-an-ensembl-biomart-database-and-dataset
+library(biomaRt)
+listEnsembl()
+listMarts()
+#ensembl <- useEnsembl(biomart = "genes", mirror="asia")  # default is Mouse strains 104
+#ensembl <- useEnsembl(biomart = "ensembl", dataset = "mmusculus_gene_ensembl", mirror = "www")
+#ensembl = useMart("ensembl_mart_44", dataset="hsapiens_gene_ensembl",archive=TRUE, mysql=TRUE)
+#ensembl <- useEnsembl(biomart = "ensembl", dataset = "mmusculus_gene_ensembl", version="104")
+#ensembl <- useEnsembl(biomart = "ensembl", dataset = "hsapiens_gene_ensembl", version="86")
+#--> total 69, 27  GRCh38.p7 and 39  GRCm38.p4
+ensembl <- useEnsembl(biomart = "ensembl", dataset = "hsapiens_gene_ensembl", version="104")
+datasets <- listDatasets(ensembl)
+#--> total 202   80                         GRCh38.p13         107                            GRCm39
+#80           hsapiens_gene_ensembl                                      Human genes (GRCh38.p13)                         GRCh38.p13
+#107         mmusculus_gene_ensembl                                        Mouse genes (GRCm39)                            GRCm39
+
+
+
+> listEnsemblArchives()
+             name     date                                url version
+1  Ensembl GRCh37 Feb 2014          http://grch37.ensembl.org  GRCh37
+2     Ensembl 104 May 2021 http://may2021.archive.ensembl.org     104
+3     Ensembl 103 Feb 2021 http://feb2021.archive.ensembl.org     103
+4     Ensembl 102 Nov 2020 http://nov2020.archive.ensembl.org     102
+
+attributes = listAttributes(ensembl)
+attributes[1:25,]
+
+
+#https://www.ncbi.nlm.nih.gov/grc/human
+#BiocManager::install("org.Mmu.eg.db")
+#library("org.Mmu.eg.db")
+#edb <- org.Mmu.eg.db
+#
+#https://bioconductor.statistik.tu-dortmund.de/packages/3.6/data/annotation/
+#EnsDb.Mmusculus.v79
+#> query(hub, c("EnsDb", "apiens", "98"))
+#columns(edb)
+
+#searchAttributes(mart = ensembl, pattern = "symbol")
+
+##https://www.geeksforgeeks.org/remove-duplicate-rows-based-on-multiple-columns-using-dplyr-in-r/
+#library(dplyr)
+#library(tidyverse)
+#df <- data.frame (lang =c ('Java','C','Python','GO','RUST','Javascript',
+                      'Cpp','Java','Julia','Typescript','Python','GO'),
+                      value = c (21,21,3,5,180,9,12,20,6,0,3,6),
+                      usage =c(21,21,0,99,44,48,53,16,6,8,0,6))
+#distinct(df, lang, .keep_all= TRUE)
+
+
+for (i in clist) {
+#WT_24hdox_vs_control K3R_3hdox21hchase_vs_control K3R_24hdox_vs_control
+#i<-clist[1]
+  contrast = paste("replicates", i, sep="_")
+  res = results(dds, name=contrast)
+  res <- res[!is.na(res$log2FoldChange),]
+  #geness <- AnnotationDbi::select(edb86, keys = rownames(res), keytype = "GENEID", columns = c("ENTREZID","EXONID","GENEBIOTYPE","GENEID","GENENAME","PROTEINDOMAINSOURCE","PROTEINID","SEQNAME","SEQSTRAND","SYMBOL","TXBIOTYPE","TXID","TXNAME","UNIPROTID"))
+  #geness <- AnnotationDbi::select(edb86, keys = rownames(res), keytype = "GENEID", columns = c("GENEID", "ENTREZID", "SYMBOL", "GENENAME","GENEBIOTYPE","TXBIOTYPE","SEQSTRAND","UNIPROTID"))
+  # In the ENSEMBL-database, GENEID is ENSEMBL-ID.
+  #geness <- AnnotationDbi::select(edb86, keys = rownames(res), keytype = "GENEID", columns = c("GENEID", "SYMBOL", "GENEBIOTYPE"))  #  "ENTREZID", "TXID","TXBIOTYPE","TXSEQSTART","TXSEQEND"
+  #geness <- geness[!duplicated(geness$GENEID), ]
+  
+  #using getBM replacing AnnotationDbi::select
+  #filters = 'ensembl_gene_id' means the records should always have a valid ensembl_gene_ids.
+  geness <- getBM(attributes = c('ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'entrezgene_id', 'chromosome_name', 'start_position', 'end_position', 'strand', 'description'),
+      filters = 'ensembl_gene_id',
+      values = rownames(res), 
+      mart = ensembl)
+  geness_uniq <- distinct(geness, ensembl_gene_id, .keep_all= TRUE)
+  
+  #merge by column by common colunmn name, in the case "GENEID"
+  res$ENSEMBL = rownames(res)
+  identical(rownames(res), rownames(geness_uniq))
+  res_df <- as.data.frame(res)
+  geness_res <- merge(geness_uniq, res_df, by.x="ensembl_gene_id", by.y="ENSEMBL")
+  dim(geness_res)
+  rownames(geness_res) <- geness_res$ensembl_gene_id
+  geness_res$ensembl_gene_id <- NULL
+  write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "all.txt", sep="-"))
+  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
+  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-2)
+  #write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="-"))
+  #write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="-"))
+}
+
+
+#--EnhancedVolcano--
+for i in WT_3hdox21hchase_vs_control WT_24hdox_vs_control K3R_3hdox21hchase_vs_control K3R_24hdox_vs_control; do
+  echo "contrast = paste(\"replicates\", \"${i}\", sep=\"_\")"
+  echo "res = results(dds, name=contrast)"
+  echo "res <- res[!is.na(res$log2FoldChange),]"
+  echo "res_df <- as.data.frame(res)"
+  #selectLab = selectLab_italics,
+  echo "png(\"${i}.png\",width=1200, height=1000)"
+  #legendPosition = 'right',legendLabSize = 12,  arrowheads = FALSE,
+  echo "EnhancedVolcano(res, lab = rownames(res),x = 'log2FoldChange',y = 'padj', pCutoff=5e-2, FCcutoff=1.2, title='', subtitleLabSize = 18, pointSize = 3.0, labSize = 5.0, colAlpha=1, legendIconSize = 4.0, drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = 'black', subtitle=expression(~Delta*\"$(echo $i | cut -d'_' -f1) versus \" *~Delta*\"$(echo $i | cut -d'_' -f3)\"))"
+  echo "dev.off()"
+done
+
+library("EnhancedVolcano")
+contrast = paste("replicates", "WT_3hdox21hchase_vs_control", sep="_")
+res = results(dds, name=contrast)
+res <- res[!is.na(res$log2FoldChange),]
+res_df <- as.data.frame(res)
+png("WT_3hdox21hchase_vs_control.png",width=1200, height=1000)
+#selectLab = c('VCAM1','KCTD12','ADAM12',   'CXCL12','CACNB2','SPARCL1','DUSP1','SAMHD1','MAOA'),
+EnhancedVolcano(res, lab = rownames(res$external_gene_name, x = 'log2FoldChange',y = 'padj', pCutoff=5e-2, FCcutoff=1.2, title='', subtitleLabSize = 18, pointSize = 3.0, labSize = 5.0, colAlpha=1, legendIconSize = 4.0, drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = 'black', subtitle="WT 3h dox + 21h chase vs. contro")
+dev.off()
+
+
+
+
+
+#---- show methods of class DESeq2 ----
+#x=capture.output(showMethods(class="DESeq2"))
+#unlist(lapply(strsplit(x[grep("Function: ",x,)]," "),function(x) x[2]))
+
+#---- Volcano Plots with automatically finding top_g ----
+#A canonical visualization for interpreting differential gene expression results is the volcano plot.
+library(ggrepel) 
+# Categorize Results based on P-value & FDR for plotting
+G891 <- read.csv("../../../891.csv")
+G471 <- read.csv("../../../471.csv")
+intersect_891_471 <- intersect(G891, G471)         #102
+G891_only <- setdiff(G891,intersect_891_471)  #789
+G471_only <- setdiff(G471,intersect_891_471)  #368
+#write.csv(intersect_891_471, "intersect.csv")
+#write.csv(G891_only, "G891_only.csv")
+#write.csv(G471_only, "G471_only.csv")
+
+#geness_res$Color <- "NS or log2FC < 2.0"
+#geness_res$Color[geness_res$pvalue < 0.05] <- "P < 0.05"
+#geness_res$Color[geness_res$padj < 0.05] <- "P-adj < 0.05"
+#geness_res$Color[geness_res$padj < 0.001] <- "P-adj < 0.001"
+#geness_res$Color[abs(geness_res$log2FoldChange) < 2.0] <- "NS or log2FC < 2.0"
+#geness_res$Color <- factor(geness_res$Color,
+#                        levels = c("NS or log2FC < 2.0", "P < 0.05",
+#                                   "P-adj < 0.05", "P-adj < 0.001"))
+#891_lysosomal_genes (one color) and 471_TFEB_genes (another color)
+
+
+
+
+
+for i in WT_3hdox21hchase_vs_control WT_24hdox_vs_control K3R_3hdox21hchase_vs_control K3R_24hdox_vs_control; do
+for i in K3R_24hdox_vs_K3R_3hdox21hchase WT_3hdox21hchase_vs_K3R_3hdox21hchase; do
+for i in WT_24hdox_vs_K3R_24hdox; do
+for i in WT_24hdox_vs_WT_3hdox21hchase; do
+  # read files to geness_res
+  echo "geness_res <- read.csv(file = paste(\"${i}\", \"all.txt\", sep=\"-\"), row.names=1)"
+
+  echo "subset(geness_res, external_gene_name %in% top_g & pvalue < 0.05 & (abs(geness_res\$log2FoldChange) >= 2.0))"
+  echo "geness_res\$Color <- \"NS or log2FC < 2.0\""
+  echo "geness_res\$Color[geness_res\$pvalue < 0.05] <- \"P < 0.05\""
+  echo "geness_res\$Color[geness_res\$padj < 0.05] <- \"P-adj < 0.05\""
+  echo "geness_res\$Color[abs(geness_res\$log2FoldChange) < 2.0] <- \"NS or log2FC < 2.0\""
+  echo "geness_res\$Color[geness_res\$external_gene_name %in% intersect_891_471\$Gene] <- \"lysosomal & TFEB\""
+  echo "geness_res\$Color[geness_res\$external_gene_name %in% G891_only\$Gene] <- \"lysosomal\""
+  echo "geness_res\$Color[geness_res\$external_gene_name %in% G471_only\$Gene] <- \"TFEB\""
+  echo "geness_res\$Color <- factor(geness_res\$Color, levels = c(\"NS or log2FC < 2.0\", \"P-adj < 0.05\", \"lysosomal & TFEB\", \"lysosomal\", \"TFEB\"))"
+  echo "write.csv(geness_res, \"${i}_with_Category.csv\")"
+
+  # pick top genes for either side of volcano to label
+  # order genes for convenience:
+  echo "geness_res\$invert_P <- (-log10(geness_res\$pvalue)) * sign(geness_res\$log2FoldChange)"
+  echo "top_g <- c()"
+  echo "top_g <- c(top_g, \
+             geness_res[, 'external_gene_name'][order(geness_res[, 'invert_P'], decreasing = TRUE)[1:100]], \
+             geness_res[, 'external_gene_name'][order(geness_res[, 'invert_P'], decreasing = FALSE)[1:100]])"
+  echo "top_g <- unique(top_g)"
+  echo "geness_res <- geness_res[, -1*ncol(geness_res)]"  # remove invert_P from matrix
+  
+  # Graph results
+  echo "png(\"${i}.png\",width=1200, height=2000)"
+  echo "ggplot(geness_res, \
+      aes(x = log2FoldChange, y = -log10(pvalue), \
+          color = Color, label = external_gene_name)) + \
+      geom_vline(xintercept = c(2.0, -2.0), lty = \"dashed\") + \
+      geom_hline(yintercept = -log10(0.05), lty = \"dashed\") + \
+      geom_point() + \
+      labs(x = \"log2(FC)\", y = \"Significance, -log10(P)\", color = \"Significance\") + \
+      scale_color_manual(values = c(\"P < 0.05\"=\"darkgray\",\"P-adj < 0.05\"=\"red\",\"lysosomal\"=\"lightblue\",\"TFEB\"=\"green\",\"lysosomal & TFEB\"=\"cyan\",\"NS or log2FC < 2.0\"=\"gray\"),guide = guide_legend(override.aes = list(size = 4))) + scale_y_continuous(expand = expansion(mult = c(0,0.05))) + \
+      geom_text_repel(data = subset(geness_res, external_gene_name %in% top_g & pvalue < 0.05 & (abs(geness_res\$log2FoldChange) >= 2.0)), size = 4, point.padding = 0.15, color = \"black\", min.segment.length = .1, box.padding = .2, lwd = 2) + \
+      theme_bw(base_size = 16) + \
+      theme(legend.position = \"bottom\")"
+  echo "dev.off()"
+done
+
+
+sed -i -e 's/Color/Category/g' *_Category.csv
+
+
+
+
+
+
+
+
+#Sinthuzan Karunanathan, Mönchengladbach 
+
+#### Plotting Genes of Interest
+#
+##A simple and effective plot to view individual genes is the violin plot. I selected a significant differentially expressed gene 'ANGPTL2' as example.
+#
+#Let's look at the distribution for ANGPTL2.
+#
+#``` {r targetExprs_1_2, eval = TRUE, warning = FALSE, echo=FALSE}
+## show expression for a single target: ANGPTL2
+#ggplot(colData(dds),
+#       aes(x = replicates, fill = replicates,
+#           y = assayDataElement(target_m666Data["ANGPTL2", ],
+#                                elt = "q_norm"))) +
+#  geom_violin() +
+#  geom_jitter(width = .2) +
+#  labs(y = "ANGPTL2 Expression") +
+#  scale_y_continuous(trans = "log2") +
+#  #facet_wrap(~class) +
+#  theme_bw()
+#```
+#
+#
+#### Heatmap of Significant Genes
+#
+#In addition to generating individual gene boxplots or volcano plots, we can again create a heatmap from our data. Here, we plot with all genes with a P < 0.05.
+#
+#``` {r heatmap_1_2, eval = TRUE, fig.width = 8, fig.height = 6.5, fig.wide = TRUE, echo=FALSE}
+#library(gplots)
+#library(dplyr)
+#library(ggforce)
+#library(knitr)
+#library(ggforce)
+#library(pheatmap)
+## select top significant genes based on significance, plot with pheatmap
+##GOI <- unique(subset(geness_res, pvalue < 0.05)$external_gene_name)
+#GOI <- rownames(subset(geness_res, pvalue < 0.05))
+#pheatmap((geness_res[GOI, ])$baseMean,
+#         scale = "row", 
+#         show_rownames = FALSE, show_colnames = FALSE,
+#         border_color = NA,
+#         clustering_method = "average",
+#         clustering_distance_rows = "correlation",
+#         clustering_distance_cols = "correlation",
+#         cutree_cols = 2, cutree_rows = 2,
+#         breaks = seq(-3, 3, 0.05),
+#         color = colorRampPalette(c("purple3", "black", "yellow2"))(120))
+#         #annotation_col = pData(target_m666Data)[, c("Group", "Location")])
+#         #annotation_col = pData(target_m666Data)[, c("region", "class")])
+#         colData(dds)$replicates
+#```
+
+
+#x <- data.frame(k1 = c(NA,3,4,5,2), k2 = c(1,NA,4,5,2), data = 6:10)
+#merge(x, y, by = "k2")
+
+#TODO next week from here!
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WT_doxchase_vs_ctr-all.txt \
+WT_doxchase_vs_ctr-up.txt \
+WT_doxchase_vs_ctr-down.txt \
+-d$',' -o WT_doxchase_vs_ctr.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WT_dox_vs_ctr-all.txt \
+WT_dox_vs_ctr-up.txt \
+WT_dox_vs_ctr-down.txt \
+-d$',' -o WT_dox_vs_ctr.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+K3R_doxchase_vs_ctr-all.txt \
+K3R_doxchase_vs_ctr-up.txt \
+K3R_doxchase_vs_ctr-down.txt \
+-d$',' -o K3R_doxchase_vs_ctr.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+K3R_dox_vs_ctr-all.txt \
+K3R_dox_vs_ctr-up.txt \
+K3R_dox_vs_ctr-down.txt \
+-d$',' -o K3R_dox_vs_ctr.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+K3R_dox_vs_K3R_doxchase-all.txt \
+K3R_dox_vs_K3R_doxchase-up.txt \
+K3R_dox_vs_K3R_doxchase-down.txt \
+-d$',' -o K3R_dox_vs_K3R_doxchase.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WT_doxcha_vs_K3R_doxcha-all.txt \
+WT_doxcha_vs_K3R_doxcha-up.txt \
+WT_doxcha_vs_K3R_doxcha-down.txt \
+-d$',' -o WT_doxcha_vs_K3R_doxcha.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WT_dox_vs_K3R_dox-all.txt \
+WT_dox_vs_K3R_dox-up.txt \
+WT_dox_vs_K3R_dox-down.txt \
+-d$',' -o WT_dox_vs_K3R_dox.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WT_dox_vs_WT_doxchase-all.txt \
+WT_dox_vs_WT_doxchase-up.txt \
+WT_dox_vs_WT_doxchase-down.txt \
+-d$',' -o WT_dox_vs_WT_doxchase.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WT_doxchase_vs_ctr-all.txt \
+WT_doxchase_vs_ctr-up.txt \
+WT_doxchase_vs_ctr-down.txt \
+-d$',' -o WT_doxchase_vs_ctr.xls;
+
+mv WT_3hdox21hchase_vs_control_with_Category.csv WT_doxcha_vs_ctr.csv
+mv WT_24hdox_vs_control_with_Category.csv WT_dox_vs_ctr.csv
+mv K3R_3hdox21hchase_vs_control_with_Category.csv K3R_doxcha_vs_ctr.csv
+mv K3R_24hdox_vs_control_with_Category.csv K3R_dox_vs_ctr.csv
+mv K3R_24hdox_vs_K3R_3hdox21hchase_with_Category.csv K3R_dox_vs_K3R_doxcha.csv
+mv WT_3hdox21hchase_vs_K3R_3hdox21hchase_with_Category.csv WT_doxcha_vs_K3R_doxcha.csv
+mv WT_24hdox_vs_K3R_24hdox_with_Category.csv WT_dox_vs_K3R_dox.csv
+mv WT_24hdox_vs_WT_3hdox21hchase_with_Category.csv WT_dox_vs_WT_doxcha.csv
+
+mv  WT_doxcha_vs_ctr.csv WT_3hdox21hchase_vs_control_with_Category.csv
+mv  WT_dox_vs_ctr.csv WT_24hdox_vs_control_with_Category.csv
+mv  K3R_doxcha_vs_ctr.csv K3R_3hdox21hchase_vs_control_with_Category.csv
+mv  K3R_dox_vs_ctr.csv K3R_24hdox_vs_control_with_Category.csv
+mv  K3R_dox_vs_K3R_doxcha.csv K3R_24hdox_vs_K3R_3hdox21hchase_with_Category.csv
+mv  WT_doxcha_vs_K3R_doxcha.csv WT_3hdox21hchase_vs_K3R_3hdox21hchase_with_Category.csv
+mv  WT_dox_vs_K3R_dox.csv WT_24hdox_vs_K3R_24hdox_with_Category.csv
+mv  WT_dox_vs_WT_doxcha.csv WT_24hdox_vs_WT_3hdox21hchase_with_Category.csv
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+WT_doxcha_vs_ctr.csv \
+WT_dox_vs_ctr.csv \
+K3R_doxcha_vs_ctr.csv \
+K3R_dox_vs_ctr.csv \
+K3R_dox_vs_K3R_doxcha.csv \
+WT_doxcha_vs_K3R_doxcha.csv \
+WT_dox_vs_K3R_dox.csv \
+WT_dox_vs_WT_doxcha.csv \
+-d$',' -o Volcano_data_with_Category.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py WT_3hdox21hchase_vs_control_with_Category.csv -d$',' -o WT_3hdox21hchase_vs_control_with_Category.xls;
+~/Tools/csv2xls-0.4/csv_to_xls.py WT_24hdox_vs_control_with_Category.csv -d$',' -o WT_24hdox_vs_control_with_Category.xls;
+~/Tools/csv2xls-0.4/csv_to_xls.py K3R_3hdox21hchase_vs_control_with_Category.csv -d$',' -o K3R_3hdox21hchase_vs_control_with_Category.xls;
+~/Tools/csv2xls-0.4/csv_to_xls.py K3R_24hdox_vs_control_with_Category.csv -d$',' -o K3R_24hdox_vs_control_with_Category.xls;
+~/Tools/csv2xls-0.4/csv_to_xls.py K3R_24hdox_vs_K3R_3hdox21hchase_with_Category.csv -d$',' -o K3R_24hdox_vs_K3R_3hdox21hchase_with_Category.xls;
+~/Tools/csv2xls-0.4/csv_to_xls.py WT_3hdox21hchase_vs_K3R_3hdox21hchase_with_Category.csv -d$',' -o WT_3hdox21hchase_vs_K3R_3hdox21hchase_with_Category.xls;
+~/Tools/csv2xls-0.4/csv_to_xls.py WT_24hdox_vs_K3R_24hdox_with_Category.csv -d$',' -o WT_24hdox_vs_K3R_24hdox_with_Category.xls;
+~/Tools/csv2xls-0.4/csv_to_xls.py WT_24hdox_vs_WT_3hdox21hchase_with_Category.csv -d$',' -o WT_24hdox_vs_WT_3hdox21hchase_with_Category.xls;
+
+
+~/Tools/csv2xls-0.4/csv_to_xls.py phenoData.csv -d$',' -o phenoData.xls;
+
+
+
+
+
+
+
+# ----------------------------------------------------
+# -------------- KEGG and GO enrichments -------------
+#mkdir pathways
+#
+##--continue from BREAK POINT--
+###
+##source("https://bioconductor.org/biocLite.R") 
+##biocLite("AnnotationDbi")
+#library("clusterProfiler")
+#library("ReactomePA")
+#setwd("~/DATA/Data_Anastasia_RNASeq/results/featureCounts/pathways")
+#
+#for sample in WT_3hdox21hchase_vs_control WT_24hdox_vs_control  K3R_3hdox21hchase_vs_control K3R_24hdox_vs_control K3R_24hdox_vs_K3R_3hdox21hchase  WT_3hdox21hchase_vs_K3R_3hdox21hchase WT_24hdox_vs_K3R_24hdox WT_24hdox_vs_WT_3hdox21hchase; do \
+#echo "${sample}_up <- read.csv('../degenes/${sample}-up.txt', row.names=1)"
+#echo "${sample}_up_KEGG <- enrichKEGG(${sample}_up\$entrezgene_id)"
+#echo "write.table(as.data.frame(${sample}_up_KEGG), file = '${sample}_up_KEGG.txt', sep = '\t', row.names = FALSE)"
+#echo "${sample}_down <- read.csv('../degenes/${sample}-down.txt', row.names=1)"
+#echo "${sample}_down_KEGG <- enrichKEGG(${sample}_down\$entrezgene_id)"
+#echo "write.table(as.data.frame(${sample}_down_KEGG), file = '${sample}_down_KEGG.txt', sep = '\t', row.names = FALSE)"
+#echo "${sample}_sig <- rbind(${sample}_up, ${sample}_down)"
+#echo "${sample}_sig_KEGG <- enrichKEGG(${sample}_sig\$entrezgene_id)"
+#echo "write.table(as.data.frame(${sample}_sig_KEGG), file = '${sample}_sig_KEGG.txt', sep = '\t', row.names = FALSE)"
+#done
+
+
+
+
+
+mkdir KEGG
+
+#--continue from BREAK POINT--
+##
+#source("https://bioconductor.org/biocLite.R") 
+#biocLite("AnnotationDbi")
+library("clusterProfiler")
+library("ReactomePA")
+setwd("~/DATA/Data_Anastasia_RNASeq/results/featureCounts/KEGG")
+
+for sample in WT_doxchase_vs_ctr WT_dox_vs_ctr  K3R_doxchase_vs_ctr K3R_dox_vs_ctr   K3R_dox_vs_K3R_doxchase  WT_doxcha_vs_K3R_doxcha   WT_dox_vs_K3R_dox WT_dox_vs_WT_doxchase; do \
+echo "${sample}_up <- read.csv('../DEGs/${sample}-up.txt', row.names=1)"
+echo "up_KEGG <- enrichKEGG(${sample}_up\$entrezgene_id)"
+echo "write.table(as.data.frame(up_KEGG), file = '${sample}_up.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_down <- read.csv('../DEGs/${sample}-down.txt', row.names=1)"
+echo "down_KEGG <- enrichKEGG(${sample}_down\$entrezgene_id)"
+echo "write.table(as.data.frame(down_KEGG), file = '${sample}_down.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_sig <- rbind(${sample}_up, ${sample}_down)"
+echo "sig_KEGG <- enrichKEGG(${sample}_sig\$entrezgene_id)"
+echo "write.table(as.data.frame(sig_KEGG), file = '${sample}_sig.txt', sep = '\t', row.names = FALSE)"
+done
+
+
+
+
+
+
+
+
+
+#To mention: You can enrich the genesets by some online protal, for example http://www.webgestalt.org.
+
+
+library(magrittr)
+#https://cran.rstudio.com/bin/windows/contrib/3.3/seriation_1.2-1.zip
+#install.packages("arulesViz")
+library(arulesViz)
+library(arules)
+
+#png("KEGG.png", width=1000, height=600)
+svg("KEGG.svg")
+merged_list <- merge_result(list('WT_dox+chase vs ctr down'=WT_3hdox21hchase_vs_control_down_KEGG, 'WT_dox vs ctr up'=WT_24hdox_vs_control_up_KEGG, 'WT_dox vs ctr down'=WT_24hdox_vs_control_down_KEGG, 'K3R_dox vs K3R_dox+chase down'=K3R_24hdox_vs_K3R_3hdox21hchase_down_KEGG, 'WT_dox vs WT_dox+chase down'=WT_24hdox_vs_WT_3hdox21hchase_down_KEGG))
+dotplot(merged_list, showCategory=1000, font.size=12)  #, #
+dev.off()
+
+
+
+cd KEGG
+~/Tools/csv2xls-0.4/csv_to_xls.py WT_doxchase_vs_ctr_up.txt WT_doxchase_vs_ctr_down.txt WT_doxchase_vs_ctr_sig.txt     WT_dox_vs_ctr_up.txt WT_dox_vs_ctr_down.txt WT_dox_vs_ctr_sig.txt    K3R_doxchase_vs_ctr_up.txt K3R_doxchase_vs_ctr_down.txt K3R_doxchase_vs_ctr_sig.txt   K3R_dox_vs_ctr_up.txt K3R_dox_vs_ctr_down.txt K3R_dox_vs_ctr_sig.txt    K3R_dox_vs_K3R_doxchase_up.txt K3R_dox_vs_K3R_doxchase_down.txt K3R_dox_vs_K3R_doxchase_sig.txt  WT_doxcha_vs_K3R_doxcha_up.txt WT_doxcha_vs_K3R_doxcha_down.txt WT_doxcha_vs_K3R_doxcha_sig.txt    WT_dox_vs_K3R_dox_up.txt WT_dox_vs_K3R_dox_down.txt WT_dox_vs_K3R_dox_sig.txt    WT_dox_vs_WT_doxchase_up.txt WT_dox_vs_WT_doxchase_down.txt WT_dox_vs_WT_doxchase_sig.txt -d$'\t' -o KEGG.xls
+
+
+
+
+
+
+
+
+
+
+setwd("~/DATA/Data_Anastasia_RNASeq/results/featureCounts/GO")
+
+for sample in WT_doxchase_vs_ctr WT_dox_vs_ctr  K3R_doxchase_vs_ctr K3R_dox_vs_ctr   K3R_dox_vs_K3R_doxchase  WT_doxcha_vs_K3R_doxcha   WT_dox_vs_K3R_dox WT_dox_vs_WT_doxchase; do \
+echo "${sample}_up <- read.csv('../DEGs/${sample}-up.txt', row.names=1)"
+echo "${sample}_up_GO_BP <- enrichGO(${sample}_up\$entrezgene_id, 'org.Hs.eg.db', ont='BP')"
+echo "${sample}_up_GO_MF <- enrichGO(${sample}_up\$entrezgene_id, 'org.Hs.eg.db', ont='MF')"
+echo "${sample}_up_GO_CC <- enrichGO(${sample}_up\$entrezgene_id, 'org.Hs.eg.db', ont='CC')"
+#echo "${sample}_up_GO_ALL <- enrichGO(${sample}_up\$entrezgene_id, 'org.Hs.eg.db', ont='ALL')"
+echo "write.table(as.data.frame(${sample}_up_GO_BP), file = '${sample}_up_GO_BP.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_up_GO_MF), file = '${sample}_up_GO_MF.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_up_GO_CC), file = '${sample}_up_GO_CC.txt', sep = '\t', row.names = FALSE)"
+#echo "write.table(as.data.frame(${sample}_up_GO_ALL), file = '${sample}_up_GO_ALL.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_down <- read.csv('../DEGs/${sample}-down.txt', row.names=1)"
+echo "${sample}_down_GO_BP <- enrichGO(${sample}_down\$entrezgene_id, 'org.Hs.eg.db', ont='BP')"
+echo "${sample}_down_GO_MF <- enrichGO(${sample}_down\$entrezgene_id, 'org.Hs.eg.db', ont='MF')"
+echo "${sample}_down_GO_CC <- enrichGO(${sample}_down\$entrezgene_id, 'org.Hs.eg.db', ont='CC')"
+#echo "${sample}_down_GO_ALL <- enrichGO(${sample}_down\$entrezgene_id, 'org.Hs.eg.db', ont='ALL')"
+echo "write.table(as.data.frame(${sample}_down_GO_BP), file = '${sample}_down_GO_BP.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_down_GO_MF), file = '${sample}_down_GO_MF.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_down_GO_CC), file = '${sample}_down_GO_CC.txt', sep = '\t', row.names = FALSE)"
+#echo "write.table(as.data.frame(${sample}_down_GO_ALL), file = '${sample}_down_GO_ALL.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_sig <- rbind(${sample}_up, ${sample}_down)"
+echo "${sample}_sig_GO_BP <- enrichGO(${sample}_sig\$entrezgene_id, 'org.Hs.eg.db', ont='BP')"
+echo "${sample}_sig_GO_MF <- enrichGO(${sample}_sig\$entrezgene_id, 'org.Hs.eg.db', ont='MF')"
+echo "${sample}_sig_GO_CC <- enrichGO(${sample}_sig\$entrezgene_id, 'org.Hs.eg.db', ont='CC')"
+#echo "${sample}_sig_GO_ALL <- enrichGO(${sample}_sig\$entrezgene_id, 'org.Hs.eg.db', ont='ALL')"
+echo "write.table(as.data.frame(${sample}_sig_GO_BP), file = '${sample}_sig_GO_BP.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_sig_GO_MF), file = '${sample}_sig_GO_MF.txt', sep = '\t', row.names = FALSE)"
+echo "write.table(as.data.frame(${sample}_sig_GO_CC), file = '${sample}_sig_GO_CC.txt', sep = '\t', row.names = FALSE)"
+#echo "write.table(as.data.frame(${sample}_sig_GO_ALL), file = '${sample}_sig_GO_ALL.txt', sep = '\t', row.names = FALSE)"
+done
+
+
+
+
+
+png("GOs_BP.png",width=1400, height=2000)
+merged_list <- merge_result(list('WT_doxchase vs ctr'=WT_doxchase_vs_ctr_sig_GO_BP, 'WT_dox vs ctr'=WT_dox_vs_ctr_sig_GO_BP, 'K3R_doxchase vs ctr'=K3R_doxchase_vs_ctr_sig_GO_BP,'K3R_dox vs ctr'=K3R_dox_vs_ctr_sig_GO_BP,   'K3R dox vs doxchase'=K3R_dox_vs_K3R_doxchase_sig_GO_BP,  'WT- vs K3R-doxchase'=WT_doxcha_vs_K3R_doxcha_sig_GO_BP,  'WT- vs K3R-dox'=WT_dox_vs_K3R_dox_sig_GO_BP,  'WT dox vs doxchase'=WT_dox_vs_WT_doxchase_sig_GO_BP))
+dotplot(merged_list, showCategory=10000)
+dev.off()
+
+png("GOs_MF.png",width=1300, height=1000)
+merged_list <- merge_result(list('WT_doxchase vs ctr'=WT_doxchase_vs_ctr_sig_GO_MF, 'WT_dox vs ctr'=WT_dox_vs_ctr_sig_GO_MF, 'K3R_doxchase vs ctr'=K3R_doxchase_vs_ctr_sig_GO_MF,'K3R_dox vs ctr'=K3R_dox_vs_ctr_sig_GO_MF,   'K3R dox vs doxchase'=K3R_dox_vs_K3R_doxchase_sig_GO_MF,  'WT- vs K3R-doxchase'=WT_doxcha_vs_K3R_doxcha_sig_GO_MF,  'WT- vs K3R-dox'=WT_dox_vs_K3R_dox_sig_GO_MF,  'WT dox vs doxchase'=WT_dox_vs_WT_doxchase_sig_GO_MF))
+dotplot(merged_list, showCategory=10000)
+dev.off()
+
+png("GOs_CC.png",width=900, height=900)
+merged_list <- merge_result(list('WT_doxchase vs ctr'=WT_doxchase_vs_ctr_sig_GO_CC, 'WT_dox vs ctr'=WT_dox_vs_ctr_sig_GO_CC, 'K3R_doxchase vs ctr'=K3R_doxchase_vs_ctr_sig_GO_CC,'K3R_dox vs ctr'=K3R_dox_vs_ctr_sig_GO_CC,   'K3R dox vs doxchase'=K3R_dox_vs_K3R_doxchase_sig_GO_CC,  'WT- vs K3R-doxchase'=WT_doxcha_vs_K3R_doxcha_sig_GO_CC,  'WT- vs K3R-dox'=WT_dox_vs_K3R_dox_sig_GO_CC,  'WT dox vs doxchase'=WT_dox_vs_WT_doxchase_sig_GO_CC))
+dotplot(merged_list, showCategory=10000)
+dev.off()
+
+# under CONSOLE
+#   
+cd GOs
+~/Tools/csv2xls-0.4/csv_to_xls.py WT_doxchase_vs_ctr_sig_GO_BP.txt WT_dox_vs_ctr_sig_GO_BP.txt  K3R_doxchase_vs_ctr_sig_GO_BP.txt K3R_dox_vs_ctr_sig_GO_BP.txt   K3R_dox_vs_K3R_doxchase_sig_GO_BP.txt  WT_doxcha_vs_K3R_doxcha_sig_GO_BP.txt   WT_dox_vs_K3R_dox_sig_GO_BP.txt WT_dox_vs_WT_doxchase_sig_GO_BP.txt  -d$'\t' -o GOs_BP.xls
+~/Tools/csv2xls-0.4/csv_to_xls.py WT_doxchase_vs_ctr_sig_GO_MF.txt WT_dox_vs_ctr_sig_GO_MF.txt  K3R_doxchase_vs_ctr_sig_GO_MF.txt K3R_dox_vs_ctr_sig_GO_MF.txt   K3R_dox_vs_K3R_doxchase_sig_GO_MF.txt  WT_doxcha_vs_K3R_doxcha_sig_GO_MF.txt   WT_dox_vs_K3R_dox_sig_GO_MF.txt WT_dox_vs_WT_doxchase_sig_GO_MF.txt  -d$'\t' -o GOs_MF.xls
+~/Tools/csv2xls-0.4/csv_to_xls.py WT_doxchase_vs_ctr_sig_GO_CC.txt WT_dox_vs_ctr_sig_GO_CC.txt  K3R_doxchase_vs_ctr_sig_GO_CC.txt K3R_dox_vs_ctr_sig_GO_CC.txt   K3R_dox_vs_K3R_doxchase_sig_GO_CC.txt  WT_doxcha_vs_K3R_doxcha_sig_GO_CC.txt   WT_dox_vs_K3R_dox_sig_GO_CC.txt WT_dox_vs_WT_doxchase_sig_GO_CC.txt  -d$'\t' -o GOs_CC.xls
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ---------------------- Project description -----------------------
+#https://for2625-lysosomes.de/
+Although lysosomal protein defects have been known to be the cause for a plethora of different rare diseases for a long time, only in recent years the view on lysosomes as a purely degradative compartment has changed towards lysosomes as a central player in adaptive responses to metabolic, developmental and environmental cues by lysosome-nucleus signaling processes.
+
+The FOR2625 research program strongly benefits from the wide spread expertises of its members by synergistic collaborations and focusses in the research unit’s 2nd funding period on following three key objectives:
+(1) protein machineries involved in biosynthetic and endocytic transport to and from lysosomes and in lysosomal signaling affect their function and biogenesis, including the analysis of protein ubiquitination, phosphorylation and acetylation
+(2) analysis of lysosome-organelle contact sites and the machinery for autophagosome-lysosome fusion and lysosome reformation
+(3) mechanisms controlling lysosome motility and positioning.
+
+ 
+
+
+
+Research Project 7:
+Lysosomal gene transcription and protein expression
+
+
+
+Principal Investigator
+Prof. Dr. rer. nat. Thomas Braulke
+Dr. rer. nat. Dominic Winter
+
+FOR2625 funded co-workers
+Anastasia Laudicina, MSc
+Dr. rer. nat. Robert Hardt
+
+associated co-workers
+Dr. rer. nat. Malte Klüssendorf
+Anne Sanner, MSc
+Sara Bonini, MSc
+
+#https://de.wikipedia.org/wiki/Ribosom
+
+Project Summary
+
+- Proteins related to lysosomal biogenesis and the autophagy pathway are subject to global transcriptional regulation, in which the transcription factor EB (TFEB) and several repressors play key roles. 
+- The transcriptional activity of TFEB is regulated by phosphorylation/ dephosphorylation of multiple conserved serine residues which determine the localization of TFEB either at the surface of lysosomes, in the cytoplasm, or the nucleus. 
+- In the first funding period, we established a variety of mass spectrometry (MS) tools for the identification and quantification of TFEB posttranslational modifications (PTMs) and the targeted absolute quantification of 144 verified murine lysosomal proteins from any type of mouse sample. 
+- These approaches led to the identification of 30 phosphorylation and 7 acetylation sites in TFEB resulting in >30 isoforms. 
+- Substitutions selected acetylation sites completely inhibited the transcriptional activity of TFEB due to cytosolic retention by unknown mechanisms. 
+- In the second funding period we will define PTM patterns for individual TFEB isoforms, followed by combinatorial site-specific substitutions, analysis of subcellular localization, transcriptional activity, and the effect of these mutants on the proteome of lysosomes and in subpopulations of lysosomes. 
+- Furthermore, we plan to identify interaction partners of acetylated and non-acetylated TFEB and their role in transcriptional activation of lysosomal and autophagy genes. 
+- Finally, TFEB-independent mechanisms of transcriptional suppression of multiple lysosomal genes will be analyzed in lysosomal disease-related cells. 
+- These studies will provide deeper insight into the role of TFEB PTMs for autophagy and lysosomal function as well as the interplay between transcriptional activators and repressors.
+
+References
+Ponnaiyan S, Akter F, Singh S, Winter D*. Comprehensive draft of the mouse embryonic fibroblast lysosomal proteome by mass spectrometry based proteomics. Sci Data 2020; 7:68.
+Singh J, Kaade E, Munte lJ, Bruderer R, Reiter L, Thelen M, Winter D*. Systematic Comparison of Strategies for the Enrichment of Lysosomes by Data Independent Acquisition. J Proteome Res 2020; 19:371-81.
+Khundadze M, Ribaudo F, Hussain A, Rosentreter J, Nietzsche S, Thelen M, Winter D, Hoffmann B, Afzal MA, Hermann T, de Heus C, Piskor EM, Kosan C, Franzka P, von Kleist L, Stauber T, Klumperman J, Damme M, Proikas-Cezanne T, Hübner CA. A mouse model for SPG48 reveals a block of autophagic flux upon disruption of adaptor protein complex five. Neurobiol Dis 2019; 127:419-31.
+Schmidtke C, Tiede S, Thelen M, Käkelä R, Jabs S, Makrypidi G, Sylvester M, Schweizer M, Braren I, Brocke-Ahmadinejad N, Cotman SL, Schulz A, Gieselmann V, Braulke T. Lysosomal proteome analysis reveals that CLN3-defective cells have multiple enzyme deficiencies associated with changes in intracellular trafficking. J Biol Chem 2019; 294:9592-604.
+
+ 
+TFEB      transcription factors.
+TFEB-K3R  replace-mutation!
+
+3h dox + chase
+24h dox
+
+doxycycline induction
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3483200/
+After the doxyxycline pulse, mice were chased (no dox in drinking water) and analyzed at 5 (C), 7 (D), 10 (E) and 12 days (F).
+
+Table S3. Genes differentially expressed following TFEB transient overexpression.
+
+
+
+
+
+
+
+
+
+
