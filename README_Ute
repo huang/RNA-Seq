@@ -180,7 +180,7 @@ dev.off()
 
 
 # since we Gene-level differential expression analysis with DESeq2, the splicing plays no role in the analysis!
-# 用nanopore 可以 compare transcript length distribution. 有可能之前很长，后面很短!
+# 用nanopore 可以 compare transcript length distribution. 有可能Cellline很长，Extracellular vesicles (EVs)很短!
 
 library(ggplot2)
 library(gridExtra)
