@@ -1,0 +1,2131 @@
+# -------------- convert bam to bigwig using deepTools by feeding inverse of DESeq’s size Factor -------------- 
+You can read the details laid out by ATpoint about how to use a scale factor with deepTools. He specified it for ATAC-seq/ChIP-seq, but the principles are the same for RNA-seq: calculate a scaling factor with DESeq2 and supply the inverse (!) to bamCoverage --scaleFactor.
+
+https://www.biostars.org/p/317023/
+
+https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html
+
+
+## Create DESeq2Dataset object
+dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
+sizeFactors(dds)
+View(counts(dds))
+dds <- estimateSizeFactors(dds)
+sizeFactors(dds)
+normalized_counts <- counts(dds, normalized=TRUE)
+write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
+
+bamCoverage --bam a.bam -o a.SeqDepthNorm.bw \
+    --binSize 10
+    --normalizeUsing RPGC
+    --effectiveGenomeSize 2150570000
+    --ignoreForNormalization chrX
+    --extendReads
+
+Sure, you can use the DESeq2 scale factor. I don't recall whether DESeq2 is dividing by the scale factor or multiplying by it. If it's doing the latter then you don't need to invert (just compare a normalized and raw count in DESeq2 to be sure).
+
+--skipNonCoveredRegions --binSize 10 --scaleFactor 1/DESeq's size factor”.
+
+#https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3941356
+BamCoverage from deepTools (version 3.0.2) was used to generate bigwig tracks with parameters “--skipNonCoveredRegions --binSize 10 --scaleFactor 1/DESeq’s size Factor”.
+
+
+
+
+# -------------- Mapping on the p602, p604, and p605 (MCPyV) ----------------
+./damian_extended/main.rb --host human3 --type dna --ref_db MCPyV.fa --external_ref MCPyV.fa --external_groupref MCPyV.fa --min_contiglength 200  -u trimmed/V_8_4_2_p602_d8_DonorI.fastq.gz  --sample p602_on_MCPyV   --no_anno_groupref   --threads 15 --force
+
+for rna_sample in p602_d8_DonorI p602_d8_DonorII p604_d8_DonorI p604_d8_DonorII p605_d8_DonorI p605_d8_DonorII; do
+for rna_sample in p602_d8_DonorI p602_d8_DonorII; do
+bwa mem -M -t 14 MCPyV.fa trimmed/${rna_sample}.fastq.gz > ${rna_sample}_on_MCPyV.sam
+samtools view -Sb ${rna_sample}_on_MCPyV.sam > ${rna_sample}_on_MCPyV.bam
+samtools flagstat ${rna_sample}_on_MCPyV.bam 
+rm *.sam
+done
+
+#22876 + 0 mapped (5.55% : N/A)
+
+
+
+
+#############################################################################################
+
+# RNASeq batch 1 --> good_quality
+./190228_NB501882_0102_AHYJJ2BGX9/nf32/8_1_3_p604_d8_S4_R1_001.fastq.gz
+./190228_NB501882_0102_AHYJJ2BGX9/nf29/8_1_3_p601_d3_S1_R1_001.fastq.gz
+./190228_NB501882_0102_AHYJJ2BGX9/nf31/_8_1_3_p604_d3_S3_R1_001.fastq.gz
+./190228_NB501882_0102_AHYJJ2BGX9/nf36/8_2_1_p605_d8_S8_R1_001.fastq.gz
+./190228_NB501882_0102_AHYJJ2BGX9/nf30/8_1_3_p601_d8_S2_R1_001.fastq.gz
+./190228_NB501882_0102_AHYJJ2BGX9/nf34/8_2_1_p600_d8_S6_R1_001.fastq.gz
+./190228_NB501882_0102_AHYJJ2BGX9/nf35/8_2_1_p605_d3_S7_R1_001.fastq.gz
+./190228_NB501882_0102_AHYJJ2BGX9/nf33/8_2_1_p600_d3_S5_R1_001.fastq.gz
+
+P601: mock (sT)
+P604: sT
+P600: mock (LT trunc.)
+P605: LT trunc.
+
+#--batch1 (190228_NB501882_0102_AHYJJ2BGX9)--
+mv 8_1_3_p601_d3_S1_R1_001.fastq.gz mock_sT_d3.fastq.gz
+mv 8_1_3_p601_d8_S2_R1_001.fastq.gz mock_sT_d8.fastq.gz
+mv 8_1_3_p604_d3_S3_R1_001.fastq.gz sT_d3.fastq.gz
+mv 8_1_3_p604_d8_S4_R1_001.fastq.gz sT_d8.fastq.gz
+mv 8_2_1_p600_d3_S5_R1_001.fastq.gz mock_truncLT_d3.fastq.gz
+mv 8_2_1_p600_d8_S6_R1_001.fastq.gz mock_truncLT_d8.fastq.gz
+mv 8_2_1_p605_d3_S7_R1_001.fastq.gz truncLT_d3.fastq.gz
+mv 8_2_1_p605_d8_S8_R1_001.fastq.gz truncLT_d8.fastq.gz
+#--batch2 (190927_NB501882_0150_AHC2MHBGXC_single) --
+mv 8_1_5_p601_d3_S1_R1_001.fastq.gz mock_sT_d3_r2.fastq.gz
+mv 8_1_5_p601_d8_S3_R1_001.fastq.gz mock_sT_d8_r2.fastq.gz
+mv 8_1_5_p604_d3_S2_R1_001.fastq.gz sT_d3_r2.fastq.gz
+mv 8_1_5_p604_d8_S4_R1_001.fastq.gz sT_d8_r2.fastq.gz
+#--batch3 (191008_NB501882_0151_AHC235BGXC) --
+mv 8_2_3_p600_d3_S20_R1_001.fastq.gz mock_truncLT_d3_r2.fastq.gz
+mv 8_2_3_p600_d8_S22_R1_001.fastq.gz mock_truncLT_d8_r2.fastq.gz
+mv 8_2_3_p605_d3_S21_R1_001.fastq.gz truncLT_d3_r2.fastq.gz
+mv 8_2_3_p605_d8_S23_R1_001.fastq.gz truncLT_d8_r2.fastq.gz
+
+
+cut -f2- merged_gene_counts.txt > merged_gene_counts_2.txt
+
+
+
+
+
+
+
+################################################################################################################
+##### STEP1: pca and heatmap_clusters, remove batch effects, intercept assay(rld), then removeBatchEffect  #####
+
+
+#> BiocManager::install(c("gplots"))
+#'getOption("repos")' replaces Bioconductor standard repositories, see
+#'?repositories' for details
+#
+#replacement repositories:
+#    CRAN: http://ftp.gwdg.de/pub/misc/cran/
+#
+#Bioconductor version 3.13 (BiocManager 1.30.16), R 4.1.1 (2021-08-10)
+#Installing package(s) 'gplots'
+#Would you like to use a personal library instead? (yes/No/cancel) 
+
+
+BiocManager::install(c("GenomicFeatures", "AnnotationDbi", "clusterProfiler", "ReactomePA", "org.Hs.eg.db", "DESeq2"))
+BiocManager::install(c("gplots"))
+library("AnnotationDbi")
+library("clusterProfiler")
+library("ReactomePA")
+library("org.Hs.eg.db")
+library(DESeq2)
+library(gplots)
+#setwd("/mnt/Seagate_Corona/Data_Denise_RNASeq/results/featureCounts")
+#setwd("/home/jhuang/DATA/Data_Denise_RNASeq/results/featureCounts")
+setwd("/media/jhuang/Seagate Expansion Drive/Data_Denise_RNASeq/results/featureCounts")
+
+####-- dataset 16 isolates: CORRECTION!! --
+
+
+# --- IMPORTANT: to reminder that sequencing in a batch if possible! ---
+d.raw<- read.delim2("merged_gene_counts_2_f3_f5.txt",sep="\t", header=TRUE, row.names=1)
+ [1] V_8_0_mock_DonorIAligned.sortedByCoord.out.bam            
+ [2] V_8_1_6_p601_d8_DonorIAligned.sortedByCoord.out.bam       
+ [3] V_8_1_5_p604_d3_DonorIIAligned.sortedByCoord.out.bam      
+ [4] V_8_1_6_p604_d3_DonorIAligned.sortedByCoord.out.bam       
+ [5] V_8_2_3_p605_d8_DonorIIAligned.sortedByCoord.out.bam      
+ [6] V_8_0_mock_DonorIIAligned.sortedByCoord.out.bam           
+ [7] V_8_1_5_p601_d8_DonorIIAligned.sortedByCoord.out.bam      
+ [8] V_8_2_3_p605_d3_DonorIIAligned.sortedByCoord.out.bam      
+ [9] V_8_1_6_p604_d8_DonorIAligned.sortedByCoord.out.bam       
+[10] V_8_2_3_p600_d8_DonorIIAligned.sortedByCoord.out.bam      
+[11] V_8_2_4_p600_d8_DonorIAligned.sortedByCoord.out.bam       
+[12] V_8_2_4_p600_d3_DonorIAligned.sortedByCoord.out.bam       
+[13] V_8_1_5_p604_d8_DonorIIAligned.sortedByCoord.out.bam      
+[14] V_8_1_5_p601_d3_DonorIIAligned.sortedByCoord.out.bam      
+[15] V_8_1_6_p601_d3_DonorIAligned.sortedByCoord.out.bam       
+[16] V_8_2_3_p600_d3_DonorIIAligned.sortedByCoord.out.bam      
+[17] V_8_2_4_p605_d3_DonorIAligned.sortedByCoord.out.bam       
+[18] V_8_4_1_p602_d8_DonorIAligned.sortedByCoord.out.bam       
+[19] V_8_3_2_p604and605_d9_DonorIIAligned.sortedByCoord.out.bam
+[20] V_8_4_2_p602_d3_DonorIAligned.sortedByCoord.out.bam       
+[21] V_8_4_2_p602_d3_DonorIIAligned.sortedByCoord.out.bam      
+[22] V_8_2_4_p605_d8_DonorIAligned.sortedByCoord.out.bam       
+[23] V_8_3_1_p600and601_d12_DonorIAligned.sortedByCoord.out.bam
+[24] V_8_4_1_p602_d8_DonorIIAligned.sortedByCoord.out.bam      
+[25] V_8_3_1_p604and605_d12_DonorIAligned.sortedByCoord.out.bam
+[26] V_8_3_2_p600and601_d9_DonorIIAligned.sortedByCoord.out.bam
+[27] V_8_5_1_sTplusLT_d3_Donor1Aligned.sortedByCoord.out.bam   
+[28] V_8_5_2_sTplusLT_d3_Donor2Aligned.sortedByCoord.out.bam  
+
+colnames(d.raw)<- c("V_8_0_mock_DonorI","V_8_1_6_p601_d8_DonorI","V_8_1_5_p604_d3_DonorII","V_8_1_6_p604_d3_DonorI","V_8_2_3_p605_d8_DonorII","V_8_0_mock_DonorII","V_8_1_5_p601_d8_DonorII","V_8_2_3_p605_d3_DonorII","V_8_1_6_p604_d8_DonorI","V_8_2_3_p600_d8_DonorII","V_8_2_4_p600_d8_DonorI","V_8_2_4_p600_d3_DonorI","V_8_1_5_p604_d8_DonorII","V_8_1_5_p601_d3_DonorII","V_8_1_6_p601_d3_DonorI","V_8_2_3_p600_d3_DonorII","V_8_2_4_p605_d3_DonorI","V_8_4_1_p602_d8_DonorI","V_8_3_2_p604and605_d9_DonorII","V_8_4_2_p602_d3_DonorI","V_8_4_2_p602_d3_DonorII","V_8_2_4_p605_d8_DonorI","V_8_3_1_p600and601_d12_DonorI","V_8_4_1_p602_d8_DonorII","V_8_3_1_p604and605_d12_DonorI","V_8_3_2_p600and601_d9_DonorII", "V_8_5_1_p602and604_d3_DonorI", "V_8_5_2_p602and604_d3_DonorII")  #26364
+
+col_order <- c("V_8_0_mock_DonorI","V_8_0_mock_DonorII","V_8_1_5_p601_d3_DonorII", "V_8_1_5_p604_d3_DonorII", "V_8_1_5_p601_d8_DonorII","V_8_1_5_p604_d8_DonorII",   "V_8_1_6_p601_d3_DonorI","V_8_1_6_p604_d3_DonorI","V_8_1_6_p601_d8_DonorI","V_8_1_6_p604_d8_DonorI",  "V_8_2_3_p600_d3_DonorII","V_8_2_3_p605_d3_DonorII","V_8_2_3_p600_d8_DonorII", "V_8_2_3_p605_d8_DonorII",  "V_8_2_4_p600_d3_DonorI","V_8_2_4_p605_d3_DonorI","V_8_2_4_p600_d8_DonorI","V_8_2_4_p605_d8_DonorI",  "V_8_4_1_p602_d8_DonorII","V_8_4_1_p602_d8_DonorI",  "V_8_3_1_p600and601_d12_DonorI", "V_8_3_1_p604and605_d12_DonorI","V_8_3_2_p600and601_d9_DonorII","V_8_3_2_p604and605_d9_DonorII",    "V_8_4_2_p602_d3_DonorI","V_8_4_2_p602_d3_DonorII",    "V_8_5_1_p602and604_d3_DonorI", "V_8_5_2_p602and604_d3_DonorII")
+reordered.raw <- d.raw[,col_order]
+#reordered.raw <- subset(d.raw, select=col_order)
+
+
+
+
+## ---- ACTIVATED for FAKE replicates, y are the fake-replicate of x ----
+## fake replicates
+#fake_reordered.raw <- reordered.raw+1
+#total <- merge(reordered.raw,fake_reordered.raw, by=0)
+#total2 <- total[,-1]
+#rownames(total2) <- total[,1]
+#
+#replicates = as.factor(c("untreated_DonorI","untreated_DonorII", "p601_d3_DonorII","p604_d3_DonorII", "p601_d8_DonorII","p604_d8_DonorII",   "p601_d3_DonorI","p604_d3_DonorI","p601_d8_DonorI","p604_d8_DonorI",  "p600_d3_DonorII","p605_d3_DonorII","p600_d8_DonorII", "p605_d8_DonorII",  "p600_d3_DonorI","p605_d3_DonorI","p600_d8_DonorI","p605_d8_DonorI",  "p602_d8_DonorII","p602_d8_DonorI",  "p600and601_d12_DonorI", "p604and605_d12_DonorI","p600and601_d9_DonorII","p604and605_d9_DonorII",        "untreated_DonorI","untreated_DonorII", "p601_d3_DonorII","p604_d3_DonorII", "p601_d8_DonorII","p604_d8_DonorII",   "p601_d3_DonorI","p604_d3_DonorI","p601_d8_DonorI","p604_d8_DonorI",  "p600_d3_DonorII","p605_d3_DonorII","p600_d8_DonorII", "p605_d8_DonorII",  "p600_d3_DonorI","p605_d3_DonorI","p600_d8_DonorI","p605_d8_DonorI",  "p602_d8_DonorII","p602_d8_DonorI",  "p600and601_d12_DonorI", "p604and605_d12_DonorI","p600and601_d9_DonorII","p604and605_d9_DonorII"))
+#
+#batch = as.factor(c("200420", "200420", "190927", "190927",    "190927", "190927", "190228", "190228",    "190228", "190228", "191008", "191008",    "191008", "191008", "190228", "190228",     "190228", "190228", "200817", "200817",       "200420", "200420", "200817", "200817",       "200420", "200420", "190927", "190927",    "190927", "190927", "190228", "190228",    "190228", "190228", "191008", "191008",    "191008", "191008", "190228", "190228",     "190228", "190228", "200817", "200817",       "200420", "200420", "200817", "200817"))
+#
+#ids = as.factor(c("untreated_DonorI.x","untreated_DonorII.x", "p601_d3_DonorII.x","p604_d3_DonorII.x", "p601_d8_DonorII.x","p604_d8_DonorII.x",   "p601_d3_DonorI.x","p604_d3_DonorI.x","p601_d8_DonorI.x","p604_d8_DonorI.x",  "p600_d3_DonorII.x","p605_d3_DonorII.x","p600_d8_DonorII.x", "p605_d8_DonorII.x",  "p600_d3_DonorI.x","p605_d3_DonorI.x","p600_d8_DonorI.x","p605_d8_DonorI.x",  "p602_d8_DonorII.x","p602_d8_DonorI.x",  "p600and601_d12_DonorI.x", "p604and605_d12_DonorI.x","p600and601_d9_DonorII.x","p604and605_d9_DonorII.x",        "untreated_DonorI.y","untreated_DonorII.y", "p601_d3_DonorII.y","p604_d3_DonorII.y", "p601_d8_DonorII.y","p604_d8_DonorII.y",   "p601_d3_DonorI.y","p604_d3_DonorI.y","p601_d8_DonorI.y","p604_d8_DonorI.y",  "p600_d3_DonorII.y","p605_d3_DonorII.y","p600_d8_DonorII.y", "p605_d8_DonorII.y",  "p600_d3_DonorI.y","p605_d3_DonorI.y","p600_d8_DonorI.y","p605_d8_DonorI.y",  "p602_d8_DonorII.y","p602_d8_DonorI.y",  "p600and601_d12_DonorI.y", "p604and605_d12_DonorI.y","p600and601_d9_DonorII.y","p604and605_d9_DonorII.y", ))
+#
+#donor = as.factor(c("DonorI","DonorII", "DonorII","DonorII", "DonorII","DonorII",   "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorII","DonorII", "DonorII",  "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorI",  "DonorI", "DonorI","DonorII","DonorII",        "DonorI","DonorII", "DonorII","DonorII", "DonorII","DonorII",   "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorII","DonorII", "DonorII",  "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorI",  "DonorI", "DonorI","DonorII","DonorII"))
+#
+#cData = data.frame(row.names=colnames(total2), replicates=replicates, donor=donor, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=total2, colData=cData, design=~replicates)  #batch+
+
+
+
+
+# ---- ACTIVATED for non-fake replicates ----
+replicates = as.factor(c("untreated","untreated", "p601_d3","p604_d3", "p601_d8","p604_d8",   "p601_d3","p604_d3","p601_d8","p604_d8",  "p600_d3","p605_d3","p600_d8", "p605_d8",  "p600_d3","p605_d3","p600_d8","p605_d8",  "p602_d8","p602_d8",  "p600and601_d9d12", "p604and605_d9d12","p600and601_d9d12","p604and605_d9d12",     "p602_d3","p602_d3",    "p602and604_d3","p602and604_d3"))
+
+batch = as.factor(c("200420", "200420", "190927", "190927",    "190927", "190927", "190228", "190228",    "190228", "190228", "191008", "191008",    "191008", "191008", "190228", "190228",     "190228", "190228", "200817", "200817",       "200420", "200420", "200817", "200817",      "210302", "210302",  "210504","210504"))
+
+ids = as.factor(c("untreated_DonorI","untreated_DonorII", "p601_d3_DonorII","p604_d3_DonorII", "p601_d8_DonorII","p604_d8_DonorII",   "p601_d3_DonorI","p604_d3_DonorI","p601_d8_DonorI","p604_d8_DonorI",  "p600_d3_DonorII","p605_d3_DonorII","p600_d8_DonorII", "p605_d8_DonorII",  "p600_d3_DonorI","p605_d3_DonorI","p600_d8_DonorI","p605_d8_DonorI",  "p602_d8_DonorII","p602_d8_DonorI",  "p600and601_d12_DonorI", "p604and605_d12_DonorI","p600and601_d9_DonorII","p604and605_d9_DonorII",        "p602_d3_DonorI","p602_d3_DonorII",      "p602and604_d3_DonorI","p602and604_d3_DonorII"))
+
+donor = as.factor(c("DonorI","DonorII",  "DonorII","DonorII", "DonorII","DonorII",   "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorII","DonorII","DonorII",  "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorI",   "DonorI", "DonorI","DonorII","DonorII",        "DonorI","DonorII",    "DonorI","DonorII"))
+
+cData = data.frame(row.names=colnames(reordered.raw), replicates=replicates, donor=donor, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~batch+replicates) # ERROR due to the factor 'batch'
+dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~donor+replicates)
+
+
+
+
+#> head(reordered.raw,0)
+ [1] V_8_0_mock_DonorI             V_8_0_mock_DonorII           
+
+ [3] V_8_1_5_p601_d3_DonorII       V_8_1_5_p604_d3_DonorII      
+ [5] V_8_1_5_p601_d8_DonorII       V_8_1_5_p604_d8_DonorII      
+ [7] V_8_1_6_p601_d3_DonorI        V_8_1_6_p604_d3_DonorI       
+ [9] V_8_1_6_p601_d8_DonorI        V_8_1_6_p604_d8_DonorI     
+ 
+[11] V_8_2_3_p600_d3_DonorII       V_8_2_3_p605_d3_DonorII      
+[13] V_8_2_3_p600_d8_DonorII       V_8_2_3_p605_d8_DonorII      
+[15] V_8_2_4_p600_d3_DonorI        V_8_2_4_p605_d3_DonorI       
+[17] V_8_2_4_p600_d8_DonorI        V_8_2_4_p605_d8_DonorI       
+
+[19] V_8_4_1_p602_d8_DonorII       V_8_4_1_p602_d8_DonorI       
+
+[21] V_8_3_1_p600and601_d12_DonorI V_8_3_1_p604and605_d12_DonorI
+[23] V_8_3_2_p600and601_d9_DonorII V_8_3_2_p604and605_d9_DonorII
+
+[25] V_8_4_2_p602_d3_DonorI        V_8_4_2_p602_d3_DonorII
+
+[27] V_8_5_1_p602and604_d3_DonorI  V_8_5_2_p602and604_d3_DonorII
+
+
+dds <- estimateSizeFactors(dds)
+sizeFactors(dds)
+
+> sizeFactors(dds)
+>NULL
+> dds <- estimateSizeFactors(dds)
+> sizeFactors(dds)
+            V_8_0_mock_DonorI            V_8_0_mock_DonorII 
+                    0.5697385                     0.7878847 
+      V_8_1_5_p601_d3_DonorII       V_8_1_5_p604_d3_DonorII 
+                    0.9301130                     0.9327397 
+      V_8_1_5_p601_d8_DonorII       V_8_1_5_p604_d8_DonorII 
+                    0.8267532                     0.8305761 
+       V_8_1_6_p601_d3_DonorI        V_8_1_6_p604_d3_DonorI 
+                    1.2743873                     1.2373613 
+                    
+       V_8_1_6_p601_d8_DonorI        V_8_1_6_p604_d8_DonorI 
+                    1.1474853                     1.2071788 
+      V_8_2_3_p600_d3_DonorII       V_8_2_3_p605_d3_DonorII 
+                    0.8610875                     0.8676190 
+                    
+      V_8_2_3_p600_d8_DonorII       V_8_2_3_p605_d8_DonorII 
+                    0.6627211                     0.8716474 
+       V_8_2_4_p600_d3_DonorI        V_8_2_4_p605_d3_DonorI 
+                    1.2870415                     1.3716371 
+                    
+       V_8_2_4_p600_d8_DonorI        V_8_2_4_p605_d8_DonorI 
+                    1.1292211                     1.6931370 
+      V_8_4_1_p602_d8_DonorII        V_8_4_1_p602_d8_DonorI 
+                    1.4178388                     1.0752340 
+                    
+V_8_3_1_p600and601_d12_DonorI V_8_3_1_p604and605_d12_DonorI 
+                    0.9149559                     0.7891984 
+V_8_3_2_p600and601_d9_DonorII V_8_3_2_p604and605_d9_DonorII 
+                    1.2432898                     1.0176785 
+                    
+       V_8_4_2_p602_d3_DonorI       V_8_4_2_p602_d3_DonorII 
+                    0.8947267                     1.0892385 
+???             ???  0,368249813                    0,326217383
+                    
+                    
+            V_8_0_mock_DonorI            V_8_0_mock_DonorII 
+                    0.6152727                     0.8401306 
+      V_8_1_5_p601_d3_DonorII       V_8_1_5_p604_d3_DonorII 
+                    1.0196629                     1.0293038 
+      V_8_1_5_p601_d8_DonorII       V_8_1_5_p604_d8_DonorII 
+                    0.8901261                     0.9062621 
+       V_8_1_6_p601_d3_DonorI        V_8_1_6_p604_d3_DonorI 
+                    1.3752853                     1.3504344 
+                    
+       V_8_1_6_p601_d8_DonorI        V_8_1_6_p604_d8_DonorI 
+                    1.2316027                     1.3085877 
+      V_8_2_3_p600_d3_DonorII       V_8_2_3_p605_d3_DonorII 
+                    0.9323440                     0.9381003 
+      V_8_2_3_p600_d8_DonorII       V_8_2_3_p605_d8_DonorII 
+                    0.7179836                     0.9400712 
+       V_8_2_4_p600_d3_DonorI        V_8_2_4_p605_d3_DonorI 
+                    1.3953243                     1.4836134 
+       V_8_2_4_p600_d8_DonorI        V_8_2_4_p605_d8_DonorI 
+                    1.2135489                     1.8270271 
+      V_8_4_1_p602_d8_DonorII        V_8_4_1_p602_d8_DonorI 
+                    1.5281322                     1.1579240 
+V_8_3_1_p600and601_d12_DonorI V_8_3_1_p604and605_d12_DonorI 
+                    0.9895927                     0.8560524 
+V_8_3_2_p600and601_d9_DonorII V_8_3_2_p604and605_d9_DonorII 
+                    1.3462308                     1.1142589 
+       V_8_4_2_p602_d3_DonorI       V_8_4_2_p602_d3_DonorII 
+                    0.9675338                     1.1800615 
+ V_8_5_1_p602and604_d3_DonorI V_8_5_2_p602and604_d3_DonorII 
+                    0.3940273/1,07                     0.3490526/1,07 
+                    
+                    
+                    
+                    
+                    
+                  
+1/0,8947267
+1/1,0892385
+#1,079921227
+#1,1800615÷1,0892385=1,083382106
+#0,8401306/0,7878847=1,066311606
+#1,3085877/1,2071788=1,084004872
+
+
+
+normalized_counts <- counts(dds, normalized=TRUE)
+write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
+
+#unter konsole
+for sample in V_8_0_mock_DonorI            V_8_0_mock_DonorII       V_8_1_5_p601_d3_DonorII       V_8_1_5_p604_d3_DonorII    V_8_1_5_p601_d8_DonorII       V_8_1_5_p604_d8_DonorII                   V_8_1_3_p601_d3_DonorI        V_8_1_3_p604_d3_DonorI      V_8_1_3_p601_d8_DonorI        V_8_1_3_p604_d8_DonorI     V_8_2_3_p600_d3_DonorII       V_8_2_3_p605_d3_DonorII                      V_8_2_3_p600_d8_DonorII       V_8_2_3_p605_d8_DonorII     V_8_2_1_p600_d3_DonorI        V_8_2_1_p605_d3_DonorI     V_8_2_1_p600_d8_DonorI        V_8_2_1_p605_d8_DonorI                     V_8_4_1_p602_d8_DonorII        V_8_4_2_p602_d8_DonorI     V_8_3_1_p600and601_d12_DonorI V_8_3_1_p604and605_d12_DonorI    V_8_3_2_p600and601_d9_DonorII V_8_3_2_p604and605_d9_DonorII; do
+  echo "bamCoverage --bam ${sample}Aligned.sortedByCoord.out.bam -o ../bigWigs/${sample}_norm.bw --binSize 10 --scaleFactor 1/0.5695507 --effectiveGenomeSize 2864785220"
+done
+
+bamCoverage --bam V_8_0_mock_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_0_mock_DonorI_norm.bw --binSize 10 --scaleFactor 1.755769942869002 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_0_mock_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_0_mock_DonorII_norm.bw --binSize 10 --scaleFactor 1.2654795034714001 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_1_5_p601_d3_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_1_5_p601_d3_DonorII_norm.bw --binSize 10 --scaleFactor 1.0798579813977185 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_1_5_p604_d3_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_1_5_p604_d3_DonorII_norm.bw --binSize 10 --scaleFactor 1.0721818557666658 --effectiveGenomeSize 2864785220
+
+bamCoverage --bam V_8_1_5_p601_d8_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_1_5_p601_d8_DonorII_norm.bw --binSize 10 --scaleFactor 1.2102200664168772 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_1_5_p604_d8_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_1_5_p604_d8_DonorII_norm.bw --binSize 10 --scaleFactor 1.201600002499328 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_1_3_p601_d3_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_1_3_p601_d3_DonorI_norm.bw --binSize 10 --scaleFactor 0.7873192472472169 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_1_3_p604_d3_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_1_3_p604_d3_DonorI_norm.bw --binSize 10 --scaleFactor 0.8112239649836798 --effectiveGenomeSize 2864785220
+#3
+bamCoverage --bam V_8_1_3_p601_d8_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_1_3_p601_d8_DonorI_norm.bw --binSize 10 --scaleFactor 0.870634432181365 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_1_3_p604_d8_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_1_3_p604_d8_DonorI_norm.bw --binSize 10 --scaleFactor 0.8299498353421024 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_2_3_p600_d3_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_2_3_p600_d3_DonorII_norm.bw --binSize 10 --scaleFactor 1.1651495836512735 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_2_3_p605_d3_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_2_3_p605_d3_DonorII_norm.bw --binSize 10 --scaleFactor 1.1570752839462746 --effectiveGenomeSize 2864785220
+#4
+bamCoverage --bam V_8_2_3_p600_d8_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_2_3_p600_d8_DonorII_norm.bw --binSize 10 --scaleFactor 1.508311550800687 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_2_3_p605_d8_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_2_3_p605_d8_DonorII_norm.bw --binSize 10 --scaleFactor 1.1484348612914632 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_2_1_p600_d3_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_2_1_p600_d3_DonorI_norm.bw --binSize 10 --scaleFactor 0.7793194795268097 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_2_1_p605_d3_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_2_1_p605_d3_DonorI_norm.bw --binSize 10 --scaleFactor 0.7323040019461711 --effectiveGenomeSize 2864785220
+#5
+bamCoverage --bam V_8_2_1_p600_d8_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_2_1_p600_d8_DonorI_norm.bw --binSize 10 --scaleFactor 0.8878432857162263 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_2_1_p605_d8_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_2_1_p605_d8_DonorI_norm.bw --binSize 10 --scaleFactor 0.5913195822752901 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_4_1_p602_d8_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_4_1_p602_d8_DonorII_norm.bw --binSize 10 --scaleFactor 0.7064626496729431 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_4_2_p602_d8_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_4_2_p602_d8_DonorI_norm.bw --binSize 10 --scaleFactor 0.9312326587018337 --effectiveGenomeSize 2864785220
+#6
+bamCoverage --bam V_8_3_1_p600and601_d12_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_3_1_p600and601_d12_DonorI_norm.bw --binSize 10 --scaleFactor 1.0941018392180148 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_3_1_p604and605_d12_DonorIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_3_1_p604and605_d12_DonorI_norm.bw --binSize 10 --scaleFactor 1.2714480572782263 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_3_2_p600and601_d9_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_3_2_p600and601_d9_DonorII_norm.bw --binSize 10 --scaleFactor 0.8053334334094346 --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_3_2_p604and605_d9_DonorIIAligned.sortedByCoord.out.bam -o ../bigWigs/V_8_3_2_p604and605_d9_DonorII_norm.bw --binSize 10 --scaleFactor 0.9845779645937887 --effectiveGenomeSize 2864785220
+#7
+bamCoverage --bam V_8_4_2_p602_d3_DonorIAligned.sortedByCoord.out.markDups.bam  -o ../bigWigs/V_8_4_2_p602_d3_DonorI_norm.bw --binSize 10 --scaleFactor 1.117659728  --effectiveGenomeSize 2864785220
+bamCoverage --bam V_8_4_2_p602_d3_DonorIIAligned.sortedByCoord.out.markDups.bam -o ../bigWigs/V_8_4_2_p602_d3_DonorII_norm.bw --binSize 10 --scaleFactor 0.91807258 --effectiveGenomeSize 2864785220
+#8 TODO: sTplusLT_d3_Donor1 (=p602and604_d3_DonorI) and sTplusLT_d3_Donor2 (=p602and604_d3_DonorII)
+
+
+
+
+
+#TODO: write mail to tell Denise that the p602_d3.bw are updated!
+
+#-rwxrwxrwx 1 root root 13057832 Mär 15  2021 V_8_4_2_p602_d3_DonorI_norm.bw
+#-rwxrwxrwx 1 root root 17951593 Mär 15  2021 V_8_4_2_p602_d3_DonorII_norm.bw
+#-rwxrwxrwx 1 root root 13072287 Sep 30 12:20 V_8_4_2_p602_d3_DonorI_norm.bw
+#-rwxrwxrwx 1 root root 17969545 Sep 30 12:31 V_8_4_2_p602_d3_DonorII_norm.bw
+
+
+
+#--go to BREAK POINT--
+# sorted by sT and truncLT
+
+#vsd <- vst(dds)
+rld <- rlogTransformation(dds)
+
+# -- before pca --
+png("pca.png", 1200, 800)
+plotPCA(rld, intgroup=c("replicates"))
+#plotPCA(rld, intgroup = c("replicates", "batch"))
+#plotPCA(rld, intgroup = c("replicates", "ids"))
+#plotPCA(rld, "batch")
+dev.off()
+
+
+# -- before heatmap --
+## generate the pairwise comparison between samples
+library(gplots) 
+library("RColorBrewer")
+png("heatmap.png", 1200, 800)
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+#paste( rld$dex, rld$cell, sep="-" )
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
+rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates))
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+
+# -- remove batch effect --
+#show the results which delete the batches effect
+#http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#why-after-vst-are-there-still-batches-in-the-pca-plot
+mat <- assay(rld)
+mat <- limma::removeBatchEffect(mat, rld$batch)
+assay(rld) <- mat
+
+
+# -- after pca --
+png("pca_after_batch_correction.png", 1200, 800)
+#plotPCA(rld, intgroup = c("replicates", "batch"))
+#plotPCA(rld, intgroup = c("replicates", "ids"))
+plotPCA(rld, intgroup=c("replicates"))
+dev.off()
+
+# -- after heatmap --
+## generate the pairwise comparison between samples
+png("heatmap_after_batch_correction.png", 1200, 800)
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,ids, sep=":"))
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+
+
+
+
+
+
+
+
+############################################################
+##### STEP2: select the differentially expressed genes #####
+
+#p600and601_d9d12
+#p600_d3
+#p601_d3
+#p601_d8
+#p602_d8
+#p604and605_d9d12
+#p604_d3
+#p604_d8
+#p605_d3
+#p605_d8
+#untreated
+#p600_d8
+
+#For each sample there should be a duplicate… In general we need the following comparisons:
+#P600 vs untreated / mock (donor 1+2) --> p600_d3_vs_untreated, p600_d8_vs_untreated
+#P601 vs untreated / mock (donor 1+2) --> p601_d3_vs_untreated, p601_d8_vs_untreated
+#P604 d3 vs p601 d3 (Donor 1+2)       --> p604_d3_vs_p601_d3
+#P604 d8 vs p601 d8 (donor 1+2)       --> p604_d8_vs_p601_d8
+#P605 d3 vs p600 d3 (donor 1+2)       --> p605_d3_vs_p600_d3
+#P605 d8 vs p600 d8 (donor 1+2)       --> p605_d8_vs_p600_d8
+#P602 d8 vs p600 d8 (donor 1+2)       --> p602_d8_vs_p600_d8
+#P604+605 d9/12 vs p600+601 d9/12 (donor 1+2)  --> p604and605_d9d12_vs_p600and601_d9d12
+
+
+#setwd("/mnt/Seagate_Corona/Data_Denise_RNASeq/results/R_results/")
+
+#---- * to untreated (1 and 2) ----
+dds$replicates <- relevel(dds$replicates, "untreated")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("p600_d3_vs_untreated","p600_d8_vs_untreated","p601_d3_vs_untreated","p601_d8_vs_untreated", "p600and601_d9d12_vs_untreated")
+clist <- c("p600and601_d9d12_vs_untreated")  #later
+clist <- c("p604_d3_vs_untreated","p604_d8_vs_untreated")
+
+#---- 3 ----
+dds$replicates <- relevel(dds$replicates, "p601_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("p604_d3_vs_p601_d3")
+clist <- c("p602and604_d3_vs_p601_d3")     #later
+
+#---- 4 ----
+dds$replicates <- relevel(dds$replicates, "p601_d8")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("p604_d8_vs_p601_d8")
+
+#---- 5 ----
+dds$replicates <- relevel(dds$replicates, "p600_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("p605_d3_vs_p600_d3")
+
+#---- 6 ----
+dds$replicates <- relevel(dds$replicates, "p600_d8")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("p605_d8_vs_p600_d8")
+
+#---- 7 ---- 
+dds$replicates <- relevel(dds$replicates, "p600_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("p602_d3_vs_p600_d3")
+
+#---- 8 ----
+dds$replicates <- relevel(dds$replicates, "p600_d8")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("p602_d8_vs_p600_d8")
+
+#---- 9 ----
+dds$replicates <- relevel(dds$replicates, "p600and601_d9d12")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("p604and605_d9d12_vs_p600and601_d9d12")
+
+#---- 10 ----
+dds$replicates <- relevel(dds$replicates, "p602_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("p602_d8_vs_p602_d3")
+
+
+
+#setwd("/mnt/Seagate_Corona/Data_Denise_RNASeq/results/featureCounts/degenes_DonorII")
+##---- * to untreated ----
+#dds$replicates <- relevel(dds$replicates, "untreated_DonorII")
+#dds = DESeq(dds, betaPrior=FALSE)
+#resultsNames(dds)
+#clist <- c("p600_d3_DonorII_vs_untreated_DonorII","p600_d8_DonorII_vs_untreated_DonorII","p601_d3_DonorII_vs_untreated_DonorII","p601_d8_DonorII_vs_untreated_DonorII")
+
+
+for (i in clist) {
+  contrast = paste("replicates", i, sep="_")
+  res = results(dds, name=contrast)
+  res <- res[!is.na(res$log2FoldChange),]
+  geness <- AnnotationDbi::select(org.Hs.eg.db, keys = rownames(res), keytype = "SYMBOL", columns = c("ENSEMBL", "ENTREZID", "SYMBOL", "GENENAME"))
+  geness <- geness[!duplicated(geness$SYMBOL), ]
+  res$SYMBOL = rownames(res)
+  rownames(geness) <- geness$SYMBOL
+  identical(rownames(res), rownames(geness))
+  res_df <- as.data.frame(res)
+  geness_res <- merge(geness, res_df)
+  dim(geness_res)
+  write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "all.txt", sep="-"))
+  #write.csv(res_df, file = paste(i, "background.txt", sep="_"))
+  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=1)
+  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-1)
+  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="-"))
+  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="-"))
+}
+
+
+
+
+
+# ---- using biomaRt annotate the genes ----
+library(biomaRt)
+library(tidyverse)
+ensembl <- useEnsembl(biomart = "ensembl", dataset = "hsapiens_gene_ensembl", version="75")
+#datasets <- listDatasets(ensembl)
+#-->26          hsapiens_gene_ensembl             Homo sapiens genes (GRCh37.p13)
+
+attributes = listAttributes(ensembl)
+attributes[1:25,]
+
+filters = listFilters(ensembl)
+filters[1:25,]
+
+
+for (i in clist) {
+#WT_24hdox_vs_control K3R_3hdox21hchase_vs_control K3R_24hdox_vs_control
+#i<-clist[3]
+  contrast = paste("replicates", i, sep="_")
+  res = results(dds, name=contrast)
+  res <- res[!is.na(res$log2FoldChange),]
+
+  #      filters = 'ensembl_gene_id',
+  geness <- getBM(attributes = c('ensembl_gene_id', 'external_gene_id', 'gene_biotype', 'entrezgene', 'chromosome_name', 'start_position', 'end_position', 'strand', 'description'),
+      values = rownames(res), 
+      mart = ensembl)
+  geness_uniq <- distinct(geness, external_gene_id, .keep_all= TRUE)
+  
+  #merge by column by common colunmn name, in the case "GENEID"
+  res$GENENAME = rownames(res)
+  #identical(rownames(res), rownames(geness_uniq))
+  res_df <- as.data.frame(res)
+  geness_res <- merge(geness_uniq, res_df, by.x="external_gene_id", by.y="GENENAME")
+  dim(geness_res)
+  rownames(geness_res) <- geness_res$external_gene_id
+  geness_res$external_gene_id <- NULL
+  write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "all.txt", sep="-"))
+  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=1)
+  #up <- subset(geness_res, padj<=0.001 & log2FoldChange>=4)
+  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-1)
+  #down <- subset(geness_res, padj<=0.001 & log2FoldChange<=-4)
+  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="-"))
+  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="-"))
+}
+
+
+#--EnhancedVolcano--
+for i in p600_d3_vs_untreated p600_d8_vs_untreated p601_d3_vs_untreated p601_d8_vs_untreated; do
+  echo "png(\"${i}.png\",width=1200, height=1000)"
+  #legendPosition = 'right',legendLabSize = 12,  arrowheads = FALSE,
+  echo "EnhancedVolcano(geness_res, lab = rownames(geness_res), selectLab=c(), x = 'log2FoldChange',y = 'padj', pCutoff=5e-2, FCcutoff=1.0, title='', subtitleLabSize = 18, pointSize = 3.0, labSize = 5.0, colAlpha=1, legendIconSize = 4.0, drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = 'black', subtitle=\"${i}\")"
+  echo "dev.off()"
+done
+
+#library("EnhancedVolcano")
+png("p600_d3_vs_untreated.png",width=1200, height=1000)
+EnhancedVolcano(geness_res, lab = rownames(geness_res), selectLab=c("GAL","IL13RA2","MCOLN2","MMP3","PTPRN","SPP1",       "ABCA6","ABCA8","ABCA9","AXIN2","CDON","CLEC3B","COL21A1","CYP26B1","ECM2","GAS7",    "GRIA1","GUCY1B3","IGFBP5","IGSF10","MBP","NTN1","PALMD","PLXNC1","PPL","PRELP","PTGIS","RCAN2","SLIT3","SORBS2","SPRY1","TINAGL1","TM4SF20","TNXB","TPD52L1"), x = 'log2FoldChange',y = 'padj', pCutoff=5e-2, FCcutoff=1.0, title='', subtitleLabSize = 18, pointSize = 3.0, labSize = 5.0, colAlpha=1, legendIconSize = 4.0, drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = 'black', subtitle="p600 d3 vs. untreated")
+dev.off()
+
+png("p600_d8_vs_untreated.png",width=1200, height=1000)
+EnhancedVolcano(geness_res, lab = rownames(geness_res), selectLab=c("CMPK2","IFI44L","IFI6","MX1","OAS1","OAS2","OAS3","OASL","PTPRN","RSAD2","THEMIS2"), x = 'log2FoldChange',y = 'padj', pCutoff=5e-2, FCcutoff=1.0, title='', subtitleLabSize = 18, pointSize = 3.0, labSize = 5.0, colAlpha=1, legendIconSize = 4.0, drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = 'black', subtitle="p600 d8 vs. untreated")
+dev.off()
+
+
+png("p601_d3_vs_untreated.png",width=1200, height=1000)
+EnhancedVolcano(geness_res, lab = rownames(geness_res), x = 'log2FoldChange',y = 'padj', pCutoff=5e-2, FCcutoff=1.0, title='', subtitleLabSize = 18, pointSize = 3.0, labSize = 5.0, colAlpha=1, legendIconSize = 4.0, drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = 'black', subtitle="p601 d3 vs. untreated")
+dev.off()
+
+png("p601_d8_vs_untreated.png",width=1200, height=1000)
+EnhancedVolcano(geness_res, lab = rownames(geness_res), selectLab=c(), x = 'log2FoldChange',y = 'padj', pCutoff=5e-2, FCcutoff=1.0, title='', subtitleLabSize = 18, pointSize = 3.0, labSize = 5.0, colAlpha=1, legendIconSize = 4.0, drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = 'black', subtitle="p601 d8 vs. untreated")
+dev.off()
+
+
+
+Since in the volcano table, I only give the filtered genes (p
+unfiltered table.
+  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
+  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-2)
+
+
+
+
+
+mv p600and601_d9d12_vs_untreated-up.txt p600a601_d9d12_vs_untreated-up.txt
+mv p600and601_d9d12_vs_untreated-down.txt p600a601_d9d12_vs_untreated-down.txt
+mv p604and605_d9d12_vs_p600and601_d9d12-up.txt p604a605_vs_p600a601_d9d12-up.txt
+mv p604and605_d9d12_vs_p600and601_d9d12-down.txt p604a605_vs_p600a601_d9d12-down.txt
+
+
+
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+_p600_d3_vs_untreated-up.txt \
+p600_d3_vs_untreated-down.txt \
+p600_d8_vs_untreated-up.txt \
+p600_d8_vs_untreated-down.txt \
+p601_d3_vs_untreated-up.txt \
+p601_d3_vs_untreated-down.txt \
+p601_d8_vs_untreated-up.txt \
+p601_d8_vs_untreated-down.txt \
+p600a601_d9d12_vs_untreated-up.txt \
+p600a601_d9d12_vs_untreated-down.txt \
+p604_d3_vs_p601_d3-up.txt \
+p604_d3_vs_p601_d3-down.txt \
+p604_d8_vs_p601_d8-up.txt \
+p604_d8_vs_p601_d8-down.txt \
+p605_d3_vs_p600_d3-up.txt \
+p605_d3_vs_p600_d3-down.txt \
+p605_d8_vs_p600_d8-up.txt \
+p605_d8_vs_p600_d8-down.txt \
+p602_d3_vs_p600_d3-up.txt \
+p602_d3_vs_p600_d3-down.txt \
+p602_d8_vs_p600_d8-up.txt \
+p602_d8_vs_p600_d8-down.txt \
+p604a605_vs_p600a601_d9d12-up.txt \
+p604a605_vs_p600a601_d9d12-down.txt \
+-d$',' -o degenes.xls;
+
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+p600a601_d9d12_vs_untreated-all.txt \
+p600a601_d9d12_vs_untreated-up.txt \
+p600a601_d9d12_vs_untreated-down.txt \
+-d$',' -o p600a601_d9d12_vs_untreated.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+p602_d3_vs_p600_d3-all.txt \
+p602_d3_vs_p600_d3-up.txt \
+p602_d3_vs_p600_d3-down.txt \
+-d$',' -o p602_d3_vs_p600_d3.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+p602_d8_vs_p600_d8-all.txt \
+p602_d8_vs_p600_d8-up.txt \
+p602_d8_vs_p600_d8-down.txt \
+-d$',' -o p602_d8_vs_p600_d8.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+p602and604_d3_vs_untreated-all.txt \
+p602and604_d3_vs_untreated-up.txt \
+p602and604_d3_vs_untreated-down.txt \
+-d$',' -o p602and604_d3_vs_untreated.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+p602and604_d3_vs_p601_d3-all.txt \
+p602and604_d3_vs_p601_d3-up.txt \
+p602and604_d3_vs_p601_d3-down.txt \
+-d$',' -o p602and604_d3_vs_p601_d3.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+p600and601_d9d12_vs_untreated-all.txt \
+p600and601_d9d12_vs_untreated-up.txt \
+p600and601_d9d12_vs_untreated-down.txt \
+-d$',' -o p600and601_d9d12_vs_untreated.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+p602_d8_vs_p602_d3-all.txt \
+p602_d8_vs_p602_d3-up.txt \
+p602_d8_vs_p602_d3-down.txt \
+-d$',' -o p602_d8_vs_p602_d3.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+p604_d3_vs_untreated-all.txt \
+p604_d3_vs_untreated-up.txt \
+p604_d3_vs_untreated-down.txt \
+-d$',' -o p604_d3_vs_untreated.xls;
+
+~/Tools/csv2xls-0.4/csv_to_xls.py \
+p604_d8_vs_untreated-all.txt \
+p604_d8_vs_untreated-up.txt \
+p604_d8_vs_untreated-down.txt \
+-d$',' -o p604_d8_vs_untreated.xls;
+
+
+
+
+############### prepare IPA tables ###############
+# First thing: commenting the 4 lines in the for-loop above.
+cut -d',' -f1-1 mock_sT_d8_vs_mock_sT_d3_background.txt > symbol1.txt
+cut -d',' -f1-1 sT_d3_vs_mock_sT_d3_background.txt > symbol2.txt
+cut -d',' -f1-1 sT_d8_vs_mock_sT_d8_background.txt > symbol3.txt
+cut -d',' -f1-1 sT_d8_vs_sT_d3_background.txt > symbol4.txt
+
+cut -d',' -f1-7 sT_d3_vs_mock_sT_d3_background.txt > sT_d3_vs_mock_d3.txt
+cut -d',' -f2-7 sT_d8_vs_mock_sT_d8_background.txt > sT_d8_vs_mock_d8.txt
+cut -d',' -f2-7 mock_sT_d8_vs_mock_sT_d3_background.txt > mock_d8_vs_mock_d3.txt
+cut -d',' -f2-7 sT_d8_vs_sT_d3_background.txt > sT_d8_vs_sT_d3.txt
+paste -d',' sT_d3_vs_mock_d3.txt sT_d8_vs_mock_d8.txt mock_d8_vs_mock_d3.txt sT_d8_vs_sT_d3.txt > sT_degenes_IPA.txt
+
+sT_degenes_IPA <- read.csv("sT_degenes_IPA.txt", row.names=1) 
+# modify the headers
+colnames(sT_degenes_IPA)<- c("sT_d3_vs_mock_d3_baseMean","sT_d3_vs_mock_d3_log2FoldChange","sT_d3_vs_mock_d3_lfcSE","sT_d3_vs_mock_d3_stat","sT_d3_vs_mock_d3_pvalue","sT_d3_vs_mock_d3_padj","sT_d8_vs_mock_d8_baseMean","sT_d8_vs_mock_d8_log2FoldChange","sT_d8_vs_mock_d8_lfcSE","sT_d8_vs_mock_d8_stat","sT_d8_vs_mock_d8_pvalue","sT_d8_vs_mock_d8_padj","mock_d8_vs_mock_d3_baseMean","mock_d8_vs_mock_d3_log2FoldChange","mock_d8_vs_mock_d3_lfcSE","mock_d8_vs_mock_d3_stat","mock_d8_vs_mock_d3_pvalue","mock_d8_vs_mock_d3_padj","sT_d8_vs_sT_d3_baseMean","sT_d8_vs_sT_d3_log2FoldChange","sT_d8_vs_sT_d3_lfcSE","sT_d8_vs_sT_d3_stat","sT_d8_vs_sT_d3_pvalue","sT_d8_vs_sT_d3_padj")
+
+sT_degenes_IPA$SYMBOL = rownames(sT_degenes_IPA)
+identical(rownames(sT_degenes_IPA), rownames(geness))
+geness_sT_degenes_IPA <- merge(geness, sT_degenes_IPA)
+write.csv(as.data.frame(geness_sT_degenes_IPA[order(geness_sT_degenes_IPA$sT_d8_vs_mock_d8_padj),]), file = "geness_sT_degenes_IPA.txt")
+~/Tools/csv2xls-0.4/csv_to_xls.py geness_sT_degenes_IPA.txt -d$',' -o geness_sT_degenes_IPA.xls;
+############### prepare IPA tables END ###############
+
+
+
+
+#under DIR degenes under KONSOLE
+for comp in mock_sT_d8_vs_mock_sT_d3 sT_d3_vs_mock_sT_d3 sT_d8_vs_mock_sT_d8 sT_d8_vs_sT_d3; do \
+for comp in sT_mock_d3_vs_untreated sT_mock_d8_vs_untreated LTtr_mock_d3_vs_untreated LTtr_mock_d8_vs_untreated; do \
+for comp in p602_d8_vs_p600_d8 p604and605_d9ord12_vs_p600and601_d9ord12; do \
+
+mkdir ${comp}_output; \
+cut -d',' -f2- ${comp}_up.txt > ${comp}_output/upregulated_filtered; \
+cut -d',' -f2- ${comp}_down.txt > ${comp}_output/downregulated_filtered; \
+cut -d',' -f2- ${comp}_background.txt > ${comp}_output/background; \
+cd ${comp}_output; \
+~/Tools/csv2xls-0.4/csv_to_xls.py upregulated_filtered downregulated_filtered background -d$',' -o ../${comp}_degenes.xls; \
+cd ..; \
+done
+# 
+
+##--- load the temporary results and pathways_KEGG calculation (https://yulab-smu.github.io/clusterProfiler-book/chapter6.html) ----
+# under CONSOLE
+# perform the GAMOLA2-annotation with “/media/jhuang/Elements/Data_Tam_RNASeq/run_with_gamola2.sh”
+mkdir pathways_KEGG
+
+#--continue from BREAK POINT--
+##
+#source("https://bioconductor.org/biocLite.R") 
+#biocLite("org.Hs.eg.db")
+#biocLite("AnnotationDbi")
+library("org.Hs.eg.db")
+library("ReactomePA")
+setwd("~/DATA/Data_Denise_RNASeq/results/featureCounts/pathways_KEGG")
+
+library("clusterProfiler")
+for sample in mock_sT_d8_vs_mock_sT_d3 sT_d3_vs_mock_sT_d3 sT_d8_vs_mock_sT_d8 sT_d8_vs_sT_d3; do
+for sample in sT_mock_d3_vs_untreated sT_mock_d8_vs_untreated LTtr_mock_d3_vs_untreated LTtr_mock_d8_vs_untreated; do \
+for sample in p602_d8_vs_p600_d8 p604and605_d9ord12_vs_p600and601_d9ord12; do \
+for sample in p600_d3_vs_untreated p600_d8_vs_untreated p601_d3_vs_untreated p601_d8_vs_untreated p600a601_d9d12_vs_untreated   p604_d3_vs_p601_d3 p604_d8_vs_p601_d8 p605_d3_vs_p600_d3 p605_d8_vs_p600_d8    p602_d3_vs_p600_d3 p602_d8_vs_p600_d8   p604a605_vs_p600a601_d9d12; do \
+for sample in p600_d3_vs_untreated p600_d8_vs_untreated p601_d3_vs_untreated p601_d8_vs_untreated p600a601_d9d12_vs_untreated   p604_d3_vs_p601_d3 p604_d8_vs_p601_d8 p605_d3_vs_p600_d3 p605_d8_vs_p600_d8    p602_d3_vs_p600_d3 p602_d8_vs_p600_d8   p604a605_vs_p600a601_d9d12; do \
+for sample in p602a604_d3_vs_untreated; do
+
+for sample in p604_d3_vs_p601_d3 p604_d8_vs_p601_d8; do \
+for sample in p602_d8_vs_p602_d3; do \
+echo "${sample}_up <- read.csv('${sample}-up.txt', row.names=1)"
+echo "${sample}_down <- read.csv('${sample}-down.txt', row.names=1)"
+#echo "${sample}_sig <- rbind(temp_up, temp_down)"
+echo "${sample}_up_KEGG <- enrichKEGG(${sample}_up\$entrezgene)"
+echo "write.table(as.data.frame(${sample}_up_KEGG), file = '${sample}_up_KEGG.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_down_KEGG <- enrichKEGG(${sample}_down\$entrezgene)"
+echo "write.table(as.data.frame(${sample}_down_KEGG), file = '${sample}_down_KEGG.txt', sep = '\t', row.names = FALSE)"
+done
+
+
+for sample in p604_d3_vs_p601_d3 p604_d8_vs_p601_d8; do \
+echo "${sample}_up <- read.csv('${sample}-up.txt', row.names=1)"
+echo "${sample}_up_GO_BP <- enrichGO(${sample}_up\$entrezgene_id, 'org.Hs.eg.db', ont='BP')"
+echo "write.table(as.data.frame(${sample}_up_GO_BP), file = '${sample}_up_GO_BP.txt', sep = '\t', row.names = FALSE)"
+echo "${sample}_down <- read.csv('${sample}-down.txt', row.names=1)"
+echo "${sample}_down_GO_BP <- enrichGO(${sample}_down\$entrezgene_id, 'org.Hs.eg.db', ont='BP')"
+echo "write.table(as.data.frame(${sample}_down_GO_BP), file = '${sample}_down_GO_BP.txt', sep = '\t', row.names = FALSE)"
+done
+
+
+
+# copy the generated codes above to R-environment.
+
+
+
+library("clusterProfiler")
+library("org.Hs.eg.db")
+p604_d3_vs_p601_d3_up <- read.csv('p604_d3_vs_p601_d3-up.txt', row.names=1)
+p604_d3_vs_p601_d3_up_GO_BP <- enrichGO(p604_d3_vs_p601_d3_up$entrezgene, 'org.Hs.eg.db', ont='BP')
+write.table(as.data.frame(p604_d3_vs_p601_d3_up_GO_BP), file = 'p604_d3_vs_p601_d3_up_GO_BP.txt', sep = '\t', row.names = FALSE)
+p604_d3_vs_p601_d3_down <- read.csv('p604_d3_vs_p601_d3-down.txt', row.names=1)
+p604_d3_vs_p601_d3_down_GO_BP <- enrichGO(p604_d3_vs_p601_d3_down$entrezgene, 'org.Hs.eg.db', ont='BP')
+write.table(as.data.frame(p604_d3_vs_p601_d3_down_GO_BP), file = 'p604_d3_vs_p601_d3_down_GO_BP.txt', sep = '\t', row.names = FALSE)
+p604_d8_vs_p601_d8_up <- read.csv('p604_d8_vs_p601_d8-up.txt', row.names=1)
+p604_d8_vs_p601_d8_up_GO_BP <- enrichGO(p604_d8_vs_p601_d8_up$entrezgene, 'org.Hs.eg.db', ont='BP')
+write.table(as.data.frame(p604_d8_vs_p601_d8_up_GO_BP), file = 'p604_d8_vs_p601_d8_up_GO_BP.txt', sep = '\t', row.names = FALSE)
+p604_d8_vs_p601_d8_down <- read.csv('p604_d8_vs_p601_d8-down.txt', row.names=1)
+p604_d8_vs_p601_d8_down_GO_BP <- enrichGO(p604_d8_vs_p601_d8_down$entrezgene, 'org.Hs.eg.db', ont='BP')
+write.table(as.data.frame(p604_d8_vs_p601_d8_down_GO_BP), file = 'p604_d8_vs_p601_d8_down_GO_BP.txt', sep = '\t', row.names = FALSE)
+
+
+png("GO_BP_p604_vs_p601.png", width=1000, height=5000)
+merged_list <- merge_result(list('sT d3 up'=p604_d3_vs_p601_d3_up_GO_BP, 'sT d8 up'=p604_d8_vs_p601_d8_up_GO_BP, 'sT d3 down'=p604_d3_vs_p601_d3_down_GO_BP, 'sT d8 down'=p604_d8_vs_p601_d8_down_GO_BP))
+dotplot(merged_list, showCategory=10000)
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+svg("KEGG_p604_vs_p601.svg")
+merged_list <- merge_result(list('sT d3 up'=p604_d3_vs_p601_d3_up_KEGG, 'sT d8 up'=p604_d8_vs_p601_d8_up_KEGG, 'sT d3 down'=p604_d3_vs_p601_d3_down_KEGG, 'sT d8 down'=p604_d8_vs_p601_d8_down_KEGG))
+#merged_list <- merge_result(list('sT_mock_d3-untreated'=sT_mock_d3_vs_untreated_KEGG, 'sT_mock_d8-untreated'=sT_mock_d8_vs_untreated_KEGG, 'LTtr_mock_d3-untreated'=LTtr_mock_d3_vs_untreated_KEGG, 'LTtr_mock_d8-untreated'=LTtr_mock_d8_vs_untreated_KEGG))
+dotplot(merged_list, showCategory=10000)
+dev.off()
+
+svg("KEGG_p605_vs_p600.svg")
+merged_list <- merge_result(list('LTtr d3 up'=p605_d3_vs_p600_d3_up_KEGG, 'LTtr d8 up'=p605_d8_vs_p600_d8_up_KEGG, 'LTtr d3 down'=p605_d3_vs_p600_d3_down_KEGG, 'LTtr d8 down'=p605_d8_vs_p600_d8_down_KEGG))
+dotplot(merged_list, showCategory=10000)
+dev.off()
+
+
+
+
+
+
+
+
+# under CONSOLE
+cd pathways_KEGG
+~/Tools/csv2xls-0.4/csv_to_xls.py sT_d3_vs_mock_sT_d3_KEGG.txt sT_d8_vs_mock_sT_d8_KEGG.txt mock_sT_d8_vs_mock_sT_d3_KEGG.txt sT_d8_vs_sT_d3_KEGG.txt -d$'\t' -o pathways_KEGG.xls
+~/Tools/csv2xls-0.4/csv_to_xls.py sT_mock_d3_vs_untreated_KEGG.txt sT_mock_d8_vs_untreated_KEGG.txt LTtr_mock_d3_vs_untreated_KEGG.txt LTtr_mock_d8_vs_untreated_KEGG.txt -d$'\t' -o pathways_KEGG.xls
+~/Tools/csv2xls-0.4/csv_to_xls.py p602_d8_vs_p600_d8_KEGG.txt p604and605_d9ord12_vs_p600and601_d9ord12_KEGG.txt -d$'\t' -o pathways_KEGG.xls
+~/Tools/csv2xls-0.4/csv_to_xls.py _p600_d3_vs_untreated_up_KEGG.txt p600_d3_vs_untreated_down_KEGG.txt p600_d8_vs_untreated_up_KEGG.txt p600_d8_vs_untreated_down_KEGG.txt p601_d3_vs_untreated_up_KEGG.txt p601_d3_vs_untreated_down_KEGG.txt p601_d8_vs_untreated_up_KEGG.txt p601_d8_vs_untreated_down_KEGG.txt p600a601_d9d12_vs_untr_up_KEGG.txt p600a601_d9d12_vs_untr_down_KEGG.txt p604_d3_vs_p601_d3_up_KEGG.txt p604_d3_vs_p601_d3_down_KEGG.txt p604_d8_vs_p601_d8_up_KEGG.txt p604_d8_vs_p601_d8_down_KEGG.txt p605_d3_vs_p600_d3_up_KEGG.txt p605_d3_vs_p600_d3_down_KEGG.txt p605_d8_vs_p600_d8_up_KEGG.txt p605_d8_vs_p600_d8_down_KEGG.txt p602_d3_vs_p600_d3_up_KEGG.txt p602_d3_vs_p600_d3_down_KEGG.txt p602_d8_vs_p600_d8_up_KEGG.txt p602_d8_vs_p600_d8_down_KEGG.txt p604a605_vs_p600a601_d9d12_up_KEGG.txt p604a605_vs_p600a601_d9d12_down_KEGG.txt -d$'\t' -o KEGG.xls
+
+
+
+
+
+
+##--- load the temporary results and pathways_MSigDB calculation on the sT-RNASeq (https://yulab-smu.github.io/clusterProfiler-book/chapter7.html) ----
+#https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp
+#https://www.gsea-msigdb.org/gsea/msigdb/index.jsp
+#mkdir pathways_MSigDB
+setwd("~/DATA/Data_Denise_RNASeq/results/featureCounts/pathways_MSigDB")
+
+#gmtfile <- system.file("extdata", "c5.cc.v5.0.entrez.gmt", package="clusterProfiler")
+H_all <- read.gmt("~/REFs/MSigDB/h.all.v7.0.entrez.gmt")
+C1_all <- read.gmt("~/REFs/MSigDB/c1.all.v7.0.entrez.gmt")
+C2_all <- read.gmt("~/REFs/MSigDB/c2.all.v7.0.entrez.gmt")
+C3_all <- read.gmt("~/REFs/MSigDB/c3.all.v7.0.entrez.gmt")
+C4_all <- read.gmt("~/REFs/MSigDB/c4.all.v7.0.entrez.gmt")
+C5_all <- read.gmt("~/REFs/MSigDB/c5.all.v7.0.entrez.gmt")
+C6_all <- read.gmt("~/REFs/MSigDB/c6.all.v7.0.entrez.gmt")
+C7_all <- read.gmt("~/REFs/MSigDB/c7.all.v7.0.entrez.gmt")
+
+for sample in mock_sT_d8_vs_mock_sT_d3 sT_d3_vs_mock_sT_d3 sT_d8_vs_mock_sT_d8 sT_d8_vs_sT_d3; do
+for sample in p602_d8_vs_p600_d8 p604and605_d9ord12_vs_p600and601_d9ord12; do \
+echo "temp_up <- read.csv('../degenes/${sample}_output/upregulated_filtered', row.names=1)"
+echo "temp_down <- read.csv('../degenes/${sample}_output/downregulated_filtered', row.names=1)"
+echo "${sample}_sig <- rbind(temp_up, temp_down)"
+echo "${sample}_MSigDB <- enricher(${sample}_sig\$ENTREZID, TERM2GENE=C7_all)"
+echo "write.table(as.data.frame(${sample}_MSigDB), file = '${sample}_MSigDB.txt', sep = '\t', row.names = FALSE)"
+done
+# copy the generated codes above to R-environment.
+
+# under CONSOLE
+cd pathways_MSigDB
+~/Tools/csv2xls-0.4/csv_to_xls.py p602_d8_vs_p600_d8_MSigDB.txt p604and605_d9ord12_vs_p600and601_d9ord12_MSigDB.txt -d$'\t' -o pathways_MSigDB_C7_all.xls
+
+
+
+
+###################################################################
+##### STEP3: prepare all_genes #####
+#rld <- rlogTransformation(dds)
+RNASeq.NoCellLine <- assay(rld)
+# reorder the columns
+#colnames(RNASeq.NoCellLine) = c("", "")
+#col.order <-  c("mock_sT_d3", "mock_sT_d3_r2", "mock_sT_d8", "mock_sT_d8_r2", "sT_d3", "sT_d3_r2", "sT_d8", "sT_d8_r2")
+col.order <- c("V_8_4_1_p602_d8_DonorII","V_8_4_2_p602_d8_DonorI","V_8_2_3_p600_d8_DonorII", "V_8_2_1_p600_d8_DonorI",   "V_8_3_2_p604and605_d9_DonorII","V_8_3_1_p604and605_d12_DonorI",  "V_8_3_2_p600and601_d9_DonorII", "V_8_3_1_p600and601_d12_DonorI")
+RNASeq.NoCellLine <- RNASeq.NoCellLine[,col.order]
+
+#Option1: filter to genes with overall lfc > 2          #612
+RNASeq.NoCellLine_  <- RNASeq.NoCellLine[apply(RNASeq.NoCellLine,1,function(x){max(x)-min(x)})>=2,]
+
+#Option2: not using the automatical comparing between max and min, rather than using manually selected from DESeq2 between conditions.
+cluster_ids_before <- read.csv("../../cluster_ids.csv")
+geness_before <- select(org.Hs.eg.db, keys = as.vector(cluster_ids_before$ensembl_gene_id), keytype = "ENSEMBL", columns = c("SYMBOL"))  #1129
+geness_before$SYMBOL
+cluster1_pathways <- enrichKEGG(geness_before$SYMBOL, organism= 'hsa')
+intersected_genes <- intersect(geness_before$SYMBOL, rownames(RNASeq.NoCellLine_))   #1076
+RNASeq.NoCellLine_  <- RNASeq.NoCellLine[intersected_genes,]
+
+#Option3: as paper described, A heatmap showing expression values of all DEGs which are significant between any pair conditions.
+all_genes <- c(rownames(mock_sT_d8_vs_mock_sT_d3_sig),rownames(sT_d3_vs_mock_sT_d3_sig),rownames(sT_d8_vs_mock_sT_d8_sig),rownames(sT_d8_vs_sT_d3_sig))     #873
+all_genes <- unique(all_genes)   #663
+#all_genes2 <- c(rownames(WAC_vs_mock_sig),rownames(WAP_vs_mock_sig),rownames(WAC_vs_WAP_sig))   #3917
+#all_genes2 <- unique(all_genes2)   #2608
+#intersected_genes <- intersect(all_genes, all_genes2)  # 2608
+#RNASeq.NoCellLine <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
+RNASeq.NoCellLine_  <- RNASeq.NoCellLine[all_genes,]
+write.csv(as.data.frame(RNASeq.NoCellLine_), file ="gene_expression_keeping_replicates.txt")
+
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_sT_d3 = rowMeans(RNASeq.NoCellLine_[, 1:2]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_sT_d8 = rowMeans(RNASeq.NoCellLine_[, 3:4]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, sT_d3 = rowMeans(RNASeq.NoCellLine_[, 5:6]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, sT_d8 = rowMeans(RNASeq.NoCellLine_[, 7:8]))
+RNASeq.NoCellLine_ <- RNASeq.NoCellLine_[,c(-1:-8)]        #663x4
+#RNASeq.NoCellLine__ <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
+write.csv(as.data.frame(RNASeq.NoCellLine_ ), file ="gene_expression_merging_replicates.txt")
+
+
+
+
+######################################################################
+##### STEP4: clustering the genes and draw heatmap #####
+#clustering methods: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).  pearson or spearman
+datamat = RNASeq.NoCellLine_
+hr <- hclust(as.dist(1-cor(t(datamat), method="pearson")), method="complete")
+hc <- hclust(as.dist(1-cor(datamat, method="spearman")), method="complete")
+mycl = cutree(hr, h=max(hr$height)/1.05)
+mycol = c("YELLOW", "DARKBLUE", "DARKORANGE", "DARKMAGENTA", "DARKCYAN", "DARKRED",  "MAROON", "DARKGREEN", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN","LIGHTGREEN", "BLUE", "ORANGE", "CYAN", "RED", "GREEN");
+
+mycol = mycol[as.vector(mycl)]
+#sampleCols <- rep('GREY',ncol(RNASeq.NoCellLine_))
+#names(sampleCols) <- c("mock_r1", "mock_r2", "mock_r3", "mock_r4", "WAP_r1", "WAP_r2",  "WAP_r3", "WAP_r4", "WAC_r1","WAC_r2")
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,4)=='mock'] <- 'GREY'
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,3)=='WAP'] <- 'RED'
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,3)=='dM_'] <- 'CYAN'
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,3)=='dP_'] <- 'BLUE'
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,3)=='WAC'] <- 'GREEN'
+png("DEGs_heatmap.png", width=900, height=1000)
+heatmap.2(as.matrix(datamat),Rowv=as.dendrogram(hr),Colv = NA, dendrogram = 'row',
+            scale='row',trace='none',col=bluered(75), 
+            RowSideColors = mycol, labRow="", srtCol=15)
+#heatmap.2(datamat,Rowv=as.dendrogram(hr),Colv=as.dendrogram(hc),
+            scale='row',trace='none',col=bluered(75),
+            RowSideColors = mycol, labRow="",
+            ColSideColors = sampleCols,
+            main=sprintf('%s', "RNA-Seq for all DEGs"), srtCol=30)
+heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none", margin=c(5,5), sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none', labRow="", srtCol=30, lhei=c(0.1,2))
+#heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none",, sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none', cexRow=1.4, lhei=c(0.25,5))
+#heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none", margin=c(10,10), sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none')
+#heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none", margin=c(10,10), sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none', cexRow=1.2, lhei=c(0.1,5))
+dev.off()
+
+
+#### cluster members #####
+write.csv(names(subset(mycl, mycl == '1')),file='cluster1_YELLOW.txt')
+write.csv(names(subset(mycl, mycl == '2')),file='cluster2_DARKBLUE.txt') 
+write.csv(names(subset(mycl, mycl == '3')),file='cluster3_DARKORANGE.txt')  
+write.csv(names(subset(mycl, mycl == '4')),file='cluster4_DARKMAGENTA.txt') 
+#~/Tools/csv2xls-0.4/csv_to_xls.py cluster*.txt -d',' -o genelist_clusters.xls
+
+
+#### pathway plot ####
+library("clusterProfiler")
+library("ReactomePA")
+#The cutoff of pathway enrichment is padj <=  0.001.
+for sample_id in cluster1_YELLOW cluster2_DARKBLUE cluster3_DARKORANGE cluster4_DARKMAGENTA; do \
+echo "${sample_id}_genes <- read.csv(\"${sample_id}.txt\")"; \
+echo "geness <- select(org.Hs.eg.db, keys = as.vector(${sample_id}_genes\$x), keytype = \"SYMBOL\", columns = c(\"ENTREZID\"))"; \
+echo "${sample_id}_pathways <- enrichKEGG(geness\$ENTREZID, organism= 'hsa', pvalueCutoff =  0.001, pAdjustMethod=\"BH\")"; \
+echo "write.table(as.data.frame(${sample_id}_pathways), file = \"pathway_${sample_id}.txt\", sep = \"\t\", row.names = FALSE)"; \
+done
+png(file= 'pathways_cluster.png', width=900, height=1040)
+merged_list <- merge_result(list(YELLOW=cluster1_YELLOW_pathways, DARKBLUE=cluster2_DARKBLUE_pathways, DARKORANGE=cluster3_DARKORANGE_pathways, DARKMAGENTA=cluster4_DARKMAGENTA_pathways)) 
+#merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways)) %>% plot(., showCategory=30, font.size = 16)
+dotplot(merged_list, showCategory=30, font.size = 16)
+#dotplot(merged_list, showCategory=30,)
+dev.off()
+#~/Tools/csv2xls-0.4/csv_to_xls.py pathway_cluster*.txt -d$'\t' -o pathways_clusters.xls
+
+
+# under CONSOLE
+mv gene_expression_* ../degenes/
+mv DEGs_heatmap.png ../degenes/
+mv cluster*.txt ../degenes/
+mv genelist_clusters.xls ../degenes/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################
+####################### truncLT ############################
+##### STEP2: select the differentially expressed genes #####
+
+#mock_truncLT_d3 mock_truncLT_d8 truncLT_d3 truncLT_d8
+setwd("~/DATA/Data_Denise_RNASeq/results/featureCounts/degenes")
+#---- relevel to mock ----
+dds$replicates <- relevel(dds$replicates, "mock_truncLT_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("mock_truncLT_d8_vs_mock_truncLT_d3", "truncLT_d3_vs_mock_truncLT_d3")
+
+dds$replicates <- relevel(dds$replicates, "mock_truncLT_d8")
+dds = DESeq(dds, betaPrior=FALSE)
+clist <- c("truncLT_d8_vs_mock_truncLT_d8")
+
+dds$replicates <- relevel(dds$replicates, "truncLT_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+clist <- c("truncLT_d8_vs_truncLT_d3")
+
+# >>> math.log(3,2) 
+# 1.5849625007211563
+for (i in clist) {
+  contrast = paste("replicates", i, sep="_")
+  res = results(dds, name=contrast)
+  #res <- res[!is.na(res$log2FoldChange),]
+  geness <- AnnotationDbi::select(org.Hs.eg.db, keys = rownames(res), keytype = "SYMBOL", columns = c("ENSEMBL", "ENTREZID", "SYMBOL", "GENENAME"))
+  geness <- geness[!duplicated(geness$SYMBOL), ]
+  res$SYMBOL = rownames(res)
+  rownames(geness) <- geness$SYMBOL
+  identical(rownames(res), rownames(geness))
+  res_df <- as.data.frame(res)
+  #geness_res <- merge(geness, res_df)
+  #dim(geness_res)
+  #write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "background.txt", sep="_"))
+  write.csv(res_df, file = paste(i, "background.txt", sep="_"))
+  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
+  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-2)
+  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="_"))
+  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="_"))
+}
+
+############### prepare IPA tables ###############
+# First thing: commenting the 4 lines in the for-loop above.
+cut -d',' -f1-1 mock_truncLT_d8_vs_mock_truncLT_d3_background.txt > symbol1.txt
+cut -d',' -f1-1 truncLT_d3_vs_mock_truncLT_d3_background.txt > symbol2.txt
+cut -d',' -f1-1 truncLT_d8_vs_mock_truncLT_d8_background.txt > symbol3.txt
+cut -d',' -f1-1 truncLT_d8_vs_truncLT_d3_background.txt > symbol4.txt
+
+cut -d',' -f1-7 truncLT_d3_vs_mock_truncLT_d3_background.txt > truncLT_d3_vs_mock_d3.txt
+cut -d',' -f2-7 truncLT_d8_vs_mock_truncLT_d8_background.txt > truncLT_d8_vs_mock_d8.txt
+cut -d',' -f2-7 mock_truncLT_d8_vs_mock_truncLT_d3_background.txt > mock_d8_vs_mock_d3.txt
+cut -d',' -f2-7 truncLT_d8_vs_truncLT_d3_background.txt > truncLT_d8_vs_truncLT_d3.txt
+paste -d',' truncLT_d3_vs_mock_d3.txt truncLT_d8_vs_mock_d8.txt mock_d8_vs_mock_d3.txt truncLT_d8_vs_truncLT_d3.txt > truncLT_degenes_IPA.txt
+
+truncLT_degenes_IPA <- read.csv("truncLT_degenes_IPA.txt", row.names=1) 
+# modify the headers
+colnames(truncLT_degenes_IPA)<- c("truncLT_d3_vs_mock_d3_baseMean","truncLT_d3_vs_mock_d3_log2FoldChange","truncLT_d3_vs_mock_d3_lfcSE","truncLT_d3_vs_mock_d3_stat","truncLT_d3_vs_mock_d3_pvalue","truncLT_d3_vs_mock_d3_padj","truncLT_d8_vs_mock_d8_baseMean","truncLT_d8_vs_mock_d8_log2FoldChange","truncLT_d8_vs_mock_d8_lfcSE","truncLT_d8_vs_mock_d8_stat","truncLT_d8_vs_mock_d8_pvalue","truncLT_d8_vs_mock_d8_padj","mock_d8_vs_mock_d3_baseMean","mock_d8_vs_mock_d3_log2FoldChange","mock_d8_vs_mock_d3_lfcSE","mock_d8_vs_mock_d3_stat","mock_d8_vs_mock_d3_pvalue","mock_d8_vs_mock_d3_padj","truncLT_d8_vs_truncLT_d3_baseMean","truncLT_d8_vs_truncLT_d3_log2FoldChange","truncLT_d8_vs_truncLT_d3_lfcSE","truncLT_d8_vs_truncLT_d3_stat","truncLT_d8_vs_truncLT_d3_pvalue","truncLT_d8_vs_truncLT_d3_padj")
+
+truncLT_degenes_IPA$SYMBOL = rownames(truncLT_degenes_IPA)
+identical(rownames(truncLT_degenes_IPA), rownames(geness))
+geness_truncLT_degenes_IPA <- merge(geness, truncLT_degenes_IPA)
+write.csv(as.data.frame(geness_truncLT_degenes_IPA[order(geness_truncLT_degenes_IPA$truncLT_d8_vs_mock_d8_padj),]), file = "geness_truncLT_degenes_IPA.txt")
+~/Tools/csv2xls-0.4/csv_to_xls.py geness_truncLT_degenes_IPA.txt -d$',' -o geness_truncLT_degenes_IPA.xls;
+############### prepare IPA tables END ###############
+
+
+
+#under DIR degenes under KONSOLE
+for comp in mock_truncLT_d8_vs_mock_truncLT_d3 truncLT_d3_vs_mock_truncLT_d3 truncLT_d8_vs_mock_truncLT_d8 truncLT_d8_vs_truncLT_d3; do \
+mkdir ${comp}_output; \
+cut -d',' -f2- ${comp}_up.txt > ${comp}_output/upregulated_filtered; \
+cut -d',' -f2- ${comp}_down.txt > ${comp}_output/downregulated_filtered; \
+cut -d',' -f2- ${comp}_background.txt > ${comp}_output/background; \
+cd ${comp}_output; \
+~/Tools/csv2xls-0.4/csv_to_xls.py upregulated_filtered downregulated_filtered background -d$',' -o ../${comp}_degenes.xls; \
+cd ..; \
+done
+# 
+
+##--- load the temporary results and save the pathways ----
+# under CONSOLE
+# perform the GAMOLA2-annotation with “/media/jhuang/Elements/Data_Tam_RNASeq/run_with_gamola2.sh”
+mkdir pathways_KEGG
+
+#--continue from BREAK POINT--
+##
+#source("https://bioconductor.org/biocLite.R") 
+#biocLite("org.Hs.eg.db")
+#biocLite("AnnotationDbi")
+library("clusterProfiler")
+library("ReactomePA")
+library("org.Hs.eg.db")
+setwd("~/DATA/Data_Denise_RNASeq/results/featureCounts/pathways_KEGG")
+
+#-- mock_truncLT_d8_vs_mock_truncLT_d3 --
+mock_truncLT_d8_vs_mock_truncLT_d3_up <- read.csv("../degenes/mock_truncLT_d8_vs_mock_truncLT_d3_output/upregulated_filtered", row.names=1)      #37
+dim(mock_truncLT_d8_vs_mock_truncLT_d3_up)
+mock_truncLT_d8_vs_mock_truncLT_d3_down <- read.csv("../degenes/mock_truncLT_d8_vs_mock_truncLT_d3_output/downregulated_filtered", row.names=1)  #1
+dim(mock_truncLT_d8_vs_mock_truncLT_d3_down)
+mock_truncLT_d8_vs_mock_truncLT_d3_sig <- rbind(mock_truncLT_d8_vs_mock_truncLT_d3_up, mock_truncLT_d8_vs_mock_truncLT_d3_down)                            #38
+dim(mock_truncLT_d8_vs_mock_truncLT_d3_sig)
+mock_truncLT_d8_vs_mock_truncLT_d3_KEGG <- enrichKEGG(mock_truncLT_d8_vs_mock_truncLT_d3_sig$ENTREZID)
+write.table(as.data.frame(mock_truncLT_d8_vs_mock_truncLT_d3_KEGG), file = "mock_truncLT_d8_vs_mock_truncLT_d3_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#-- truncLT_d3_vs_mock_truncLT_d3 --
+truncLT_d3_vs_mock_truncLT_d3_up <- read.csv("../degenes/truncLT_d3_vs_mock_truncLT_d3_output/upregulated_filtered", row.names=1)      #251
+dim(truncLT_d3_vs_mock_truncLT_d3_up)
+truncLT_d3_vs_mock_truncLT_d3_down <- read.csv("../degenes/truncLT_d3_vs_mock_truncLT_d3_output/downregulated_filtered", row.names=1)  #3
+dim(truncLT_d3_vs_mock_truncLT_d3_down)
+truncLT_d3_vs_mock_truncLT_d3_sig <- rbind(truncLT_d3_vs_mock_truncLT_d3_up, truncLT_d3_vs_mock_truncLT_d3_down)                              #254
+dim(truncLT_d3_vs_mock_truncLT_d3_sig)
+truncLT_d3_vs_mock_truncLT_d3_KEGG <- enrichKEGG(truncLT_d3_vs_mock_truncLT_d3_sig$ENTREZID)
+write.table(as.data.frame(truncLT_d3_vs_mock_truncLT_d3_KEGG), file = "truncLT_d3_vs_mock_truncLT_d3_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#-- truncLT_d8_vs_mock_truncLT_d8 --
+truncLT_d8_vs_mock_truncLT_d8_up <- read.csv("../degenes/truncLT_d8_vs_mock_truncLT_d8_output/upregulated_filtered", row.names=1)      #401
+dim(truncLT_d8_vs_mock_truncLT_d8_up)
+truncLT_d8_vs_mock_truncLT_d8_down <- read.csv("../degenes/truncLT_d8_vs_mock_truncLT_d8_output/downregulated_filtered", row.names=1)  #147
+dim(truncLT_d8_vs_mock_truncLT_d8_down)
+truncLT_d8_vs_mock_truncLT_d8_sig <- rbind(truncLT_d8_vs_mock_truncLT_d8_up, truncLT_d8_vs_mock_truncLT_d8_down)                               #548
+dim(truncLT_d8_vs_mock_truncLT_d8_sig)
+truncLT_d8_vs_mock_truncLT_d8_KEGG <- enrichKEGG(truncLT_d8_vs_mock_truncLT_d8_sig$ENTREZID)
+write.table(as.data.frame(truncLT_d8_vs_mock_truncLT_d8_KEGG), file = "truncLT_d8_vs_mock_truncLT_d8_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#-- truncLT_d8_vs_truncLT_d3 --
+truncLT_d8_vs_truncLT_d3_up <- read.csv("../degenes/truncLT_d8_vs_truncLT_d3_output/upregulated_filtered", row.names=1)      #24
+dim(truncLT_d8_vs_truncLT_d3_up)
+truncLT_d8_vs_truncLT_d3_down <- read.csv("../degenes/truncLT_d8_vs_truncLT_d3_output/downregulated_filtered", row.names=1)  #10
+dim(truncLT_d8_vs_truncLT_d3_down)
+truncLT_d8_vs_truncLT_d3_sig <- rbind(truncLT_d8_vs_truncLT_d3_up, truncLT_d8_vs_truncLT_d3_down)                               #34
+dim(truncLT_d8_vs_truncLT_d3_sig)
+truncLT_d8_vs_truncLT_d3_KEGG <- enrichKEGG(truncLT_d8_vs_truncLT_d3_sig$ENTREZID)
+write.table(as.data.frame(truncLT_d8_vs_truncLT_d3_KEGG), file = "truncLT_d8_vs_truncLT_d3_KEGG.txt", sep = "\t", row.names = FALSE)
+
+png("pathways_KEGG.png",width=1200, height=800)
+merged_list <- merge_result(list('truncLT_d3-mock_truncLT_d3'=truncLT_d3_vs_mock_truncLT_d3_KEGG, 'truncLT_d8-mock_truncLT_d8'=truncLT_d8_vs_mock_truncLT_d8_KEGG, 'mock_truncLT_d8-mock_truncLT_d3'=mock_truncLT_d8_vs_mock_truncLT_d3_KEGG, 'truncLT_d8-truncLT_d3'=truncLT_d8_vs_truncLT_d3_KEGG))
+dotplot(merged_list, showCategory=20)
+dev.off()
+
+
+# under CONSOLE
+cd pathways_KEGG
+~/Tools/csv2xls-0.4/csv_to_xls.py truncLT_d3_vs_mock_truncLT_d3_KEGG.txt truncLT_d8_vs_mock_truncLT_d8_KEGG.txt mock_truncLT_d8_vs_mock_truncLT_d3_KEGG.txt truncLT_d8_vs_truncLT_d3_KEGG.txt -d$'\t' -o pathways_KEGG.xls
+
+
+
+
+###################################################################
+##### STEP3: prepare all_genes #####
+#rld <- rlogTransformation(dds)
+RNASeq.NoCellLine <- assay(rld)
+# reorder the columns
+#colnames(RNASeq.NoCellLine) = c("", "")
+col.order <-  c("mock_truncLT_d3", "mock_truncLT_d3_r2", "mock_truncLT_d8", "mock_truncLT_d8_r2", "truncLT_d3", "truncLT_d3_r2", "truncLT_d8", "truncLT_d8_r2")
+RNASeq.NoCellLine <- RNASeq.NoCellLine[,col.order]
+
+#Option1: filter to genes with overall lfc > 2          #2760
+RNASeq.NoCellLine_  <- RNASeq.NoCellLine[apply(RNASeq.NoCellLine,1,function(x){max(x)-min(x)})>=2,]
+
+#Option2: not using the automatical comparing between max and min, rather than using manually selected from DESeq2 between conditions.
+cluster_ids_before <- read.csv("../../cluster_ids.csv")
+geness_before <- select(org.Hs.eg.db, keys = as.vector(cluster_ids_before$ensembl_gene_id), keytype = "ENSEMBL", columns = c("SYMBOL"))  #1129
+geness_before$SYMBOL
+cluster1_pathways <- enrichKEGG(geness_before$SYMBOL, organism= 'hsa')
+intersected_genes <- intersect(geness_before$SYMBOL, rownames(RNASeq.NoCellLine_))   #1076
+RNASeq.NoCellLine_  <- RNASeq.NoCellLine[intersected_genes,]
+
+#Option3: as paper described, A heatmap showing expression values of all DEGs which are significant between any pair conditions.
+all_genes <- c(rownames(mock_truncLT_d8_vs_mock_truncLT_d3_sig),rownames(truncLT_d3_vs_mock_truncLT_d3_sig),rownames(truncLT_d8_vs_mock_truncLT_d8_sig),rownames(truncLT_d8_vs_truncLT_d3_sig))     #873
+all_genes <- unique(all_genes)   #663
+#all_genes2 <- c(rownames(WAC_vs_mock_sig),rownames(WAP_vs_mock_sig),rownames(WAC_vs_WAP_sig))   #3917
+#all_genes2 <- unique(all_genes2)   #2608
+#intersected_genes <- intersect(all_genes, all_genes2)  # 2608
+#RNASeq.NoCellLine <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
+RNASeq.NoCellLine_  <- RNASeq.NoCellLine[all_genes,]
+write.csv(as.data.frame(RNASeq.NoCellLine_), file ="gene_expression_keeping_replicates.txt")
+
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_truncLT_d3 = rowMeans(RNASeq.NoCellLine_[, 1:2]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_truncLT_d8 = rowMeans(RNASeq.NoCellLine_[, 3:4]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, truncLT_d3 = rowMeans(RNASeq.NoCellLine_[, 5:6]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, truncLT_d8 = rowMeans(RNASeq.NoCellLine_[, 7:8]))
+RNASeq.NoCellLine_ <- RNASeq.NoCellLine_[,c(-1:-8)]        #663x4
+#RNASeq.NoCellLine__ <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
+write.csv(as.data.frame(RNASeq.NoCellLine_ ), file ="gene_expression_merging_replicates.txt")
+
+
+
+
+######################################################################
+##### STEP4: clustering the genes and draw heatmap #####
+#clustering methods: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).  pearson or spearman
+datamat = RNASeq.NoCellLine_
+hr <- hclust(as.dist(1-cor(t(datamat), method="pearson")), method="complete")
+hc <- hclust(as.dist(1-cor(datamat, method="spearman")), method="complete")
+mycl = cutree(hr, h=max(hr$height)/1.05)
+mycol = c("YELLOW", "DARKBLUE", "DARKORANGE", "DARKMAGENTA", "DARKCYAN", "DARKRED",  "MAROON", "DARKGREEN", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN","LIGHTGREEN", "BLUE", "ORANGE", "CYAN", "RED", "GREEN");
+
+mycol = mycol[as.vector(mycl)]
+#sampleCols <- rep('GREY',ncol(RNASeq.NoCellLine_))
+#names(sampleCols) <- c("mock_r1", "mock_r2", "mock_r3", "mock_r4", "WAP_r1", "WAP_r2",  "WAP_r3", "WAP_r4", "WAC_r1","WAC_r2")
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,4)=='mock'] <- 'GREY'
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,3)=='WAP'] <- 'RED'
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,3)=='dM_'] <- 'CYAN'
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,3)=='dP_'] <- 'BLUE'
+#sampleCols[substr(colnames(RNASeq.NoCellLine_),1,3)=='WAC'] <- 'GREEN'
+png("DEGs_heatmap.png", width=900, height=1000)
+heatmap.2(as.matrix(datamat),Rowv=as.dendrogram(hr),Colv = NA, dendrogram = 'row',
+            scale='row',trace='none',col=bluered(75), 
+            RowSideColors = mycol, labRow="", srtCol=15)
+#heatmap.2(datamat,Rowv=as.dendrogram(hr),Colv=as.dendrogram(hc),
+            scale='row',trace='none',col=bluered(75),
+            RowSideColors = mycol, labRow="",
+            ColSideColors = sampleCols,
+            main=sprintf('%s', "RNA-Seq for all DEGs"), srtCol=30)
+heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none", margin=c(5,5), sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none', labRow="", srtCol=30, lhei=c(0.1,2))
+#heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none",, sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none', cexRow=1.4, lhei=c(0.25,5))
+#heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none", margin=c(10,10), sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none')
+#heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none", margin=c(10,10), sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none', cexRow=1.2, lhei=c(0.1,5))
+dev.off()
+
+
+#### cluster members #####
+write.csv(names(subset(mycl, mycl == '1')),file='cluster1_YELLOW.txt')
+write.csv(names(subset(mycl, mycl == '2')),file='cluster2_DARKBLUE.txt') 
+write.csv(names(subset(mycl, mycl == '3')),file='cluster3_DARKORANGE.txt')  
+#~/Tools/csv2xls-0.4/csv_to_xls.py cluster*.txt -d',' -o genelist_clusters.xls
+
+
+
+#### pathway plot ####
+library("clusterProfiler")
+library("ReactomePA")
+#The cutoff of pathway enrichment is padj <=  0.001 or default 0.05
+for sample_id in cluster1_YELLOW cluster2_DARKBLUE cluster3_DARKORANGE; do \
+echo "${sample_id}_genes <- read.csv(\"${sample_id}.txt\")"; \
+echo "geness <- select(org.Hs.eg.db, keys = as.vector(${sample_id}_genes\$x), keytype = \"SYMBOL\", columns = c(\"ENTREZID\"))"; \
+echo "${sample_id}_pathways <- enrichKEGG(geness\$ENTREZID, organism= 'hsa', pvalueCutoff =  0.05, pAdjustMethod=\"BH\")"; \
+echo "write.table(as.data.frame(${sample_id}_pathways), file = \"pathway_${sample_id}.txt\", sep = \"\t\", row.names = FALSE)"; \
+done
+png(file= 'pathways_cluster.png', width=900, height=1040)
+merged_list <- merge_result(list(YELLOW=cluster1_YELLOW_pathways, DARKBLUE=cluster2_DARKBLUE_pathways, DARKORANGE=cluster3_DARKORANGE_pathways)) 
+#merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways)) %>% plot(., showCategory=30, font.size = 16)
+dotplot(merged_list, showCategory=30, font.size = 16)
+#dotplot(merged_list, showCategory=30,)
+dev.off()
+#~/Tools/csv2xls-0.4/csv_to_xls.py pathway_cluster*.txt -d$'\t' -o pathways_clusters.xls
+
+
+# under CONSOLE
+mv gene_expression_* ../degenes/
+mv DEGs_heatmap.png ../degenes/
+mv cluster*.txt ../degenes/
+mv genelist_clusters.xls ../degenes/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#under ngi_chipseq_ac2 using HISAT2
+#--star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/HISAT2Index/" --> DEBUG3
+nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz'  --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed" --singleEnd -profile standard --aligner hisat2  -resume
+
+#under ngi_chipseq_ac2 using STAR
+#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/Raw_Data/*.fastq.gz'  --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"  --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed" --singleEnd -profile standard     -resume
+
+
+#### WARNING while running HISAT2 ####
+[HISAT2 index build] Available memory: 60 GB
+[HISAT2 index build] Less than 200 GB available, so NOT using splice sites and exons in HISAT2 index.
+
+
+--downloadGTF 
+https://www.ensembl.org/info/data/ftp/index.html
+http://hgdownload.cse.ucsc.edu/goldenpath/hg19/database/
+http://genome.ucsc.edu/cgi-bin/hgTables
+
+
+#DEBUG1
+
+conda install -c bioconda bioconductor-rsubread
+conda install -c bioconda subread
+conda install -c bioconda stringtie
+conda install -c bioconda hisat2
+conda update hisat2
+conda install -c bioconda preseq
+# installed Rsubread under ~/anaconda3/envs/ngi_chipseq_ac2/lib/R/library
+BiocManager::install(c("Rsubread", "dupRadar", "limma", "lattice", "locfit", "edgeR", "chron", "data.table", "gtools", "gdata", "bitops", "caTools", "gplots", "markdown"))
+
+
+#DEBUG2
+ ERROR: failed to find the gene identifier attribute in the 9th column of the provided GTF file.
+  The specified gene identifier attribute is 'gene_biotype'
+  An example of attributes included in your GTF annotation is 'gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";'
+  The program has to terminate.
+  
+featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+
+    featureCounts -a $gtf -g gene_id -o ${bam_featurecounts.baseName}_gene.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+    featureCounts -a $gtf -g gene_biotype -o ${bam_featurecounts.baseName}_biotype.featureCounts.txt -p -s $featureCounts_direction $bam_featurecounts
+    cut -f 1,7 ${bam_featurecounts.baseName}_biotype.featureCounts.txt | tail -n 7 > tmp_file
+    cat $biotypes_header tmp_file >> ${bam_featurecounts.baseName}_biotype_counts_mqc.txt
+
+    
+
+
+
+
+#needs the gtf of ENSEMBLE, since it includes "gene_biotype" and "gene_id"
+# ENSEMBLE (874M) 9th colum
+1 processed_transcript                transcript  11869 14409 . + . gene_id "ENSG00000223972"; transcript_id "ENST00000456328"; gene_name "DDX11L1"; gene_sourc e "havana"; gene_biotype "transcribed_unprocessed_pseudogene"; transcript_name "DDX11L1-002"; transcript_source "havana";
+
+# UCSC (136M) 9th column
+gene_id "WASH7P"; gene_name "WASH7P"; transcript_id "NR_024540"; tss_id "TSS8568";
+
+
+diff /ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa /media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa
+
+cut -f1-2 /ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa.fai | sort > hg19_UCSC.fa_length
+cut -f1-2 /media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa.fai | sort > hg19_Ensemble.fa_length
+cut -f2 hg19_UCSC.fa_length > hg19_UCSC.fa_length_
+cut -f2 hg19_Ensemble.fa_length > hg19_Ensemble.fa_length_
+--->
+23c23
+< 16571
+---
+> 16569
+
+
+
+
+
+#################################################
+############### START FROM HERE #################
+#http://genome.ucsc.edu/FAQ/FAQformat.html#format4
+
+-rw-rw-r-- 1 jhuang jhuang  987M Mär  5  2019 mock_sT_d3.fastq.gz
+-rw-rw-r-- 1 jhuang jhuang  829M Mär  5  2019 mock_sT_d8.fastq.gz
+-rw-rw-r-- 1 jhuang jhuang 1010M Mär  5  2019 sT_d3.fastq.gz
+-rw-rw-r-- 1 jhuang jhuang 1021M Mär  5  2019 sT_d8.fastq.gz
+-rw-rw-r-- 1 jhuang jhuang  1,1G Mär  5  2019 mock_truncLT_d3.fastq.gz
+-rw-rw-r-- 1 jhuang jhuang  904M Mär  5  2019 mock_truncLT_d8.fastq.gz
+-rw-rw-r-- 1 jhuang jhuang 1007M Mär  5  2019 truncLT_d3.fastq.gz
+-rw-rw-r-- 1 jhuang jhuang  1,2G Mär  5  2019 truncLT_d8.fastq.gz
+
+-rwxrwxrwx 1 jhuang jhuang  710M Okt 21  2019 truncLT_d8_r2.fastq.gz
+-rwxrwxrwx 1 jhuang jhuang  842M Okt 21  2019 mock_truncLT_d3_r2.fastq.gz
+-rwxrwxrwx 1 jhuang jhuang  733M Okt 21  2019 truncLT_d3_r2.fastq.gz
+-rwxrwxrwx 1 jhuang jhuang  657M Okt 21  2019 mock_truncLT_d8_r2.fastq.gz
+-rwxrwxrwx 1 jhuang jhuang  743M Okt 21  2019 sT_d8_r2.fastq.gz
+-rwxrwxrwx 1 jhuang jhuang  780M Okt 21  2019 mock_sT_d3_r2.fastq.gz
+-rwxrwxrwx 1 jhuang jhuang  764M Okt 21  2019 sT_d3_r2.fastq.gz
+-rwxrwxrwx 1 jhuang jhuang  772M Okt 21  2019 mock_sT_d8_r2.fastq.gz
+
+-rwxrwxr-x 1 jhuang jhuang  651M Mai  7 10:57 untreated_r1.fastq.gz
+-rwxrwxr-x 1 jhuang jhuang  902M Mai  7 10:57 untreated_r2.fastq.gz
+
+
+Raw_Data2
+rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_202003_202007/200420_NB501882_0195_AHJCNWBGXF.zip ./
+rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_201904_202002/190927_NB501882_0150_AHC2MHBGXC_single.zip ./
+rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_until_201904/d_ohnezeit/190228_NB501882_0102_AHYJJ2BGX9 ./
+rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_201904_202002/191008_NB501882_0151_AHC235BGXC.zip ./
+rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_until_201904/d_ohnezeit/190228_NB501882_0102_AHYJJ2BGX9  ./
+rsync -aP jhuang@hamm:/mnt/h1/jhuang/j_huang_202007_202012/200817_NB501882_0221_AHFMVLBGXG ./
+
+
+
+#RNASeq V.8.0
+ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf207/8_0_mock_NHDF_Donor_I_P9_S11_R1_001.fastq.gz  V_8_0_mock_DonorI.fastq.gz
+ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf208/8_0_mock_NHDF_Donor_II_P9_S12_R1_001.fastq.gz V_8_0_mock_DonorII.fastq.gz
+#RNASeq V.8.1.5
+ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf135/8_1_5_p601_d3_S1_R1_001.fastq.gz V_8_1_5_p601_d3_DonorII.fastq.gz
+ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf136/8_1_5_p604_d3_S2_R1_001.fastq.gz V_8_1_5_p604_d3_DonorII.fastq.gz
+ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf137/8_1_5_p601_d8_S3_R1_001.fastq.gz V_8_1_5_p601_d8_DonorII.fastq.gz
+ln -s ../Raw_Data2/190927_NB501882_0150_AHC2MHBGXC_single/nf138/8_1_5_p604_d8_S4_R1_001.fastq.gz V_8_1_5_p604_d8_DonorII.fastq.gz
+#RNASeq V.8.1.3 (should be V.8.1.6)
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf29/8_1_3_p601_d3_S1_R1_001.fastq.gz   V_8_1_6_p601_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf30/8_1_3_p601_d8_S2_R1_001.fastq.gz   V_8_1_6_p601_d8_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf31/_8_1_3_p604_d3_S3_R1_001.fastq.gz  V_8_1_6_p604_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf32/8_1_3_p604_d8_S4_R1_001.fastq.gz   V_8_1_6_p604_d8_DonorI.fastq.gz
+#RNASeq V.8.2.3
+ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf139/8_2_3_p600_d3_S20_R1_001.fastq.gz V_8_2_3_p600_d3_DonorII.fastq.gz
+ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf140/8_2_3_p605_d3_S21_R1_001.fastq.gz V_8_2_3_p605_d3_DonorII.fastq.gz
+ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf141/8_2_3_p600_d8_S22_R1_001.fastq.gz V_8_2_3_p600_d8_DonorII.fastq.gz
+ln -s ../Raw_Data2/191008_NB501882_0151_AHC235BGXC/nf142/8_2_3_p605_d8_S23_R1_001.fastq.gz V_8_2_3_p605_d8_DonorII.fastq.gz
+#RNASeq V.8.2.1 (should be V.8.2.4)
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf33/8_2_1_p600_d3_S5_R1_001.fastq.gz   V_8_2_4_p600_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf34/8_2_1_p600_d8_S6_R1_001.fastq.gz   V_8_2_4_p600_d8_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf35/8_2_1_p605_d3_S7_R1_001.fastq.gz   V_8_2_4_p605_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/190228_NB501882_0102_AHYJJ2BGX9/nf36/8_2_1_p605_d8_S8_R1_001.fastq.gz   V_8_2_4_p605_d8_DonorI.fastq.gz
+#RNASeq V.8.4.1 (Note V_8_4_2 should be V_8_4_1)
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf298/V_8_4_1_p602_Donor_II_d8_S12_R1_001.fastq.gz V_8_4_1_p602_d8_DonorII.fastq.gz
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf297/V_8_4_2_p602_Donor_I_d8_S11_R1_001.fastq.gz  V_8_4_1_p602_d8_DonorI.fastq.gz
+#RNASeq V.8.4.2
+ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf613/V842_NHDF_Donor_1_LT_d3_S19_R1_001.fastq.gz  V_8_4_2_p602_d3_DonorI.fastq.gz
+ln -s ../Raw_Data2/210302_NB501882_0250_AHLM2YBGXH/nf614/V842_NHDF_Donor_2_LT_d3_S20_R1_001.fastq.gz  V_8_4_2_p602_d3_DonorII.fastq.gz
+#RNASeq V.8.3.1 (Note that 8_2_3 should be V_8_3_1)
+ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf209/8_3_1_p600and601_d12_S13_R1_001.fastq.gz    V_8_3_1_p600and601_d12_DonorI.fastq.gz
+ln -s ../Raw_Data2/200420_NB501882_0195_AHJCNWBGXF/nf210/8_2_3_p604and605_d12_S14_R1_001.fastq.gz    V_8_3_1_p604and605_d12_DonorI.fastq.gz
+#RNASeq V.8.3.2
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf299/V_8_3_2_p600_601_Donor_II_d9_S13_R1_001.fastq.gz  V_8_3_2_p600and601_d9_DonorII.fastq.gz
+ln -s ../Raw_Data2/200817_NB501882_0221_AHFMVLBGXG/nf300/V_8_3_2_p604_605_Donor_II_d9_S14_R1_001.fastq.gz  V_8_3_2_p604and605_d9_DonorII.fastq.gz
+
+
+
+#---- to compare ----
+P600 vs untreated / mock (donor 1+2)
+
+P601 vs untreated / mock (donor 1+2)
+
+P604 d3 vs p601 d3 (Donor 1+2)
+
+P604 d8 vs p601 d8 (donor 1+2)
+
+P605 d3 vs p600 d3 (donor 1+2)
+
+P605 d8 vs p600 d8 (donor 1+2)
+
+(These were already analysed)
+
+
+What is new:
+
+P602 d8 vs p600 d8 (donor 1+2)
+
+P604+605 d9/12 vs p600+601 d9/12 (donor 1+2)
+
+P602 d3 vs p600 d3 (donor 1+2)
+
+
+
+--0--
+mkdir trimmed; 
+cd trimmed;
+for sample_id in V_8_0_mock_DonorI        V_8_1_6_p601_d8_DonorI   V_8_2_4_p600_d3_DonorI         V_8_3_2_p604and605_d9_DonorII  V_8_0_mock_DonorII       V_8_1_6_p604_d3_DonorI   V_8_2_4_p600_d8_DonorI         V_8_4_1_p602_d8_DonorI  V_8_1_5_p601_d3_DonorII  V_8_1_6_p604_d8_DonorI   V_8_2_4_p605_d3_DonorI         V_8_4_1_p602_d8_DonorII  V_8_1_5_p601_d8_DonorII  V_8_2_3_p600_d3_DonorII  V_8_2_4_p605_d8_DonorI         V_8_4_2_p602_d3_DonorI  V_8_1_5_p604_d3_DonorII  V_8_2_3_p600_d8_DonorII  V_8_3_1_p600and601_d12_DonorI  V_8_4_2_p602_d3_DonorII  V_8_1_5_p604_d8_DonorII  V_8_2_3_p605_d3_DonorII  V_8_3_1_p604and605_d12_DonorI  V_8_1_6_p601_d3_DonorI   V_8_2_3_p605_d8_DonorII  V_8_3_2_p600and601_d9_DonorII; do \
+        java -jar /home/jhuang/Tools/Trimmomatic-0.36/trimmomatic-0.36.jar SE -threads 16 ../Raw_Data/${sample_id}.fastq.gz ${sample_id}.fastq.gz ILLUMINACLIP:/home/jhuang/Tools/Trimmomatic-0.36/adapters/TruSeq3-SE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 AVGQUAL:20; \
+done 2>trimmomatic.log
+
+# see read_biotype_assignment: https://github.com/ewels/ngi_visualizations/tree/master/ngi_visualizations/biotypes
+Running twice, once without biotype using UCSC  --> get the results which comparable to ChIPSeq-data, since they both using UCSC-gtf -->1
+               once with biotype using ENSEMBLE reference --> get images of biotypes and as controls -->2
+
+#--1--
+## since in UCSC-gtf, there is no gene_biotype, we use gene_id in --fcGroupFeaturesType; NOTE that bed-file and HISAT-index are generated on site!
+#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"  #--singleEnd -profile standard --aligner hisat2 --fcGroupFeaturesType gene_id --outdir results_nfcore -w work_nfcore -resume
+## when using already generated genes.bed and HISAT2Index
+#--hisat2_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/HISAT2Index/" --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
+#
+#--2--
+## default type of --fcGroupFeaturesType is 'gene_biotype' if using Ensembl-gtf
+#nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner hisat2      -resume
+
+
+
+
+
+#### prefer to use STARIndex, since HISAT2 needs memory of 120GB, otherwise it does not work for splicing mapping.
+--1--
+# since in UCSC-gtf, there is no gene_biotype, we use gene_id in --fcGroupFeaturesType; NOTE that bed-file and HISAT-index are generated on site!
+#DEBUG: An example of attributes included in your GTF annotation is 'gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";'
+#---- SUCCESSFUL using STAR ----
+nextflow run rnaseq --reads '/mnt/Seagate_Corona/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa" --gtf "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf" --star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"  --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id  -resume
+
+#rerun save bams 
+nextflow run rnaseq --reads '/mnt/Seagate_Corona/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta /ref/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa --gtf /ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf --star_index /ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/ --bed12 /ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_id -resume --saveAlignedIntermediates
+
+
+#-->Geneid  gene_name       V_8_2_3_p600_d3_DonorIIAligned.sortedByCoord.out.bam    V_8_2_1_p600_d8_DonorIAligned.sortedByCoord.out.bam     V_8_2_3_p605_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_2_1_p605_d8_DonorIAligned.sortedByCoord.out.bam     V_8_1_3_p604_d8_DonorIAligned.sortedByCoord.out.bam     V_8_1_5_p604_d3_DonorIIAligned.sortedByCoord.out.bam    V_8_2_1_p600_d3_DonorIAligned.sortedByCoord.out.bam     V_8_2_3_p605_d3_DonorIIAligned.sortedByCoord.out.bam    V_8_3_2_p600and601_d9_DonorIIAligned.sortedByCoord.out.bam      V_8_0_mock_DonorIAligned.sortedByCoord.out.bam  V_8_1_5_p601_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_3_1_p600and601_d12_DonorIAligned.sortedByCoord.out.bam      V_8_3_1_p604and605_d12_DonorIAligned.sortedByCoord.out.bam      V_8_2_1_p605_d3_DonorIAligned.sortedByCoord.out.bam     V_8_4_2_p602_d8_DonorIAligned.sortedByCoord.out.bam     V_8_1_5_p604_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_2_3_p600_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_0_mock_DonorIIAligned.sortedByCoord.out.bam V_8_1_3_p601_d8_DonorIAligned.sortedByCoord.out.bam     V_8_1_5_p601_d3_DonorIIAligned.sortedByCoord.out.bam    V_8_1_3_p601_d3_DonorIAligned.sortedByCoord.out.bam     V_8_3_2_p604and605_d9_DonorIIAligned.sortedByCoord.out.bam      V_8_4_1_p602_d8_DonorIIAligned.sortedByCoord.out.bam    V_8_1_3_p604_d3_DonorIAligned.sortedByCoord.out.bam
+
+
+
+
+# when using already generated genes.bed and *Index
+--hisat2_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/HISAT2Index/" (todo)   --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"
+--star_index "/ref/Homo_sapiens/UCSC/hg19/Sequence/STARIndex/" --bed12 "/ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.bed"
+
+
+
+--2--
+# default type of --fcGroupFeaturesType is 'gene_biotype' if using Ensembl-gtf
+nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Denise_RNASeq/trimmed/*.fastq.gz' --fasta "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa" --gtf "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf" --singleEnd -profile standard --aligner star   --outdir results_gr_gene_biotype -w work_gr_gene_biotype   -resume
+# when using already generated genes.bed and *Index
+--hisat2_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/HISAT2Index/" --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
+--star_index "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Sequence/STARIndex/" (todo)    --bed12 "/media/jhuang/Titisee/ref/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.bed"
+
+
+
+
+
+###################################################################################
+#################### RNASeq #######################################################
+################################################################################################################
+##### STEP1: pca and heatmap_clusters, remove batch effects, intercept assay(rld), then removeBatchEffect  #####
+#BiocManager::install(c("DESeq2"))
+requiredPackages1 <-c("AnnotationDbi","clusterProfiler","ReactomePA","org.Hs.eg.db","DESeq2", "gplots", "RColorBrewer")
+ipak <- function(pkg){
+        new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+        if (length(new.pkg))
+                install.packages(new.pkg, dependencies = TRUE)
+        sapply(pkg, require, character.only = TRUE)
+}
+ipak(requiredPackages1)
+#requiredPackages2 <- c("tidyverse")
+#ipak(requiredPackages2)
+
+
+Loading required package: tidyverse
+── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
+✔ ggplot2 3.1.0     ✔ purrr   0.3.0
+✔ tibble  2.0.1     ✔ dplyr   0.7.8
+✔ tidyr   0.8.2     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::collapse()   masks IRanges::collapse()
+✖ dplyr::combine()    masks Biobase::combine(), BiocGenerics::combine()
+✖ dplyr::count()      masks matrixStats::count()
+✖ dplyr::desc()       masks IRanges::desc()
+✖ tidyr::expand()     masks S4Vectors::expand()
+✖ dplyr::filter()     masks stats::filter()
+✖ dplyr::first()      masks S4Vectors::first()
+✖ dplyr::lag()        masks stats::lag()
+✖ ggplot2::Position() masks BiocGenerics::Position(), base::Position()
+✖ purrr::reduce()     masks GenomicRanges::reduce(), IRanges::reduce()
+✖ dplyr::rename()     masks S4Vectors::rename()
+✖ dplyr::select()     masks AnnotationDbi::select()
+✖ purrr::simplify()   masks DelayedArray::simplify(), clusterProfiler::simplify()
+✖ dplyr::slice()      masks IRanges::slice()
+tidyverse 
+     TRUE 
+
+
+setwd("~/DATA/Data_Denise_RNASeq/results/featureCounts")
+
+####-- dataset 16 samples --
+d.raw<- read.delim2("merged_gene_counts_f2.txt",sep="\t", header=TRUE, row.names=1)
+d.raw_pseudo <- d.raw + 1
+d.raw_c <- cbind(d.raw, d.raw_pseudo)
+colnames(d.raw_c) <- as.factor(c("mock_sT_d8", "sT_d3", "sT_d8","LTtrunc_d3", "LTtrunc_d8", "mock_sT_d3", "mock_LTtrunc_d3", "mock_LTtrunc_d8", "mock_sT_d8_p", "sT_d3_p", "sT_d8_p","LTtrunc_d3_p", "LTtrunc_d8_p", "mock_sT_d3_p", "mock_LTtrunc_d3_p", "mock_LTtrunc_d8_p"))
+
+#d<- d.raw_c[rowSums(d.raw_c>3)>2,]    #15713
+#replicates = as.factor(c("mock_sT_d8", "sT_d3", "sT_d8","LTtrunc_d3", "LTtrunc_d8", "mock_sT_d3", "mock_LTtrunc_d3", "mock_LTtrunc_d8", "mock_sT_d8", "sT_d3", "sT_d8","LTtrunc_d3", "LTtrunc_d8", "mock_sT_d3", "mock_LTtrunc_d3", "mock_LTtrunc_d8"))
+#ids = as.factor(c("mock_sT_d8_r1", "sT_d3_r1", "sT_d8_r1","LTtrunc_d3_r1", "LTtrunc_d8_r1", "mock_sT_d3_r1", "mock_LTtrunc_d3_r1", "mock_LTtrunc_d8_r1", "mock_sT_d8_r2", "sT_d3_r2", "sT_d8_r2","LTtrunc_d3_r2", "LTtrunc_d8_r2", "mock_sT_d3_r2", "mock_LTtrunc_d3_r2", "mock_LTtrunc_d8_r2"))
+#cData = data.frame(row.names=colnames(d), replicates=replicates, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~replicates)
+##vsd <- vst(dds)
+#rld <- rlogTransformation(dds)
+
+## -- pca --
+#png("pca.png", 1200, 800)
+#plotPCA(rld, intgroup = c("replicates"))
+#dev.off()
+
+## -- heatmap --
+### generate the pairwise comparison between samples
+#png("heatmap.png", 1200, 800)
+#distsRL <- dist(t(assay(rld)))
+#mat <- as.matrix(distsRL)
+##rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
+#rownames(mat) <- colnames(mat) <- with(colData(dds),replicates)
+#hc <- hclust(distsRL)
+#hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+#heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+#dev.off()
+
+
+
+
+
+
+
+#################################################
+##### for LTtrunc ####################
+#################################################
+#LTtrunc.raw <- d.raw_c %>% select(contains("LTtrunc")) # needs dplyr-package
+-- LTtrunc --
+LTtrunc.raw <- d.raw_c[,c("LTtrunc_d3", "LTtrunc_d8", "mock_LTtrunc_d3", "mock_LTtrunc_d8", "LTtrunc_d3_p", "LTtrunc_d8_p", "mock_LTtrunc_d3_p", "mock_LTtrunc_d8_p")]
+
+
+
+
+LTtrunc<- LTtrunc.raw[rowSums(LTtrunc.raw>3)>2,]    #15945
+#[1] LTtrunc_d3        LTtrunc_d8        mock_LTtrunc_d3   mock_LTtrunc_d8  
+#[5] LTtrunc_d3_p      LTtrunc_d8_p      mock_LTtrunc_d3_p mock_LTtrunc_d8_p
+colnames(LTtrunc) = as.factor(c("LTtrunc_d3_r1", "LTtrunc_d8_r1", "mock_d3_r1", "mock_d8_r1", "LTtrunc_d3_r2", "LTtrunc_d8_r2", "mock_d3_r2", "mock_d8_r2"))
+
+replicates = as.factor(c("LTtrunc_d3", "LTtrunc_d8", "mock_d3", "mock_d8", "LTtrunc_d3", "LTtrunc_d8", "mock_d3", "mock_d8"))
+ids = as.factor(c("LTtrunc_d3_r1", "LTtrunc_d8_r1", "mock_d3_r1", "mock_d8_r1", "LTtrunc_d3_r2", "LTtrunc_d8_r2", "mock_d3_r2", "mock_d8_r2"))
+cData = data.frame(row.names=colnames(LTtrunc), replicates=replicates, ids=ids)
+dds<-DESeqDataSetFromMatrix(countData=LTtrunc, colData=cData, design=~replicates)
+#vsd <- vst(dds)
+rld <- rlogTransformation(dds)
+
+
+#under KONSOLE
+mkdir degenes_LTtrunc
+setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/degenes_LTtrunc")
+
+
+# -- pca --
+png("pca_LTtrunc.png", 1200, 800)
+plotPCA(rld, intgroup = c("replicates"))
+dev.off()
+
+# -- heatmap --
+## generate the pairwise comparison between samples
+png("heatmap_LTtrunc.png", 1200, 800)
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
+rownames(mat) <- colnames(mat) <- with(colData(dds),replicates)
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+
+####################################################################
+##### STEP2: select the differentially expressed genes #####
+
+#---- relevel to mock ----
+dds$replicates <- relevel(dds$replicates, "mock_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+#[1] "Intercept"                        "replicates_LTtrunc_d3_vs_mock_d3"
+#[3] "replicates_LTtrunc_d8_vs_mock_d3" "replicates_mock_d8_vs_mock_d3"   
+clist <- c("LTtrunc_d3_vs_mock_d3","LTtrunc_d8_vs_mock_d3","mock_d8_vs_mock_d3")
+
+dds$replicates <- relevel(dds$replicates, "mock_d8")
+dds = DESeq(dds, betaPrior=FALSE)
+clist <- c("LTtrunc_d3_vs_mock_d8", "LTtrunc_d8_vs_mock_d8")
+
+dds$replicates <- relevel(dds$replicates, "LTtrunc_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+clist <- c("LTtrunc_d8_vs_LTtrunc_d3")
+
+
+for (i in clist) {
+  contrast = paste("replicates", i, sep="_")
+  res = results(dds, name=contrast)
+  res <- res[!is.na(res$log2FoldChange),]
+  geness <- AnnotationDbi::select(org.Hs.eg.db, keys = rownames(res), keytype = "SYMBOL", columns = c("ENSEMBL", "ENTREZID", "SYMBOL", "GENENAME"))
+  geness <- geness[!duplicated(geness$SYMBOL), ]
+  res$SYMBOL = rownames(res)
+  rownames(geness) <- geness$SYMBOL
+  identical(rownames(res), rownames(geness))
+  res_df <- as.data.frame(res)
+  geness_res <- merge(geness, res_df)
+  dim(geness_res)
+  write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "background", sep="_"))
+  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
+  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-2)
+  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="_"))
+  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="_"))
+}
+
+#under DIR degenes under KONSOLE
+~/Tools/csv2xls-0.4/csv_to_xls.py *.txt -d$',' -o LTtrunc_degenes.xls
+
+
+
+
+
+##--- load the temporary results and save the pathways ----
+# under CONSOLE
+mkdir pathways_KEGG_LTtrunc
+setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/pathways_KEGG_LTtrunc")
+
+#--continue from SAVED FILES--
+for sample_id in "LTtrunc_d3_vs_mock_d3" "LTtrunc_d8_vs_mock_d3" "mock_d8_vs_mock_d3" "LTtrunc_d3_vs_mock_d8" "LTtrunc_d8_vs_mock_d8" "LTtrunc_d8_vs_LTtrunc_d3"; do \
+echo "${sample_id}_up <- read.csv(\"../degenes_LTtrunc/${sample_id}_up.txt\", row.names=1)"
+echo "${sample_id}_down <- read.csv(\"../degenes_LTtrunc/${sample_id}_down.txt\", row.names=1)"
+echo "${sample_id}_sig <- rbind(${sample_id}_up, ${sample_id}_down)"        
+echo "${sample_id}_KEGG <- enrichKEGG(${sample_id}_sig\$ENTREZID, pvalueCutoff =  0.01)"
+echo "write.table(as.data.frame(${sample_id}_KEGG), file = \"${sample_id}_KEGG.txt\", sep = \"\t\", row.names = FALSE)"
+done
+
+
+png("pathways_KEGG_LTtrunc.png",width=1200, height=800)
+merged_list <- merge_result(list('LTtrunc_d3_vs_mock_d3'=LTtrunc_d3_vs_mock_d3_KEGG, 'LTtrunc_d8_vs_mock_d3'=LTtrunc_d8_vs_mock_d3_KEGG, 'mock_d8_vs_mock_d3'=mock_d8_vs_mock_d3_KEGG, 'LTtrunc_d3_vs_mock_d8'=LTtrunc_d3_vs_mock_d8_KEGG,  'LTtrunc_d8_vs_mock_d8'=LTtrunc_d8_vs_mock_d8_KEGG,'LTtrunc_d8_vs_LTtrunc_d3'=LTtrunc_d8_vs_LTtrunc_d3_KEGG))
+dotplot(merged_list, showCategory=30)
+dev.off()
+
+
+# under CONSOLE
+cd pathways_KEGG_LTtrunc
+~/Tools/csv2xls-0.4/csv_to_xls.py *.txt -d$'\t' -o pathways_KEGG_LTtrunc.xls
+
+
+
+
+
+###################################################################
+##### STEP3: prepare all_genes #####
+
+RNASeq.NoCellLine <- assay(rld)
+## reorder the columns
+#colnames(RNASeq.NoCellLine) = c("DoA_WAC6h_Indra", "DoA_WAP6h_Indra", "DoA_mock_Indra","DoII_WAC6h_Indra", "DoII_WAP6h_Indra", "DoII_mock_Indra", "DonorIII_WAP6h_Laura","DonorIII_deltaM6h_Laura","DonorIII_deltaP6h_Laura","DonorIII_mock6h_Laura" ,"DonorII_WAP6h_Laura" ,"DonorII_deltaM6h_Laura","DonorII_deltaP6h_Laura" ,"DonorII_mock6h_Laura")
+col.order <-  c("LTtrunc_d3_r1", "LTtrunc_d3_r2", "LTtrunc_d8_r1","LTtrunc_d8_r2","mock_d3_r1","mock_d3_r2","mock_d8_r1","mock_d8_r2")
+RNASeq.NoCellLine <- RNASeq.NoCellLine[,col.order]
+
+
+#Option3: as paper described, A heatmap showing expression values of all DEGs which are significant between any pair conditions.
+all_genes <- c(LTtrunc_d3_vs_mock_d3_sig$SYMBOL,LTtrunc_d3_vs_mock_d3_sig$SYMBOL,mock_d8_vs_mock_d3_sig$SYMBOL,LTtrunc_d3_vs_mock_d8_sig$SYMBOL,LTtrunc_d8_vs_mock_d8_sig$SYMBOL,LTtrunc_d8_vs_LTtrunc_d3_sig$SYMBOL)
+all_genes <- unique(all_genes)   #786
+
+RNASeq.NoCellLine_  <- RNASeq.NoCellLine[all_genes,]
+
+#RNASeq.NoCellLine_ <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, LTtrunc_d3 = rowMeans(RNASeq.NoCellLine_[, 1:2]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, LTtrunc_d8 = rowMeans(RNASeq.NoCellLine_[, 3:4]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_d3 = rowMeans(RNASeq.NoCellLine_[, 5:6]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_d8 = rowMeans(RNASeq.NoCellLine_[, 7:8]))
+RNASeq.NoCellLine_ <- RNASeq.NoCellLine_[,c(-1:-8)]  
+
+setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/pathways_KEGG_LTtrunc")
+write.csv(as.data.frame(RNASeq.NoCellLine_ ), file ="gene_expression_LTtrunc.txt")
+# convert the txt to xlsx-format
+
+
+
+######################################################################
+##### STEP4: clustering the genes and draw heatmap #####
+#clustering methods: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).  pearson or spearman
+datamat = RNASeq.NoCellLine_
+hr <- hclust(as.dist(1-cor(t(datamat), method="pearson")), method="complete")
+hc <- hclust(as.dist(1-cor(datamat, method="spearman")), method="complete")
+mycl = cutree(hr, h=max(hr$height)/1.05)
+mycol = c("YELLOW", "BLUE", "ORANGE", "MAGENTA", "CYAN", "RED", "GREEN", "MAROON", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN", "LIGHTRED", "LIGHTGREEN");
+mycol = mycol[as.vector(mycl)]
+png("DEGs_heatmap.png", width=900, height=1000)
+heatmap.2(as.matrix(datamat),Rowv=as.dendrogram(hr),Colv = NA, dendrogram = 'row',
+            scale='row',trace='none',col=bluered(75), 
+            RowSideColors = mycol, labRow="", srtCol=15)
+#heatmap.2(datamat,Rowv=as.dendrogram(hr),Colv=as.dendrogram(hc),
+            scale='row',trace='none',col=bluered(75),
+            RowSideColors = mycol, labRow="",
+            ColSideColors = sampleCols,
+            main=sprintf('%s', "RNA-Seq for all DEGs"), srtCol=30)
+heatmap.2(datamat, Rowv=as.dendrogram(hr), col=bluered(75), scale="row", RowSideColors=mycol, trace="none", margin=c(5,5), sepwidth=c(0,0), dendrogram = 'row', Colv = 'false', density.info='none', labRow="", srtCol=30, lhei=c(0.1,2))
+dev.off()
+
+
+#### cluster members #####
+#mycol = c("YELLOW", "BLUE", "ORANGE", "MAGENTA", "CYAN", "RED", "GREEN", "MAROON", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN", "LIGHTRED", "LIGHTGREEN");
+write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '1')),],file='cluster1_YELLOW.txt')  #1765
+write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '2')),],file='cluster2_BLUE.txt')  #322
+write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '3')),],file='cluster3_ORANGE.txt')  #127
+write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '4')),],file='cluster4_MAGENTA.txt')  #514
+#~/Tools/csv2xls-0.4/csv_to_xls.py cluster*.txt -d',' -o genelist_clusters.xls
+
+
+#### pathway plot ####
+library("clusterProfiler")
+library("ReactomePA")
+#The cutoff of pathway enrichment is padj <=  0.01 .
+cluster1_genes <- read.csv("cluster1_YELLOW.txt")
+geness <- select(org.Hs.eg.db, keys = as.vector(cluster1_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
+cluster1_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05, pAdjustMethod="BH")  
+write.table(as.data.frame(cluster1_pathways), file = "pathway_YELLOW.txt", sep = "\t", row.names = FALSE)
+cluster2_genes <- read.csv("cluster2_BLUE.txt")
+geness <- select(org.Hs.eg.db, keys = as.vector(cluster2_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
+cluster2_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
+write.table(as.data.frame(cluster2_pathways), file = "pathway_BLUE.txt", sep = "\t", row.names = FALSE)
+cluster3_genes <- read.csv("cluster3_ORANGE.txt")
+geness <- select(org.Hs.eg.db, keys = as.vector(cluster3_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
+cluster3_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
+write.table(as.data.frame(cluster3_pathways), file = "pathway_ORANGE.txt", sep = "\t", row.names = FALSE)
+cluster4_genes <- read.csv("cluster4_MAGENTA.txt")
+geness <- select(org.Hs.eg.db, keys = as.vector(cluster4_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
+cluster4_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
+write.table(as.data.frame(cluster4_pathways), file = "pathway_MAGENTA.txt", sep = "\t", row.names = FALSE)
+
+png(file= 'pathways_cluster.png', width=510, height=1040)
+merged_list <- merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways, MAGENTA=cluster4_pathways, CYAN=cluster5_pathways)) 
+#merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways)) %>% plot(., showCategory=29, font.size = 16)
+dotplot(merged_list, showCategory=29, font.size = 16)
+#dotplot(merged_list, showCategory=30,)
+dev.off()
+#~/Tools/csv2xls-0.4/csv_to_xls.py pathway_*.txt -d$'\t' -o pathways_clusters.xls
+
+
+#rm *_KEGG.txt cluster*_*.txt
+mv DEGs_heatmap.png ../degenes_LTtrunc/
+mv genelist_clusters.xls ../degenes_LTtrunc/
+mv gene_expression_LTtrunc.* ../degenes_LTtrunc/
+#under degenes_LTtrunc
+rm *.txt
+mv *_background ../background
+
+
+
+
+#################################################
+##### for sT ####################
+#################################################
+-- sT --
+sT.raw <- d.raw_c[,c("mock_sT_d8", "sT_d3", "sT_d8", "mock_sT_d3", "mock_sT_d8_p", "sT_d3_p", "sT_d8_p", "mock_sT_d3_p")]
+
+
+
+sT<- sT.raw[rowSums(sT.raw>3)>2,]    #15976
+#[1] mock_sT_d8   sT_d3        sT_d8        mock_sT_d3   mock_sT_d8_p
+#[6] sT_d3_p      sT_d8_p      mock_sT_d3_p
+colnames(sT) = as.factor(c("mock_d8_r1", "sT_d3_r1", "sT_d8_r1", "mock_d3_r1", "mock_d8_r2", "sT_d3_r2", "sT_d8_r2", "mock_d3_r2"))
+replicates = as.factor(c("mock_d8", "sT_d3", "sT_d8", "mock_d3", "mock_d8", "sT_d3", "sT_d8", "mock_d3"))
+ids = as.factor(c("mock_d8_r1", "sT_d3_r1", "sT_d8_r1", "mock_d3_r1", "mock_d8_r2", "sT_d3_r2", "sT_d8_r2", "mock_d3_r2"))
+cData = data.frame(row.names=colnames(sT), replicates=replicates, ids=ids)
+dds<-DESeqDataSetFromMatrix(countData=sT, colData=cData, design=~replicates)
+#vsd <- vst(dds)
+rld <- rlogTransformation(dds)
+
+
+#under KONSOLE
+mkdir degenes_sT
+setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/degenes_sT")
+
+
+# -- pca --
+png("pca_sT.png", 1200, 800)
+plotPCA(rld, intgroup = c("replicates"))
+dev.off()
+
+# -- heatmap --
+## generate the pairwise comparison between samples
+png("heatmap_sT.png", 1200, 800)
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
+rownames(mat) <- colnames(mat) <- with(colData(dds),replicates)
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+
+####################################################################
+##### STEP2: select the differentially expressed genes #####
+
+#---- relevel to mock ----
+dds$replicates <- relevel(dds$replicates, "mock_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+#[1] "Intercept"                        "replicates_sT_d3_vs_mock_d3"
+#[3] "replicates_sT_d8_vs_mock_d3" "replicates_mock_d8_vs_mock_d3"   
+clist <- c("sT_d3_vs_mock_d3","sT_d8_vs_mock_d3","mock_d8_vs_mock_d3")
+
+dds$replicates <- relevel(dds$replicates, "mock_d8")
+dds = DESeq(dds, betaPrior=FALSE)
+clist <- c("sT_d3_vs_mock_d8", "sT_d8_vs_mock_d8")
+
+dds$replicates <- relevel(dds$replicates, "sT_d3")
+dds = DESeq(dds, betaPrior=FALSE)
+clist <- c("sT_d8_vs_sT_d3")
+
+
+
+
+
+for (i in clist) {
+  contrast = paste("replicates", i, sep="_")
+  res = results(dds, name=contrast)
+  res <- res[!is.na(res$log2FoldChange),]
+  geness <- AnnotationDbi::select(org.Hs.eg.db, keys = rownames(res), keytype = "SYMBOL", columns = c("ENSEMBL", "ENTREZID", "SYMBOL", "GENENAME"))
+  geness <- geness[!duplicated(geness$SYMBOL), ]
+  res$SYMBOL = rownames(res)
+  rownames(geness) <- geness$SYMBOL
+  identical(rownames(res), rownames(geness))
+  res_df <- as.data.frame(res)
+  geness_res <- merge(geness, res_df)
+  dim(geness_res)
+  write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "background", sep="_"))
+  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
+  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-2)
+  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="_"))
+  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="_"))
+}
+
+#under DIR degenes under KONSOLE
+~/Tools/csv2xls-0.4/csv_to_xls.py *.txt -d$',' -o sT_degenes.xls
+
+
+
+
+
+##--- load the temporary results and save the pathways ----
+# under CONSOLE
+mkdir pathways_KEGG_sT
+setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/pathways_KEGG_sT")
+
+#--continue from SAVED FILES--
+for sample_id in "sT_d3_vs_mock_d3" "sT_d8_vs_mock_d3" "mock_d8_vs_mock_d3" "sT_d3_vs_mock_d8" "sT_d8_vs_mock_d8" "sT_d8_vs_sT_d3"; do \
+echo "${sample_id}_up <- read.csv(\"../degenes_sT/${sample_id}_up.txt\", row.names=1)"
+echo "${sample_id}_down <- read.csv(\"../degenes_sT/${sample_id}_down.txt\", row.names=1)"
+echo "${sample_id}_sig <- rbind(${sample_id}_up, ${sample_id}_down)"        
+echo "${sample_id}_KEGG <- enrichKEGG(${sample_id}_sig\$ENTREZID, pvalueCutoff =  0.01)"
+echo "write.table(as.data.frame(${sample_id}_KEGG), file = \"${sample_id}_KEGG.txt\", sep = \"\t\", row.names = FALSE)"
+done
+
+
+png("pathways_KEGG_sT.png",width=1200, height=800)
+merged_list <- merge_result(list('sT_d3_vs_mock_d3'=sT_d3_vs_mock_d3_KEGG, 'sT_d8_vs_mock_d3'=sT_d8_vs_mock_d3_KEGG, 'mock_d8_vs_mock_d3'=mock_d8_vs_mock_d3_KEGG, 'sT_d3_vs_mock_d8'=sT_d3_vs_mock_d8_KEGG,  'sT_d8_vs_mock_d8'=sT_d8_vs_mock_d8_KEGG,'sT_d8_vs_sT_d3'=sT_d8_vs_sT_d3_KEGG))
+dotplot(merged_list, showCategory=30)
+dev.off()
+
+
+# under CONSOLE
+cd pathways_KEGG_sT
+~/Tools/csv2xls-0.4/csv_to_xls.py *.txt -d$'\t' -o pathways_KEGG_sT.xls
+
+
+
+
+
+###################################################################
+##### STEP3: prepare all_genes #####
+
+RNASeq.NoCellLine <- assay(rld)
+## reorder the columns
+#colnames(RNASeq.NoCellLine) = c("DoA_WAC6h_Indra", "DoA_WAP6h_Indra", "DoA_mock_Indra","DoII_WAC6h_Indra", "DoII_WAP6h_Indra", "DoII_mock_Indra", "DonorIII_WAP6h_Laura","DonorIII_deltaM6h_Laura","DonorIII_deltaP6h_Laura","DonorIII_mock6h_Laura" ,"DonorII_WAP6h_Laura" ,"DonorII_deltaM6h_Laura","DonorII_deltaP6h_Laura" ,"DonorII_mock6h_Laura")
+col.order <-  c("sT_d3_r1", "sT_d3_r2", "sT_d8_r1","sT_d8_r2","mock_d3_r1","mock_d3_r2","mock_d8_r1","mock_d8_r2")
+RNASeq.NoCellLine <- RNASeq.NoCellLine[,col.order]
+
+
+#Option3: as paper described, A heatmap showing expression values of all DEGs which are significant between any pair conditions.
+all_genes <- c(sT_d3_vs_mock_d3_sig$SYMBOL,sT_d3_vs_mock_d3_sig$SYMBOL,mock_d8_vs_mock_d3_sig$SYMBOL,sT_d3_vs_mock_d8_sig$SYMBOL,sT_d8_vs_mock_d8_sig$SYMBOL,sT_d8_vs_sT_d3_sig$SYMBOL)
+all_genes <- unique(all_genes)   #1024
+
+RNASeq.NoCellLine_  <- RNASeq.NoCellLine[all_genes,]
+
+#RNASeq.NoCellLine_ <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, sT_d3 = rowMeans(RNASeq.NoCellLine_[, 1:2]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, sT_d8 = rowMeans(RNASeq.NoCellLine_[, 3:4]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_d3 = rowMeans(RNASeq.NoCellLine_[, 5:6]))
+RNASeq.NoCellLine_ <- cbind(RNASeq.NoCellLine_, mock_d8 = rowMeans(RNASeq.NoCellLine_[, 7:8]))
+RNASeq.NoCellLine_ <- RNASeq.NoCellLine_[,c(-1:-8)]  
+
+setwd("~/DATA/Data_Denise_RNASeq/results_UCSC/featureCounts/pathways_KEGG_sT")
+write.csv(as.data.frame(RNASeq.NoCellLine_ ), file ="gene_expression_sT.txt")
+# convert the txt to xlsx-format
+
+
+
+######################################################################
+##### STEP4: clustering the genes and draw heatmap #####
+#clustering methods: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).  pearson or spearman
+datamat = RNASeq.NoCellLine_
+hr <- hclust(as.dist(1-cor(t(datamat), method="pearson")), method="complete")
+hc <- hclust(as.dist(1-cor(datamat, method="spearman")), method="complete")
+mycl = cutree(hr, h=max(hr$height)/1.04)
+mycol = c("YELLOW", "BLUE", "ORANGE", "MAGENTA", "CYAN", "RED", "GREEN", "MAROON", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN", "LIGHTRED", "LIGHTGREEN");
+mycol = mycol[as.vector(mycl)]
+png("DEGs_heatmap.png", width=900, height=1000)
+heatmap.2(as.matrix(datamat),Rowv=as.dendrogram(hr),Colv = NA, dendrogram = 'row',
+            scale='row',trace='none',col=bluered(75), 
+            RowSideColors = mycol, labRow="", srtCol=15)
+dev.off()
+
+
+#### cluster members #####
+#mycol = c("YELLOW", "BLUE", "ORANGE", "MAGENTA", "CYAN", "RED", "GREEN", "MAROON", "LIGHTBLUE", "PINK", "MAGENTA", "LIGHTCYAN", "LIGHTRED", "LIGHTGREEN");
+write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '1')),],file='cluster1_YELLOW.txt')  #1765
+write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '2')),],file='cluster2_BLUE.txt')  #322
+write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '3')),],file='cluster3_ORANGE.txt')  #127
+write.csv(RNASeq.NoCellLine_[names(subset(mycl, mycl == '4')),],file='cluster4_MAGENTA.txt')  #514
+#~/Tools/csv2xls-0.4/csv_to_xls.py cluster*.txt -d',' -o genelist_clusters.xls
+
+
+#### pathway plot ####
+library("clusterProfiler")
+library("ReactomePA")
+#The cutoff of pathway enrichment is padj <=  0.01 .
+cluster1_genes <- read.csv("cluster1_YELLOW.txt")
+geness <- select(org.Hs.eg.db, keys = as.vector(cluster1_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
+cluster1_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05, pAdjustMethod="BH")  
+write.table(as.data.frame(cluster1_pathways), file = "pathway_YELLOW.txt", sep = "\t", row.names = FALSE)
+cluster2_genes <- read.csv("cluster2_BLUE.txt")
+geness <- select(org.Hs.eg.db, keys = as.vector(cluster2_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
+cluster2_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
+write.table(as.data.frame(cluster2_pathways), file = "pathway_BLUE.txt", sep = "\t", row.names = FALSE)
+cluster3_genes <- read.csv("cluster3_ORANGE.txt")
+geness <- select(org.Hs.eg.db, keys = as.vector(cluster3_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
+cluster3_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
+write.table(as.data.frame(cluster3_pathways), file = "pathway_ORANGE.txt", sep = "\t", row.names = FALSE)
+cluster4_genes <- read.csv("cluster4_MAGENTA.txt")
+geness <- select(org.Hs.eg.db, keys = as.vector(cluster4_genes$X), keytype = "SYMBOL", columns = c("ENTREZID"))
+cluster4_pathways <- enrichKEGG(geness$ENTREZID, pvalueCutoff =  0.05)  
+write.table(as.data.frame(cluster4_pathways), file = "pathway_MAGENTA.txt", sep = "\t", row.names = FALSE)
+
+png(file= 'pathways_cluster.png', width=510, height=1040)
+merged_list <- merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways, MAGENTA=cluster4_pathways, CYAN=cluster5_pathways)) 
+#merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways)) %>% plot(., showCategory=29, font.size = 16)
+dotplot(merged_list, showCategory=29, font.size = 16)
+#dotplot(merged_list, showCategory=30,)
+dev.off()
+#~/Tools/csv2xls-0.4/csv_to_xls.py pathway_*.txt -d$'\t' -o pathways_clusters.xls
+
+
+
+
+#rm *_KEGG.txt cluster*_*.txt
+mv DEGs_heatmap.png ../degenes_sT/
+mv genelist_clusters.xls ../degenes_sT/
+mv gene_expression_sT.* ../degenes_sT/
+#under degenes_sT
+rm *.txt
+mv *_background ../background
+
+
+
+
+
+
+
+
+
+
+#------------------------------- DELETE ------------------------------
+## OPTION1: sT
+#d.raw_sT <- subset(d.raw, select=c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
+#d <- d.raw_sT[rowSums(d.raw_sT>3)>2,]
+#replicates = as.factor(c("mock_sT_d3","mock_sT_d8","sT_d3","sT_d8","mock_sT_d3","sT_d3","mock_sT_d8","sT_d8"))
+#batch = as.factor(c("r2","r1","r1","r2","r1","r2","r2","r1"))
+#ids = as.factor(c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
+#cData = data.frame(row.names=colnames(d), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batch+replicates)
+#
+## OPTION2: truncLT
+#d.raw_truncLT <- subset(d.raw, select=c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
+#d <- d.raw_truncLT[rowSums(d.raw_truncLT>3)>2,]
+#replicates = as.factor(c("truncLT_d8","truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3","truncLT_d8"))
+#batch = as.factor(c("r2","r1","r2","r2","r1","r1","r2","r1"))
+#ids = as.factor(c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
+#cData = data.frame(row.names=colnames(d), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batch+replicates)
+#
+## OPTION3: IPA sT
+#d.raw_sT <- subset(d.raw, select=c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
+#replicates = as.factor(c("mock_sT_d3","mock_sT_d8","sT_d3","sT_d8","mock_sT_d3","sT_d3","mock_sT_d8","sT_d8"))
+#batch = as.factor(c("r2","r1","r1","r2","r1","r2","r2","r1"))
+#ids = as.factor(c("mock_sT_d3_r2","mock_sT_d8","sT_d3","sT_d8_r2","mock_sT_d3","sT_d3_r2","mock_sT_d8_r2","sT_d8"))
+#cData = data.frame(row.names=colnames(d.raw_sT), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d.raw_sT, colData=cData, design=~batch+replicates)
+#
+## OPTION4: IPA truncLT
+#d.raw_truncLT <- subset(d.raw, select=c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
+#replicates = as.factor(c("truncLT_d8","truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3","truncLT_d8"))
+#batch = as.factor(c("r2","r1","r2","r2","r1","r1","r2","r1"))
+#ids = as.factor(c("truncLT_d8_r2","truncLT_d3","mock_truncLT_d8_r2","mock_truncLT_d3_r2","mock_truncLT_d8","mock_truncLT_d3","truncLT_d3_r2","truncLT_d8"))
+#cData = data.frame(row.names=colnames(d.raw_truncLT), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d.raw_truncLT, colData=cData, design=~batch+replicates)
+#
+## OPTION5: sT vs untreated or LTtr vs untreated
+#d.raw_mock_untreated <- subset(d.raw, #select=c("mock_sT_d3_r2","mock_sT_d8_r1","mock_sT_d8_r2","mock_truncLT_d8_r2","mock_truncLT_d3_r1","mock_truncLT_d8_r1","mock_truncLT_d3_r2","mock_sT_d3_r1","untreated_r1","untreated_r2"))
+#replicates = as.factor(c("sT_mock_d3","sT_mock_d8","sT_mock_d8","LTtr_mock_d8","LTtr_mock_d3","LTtr_mock_d8","LTtr_mock_d3","sT_mock_d3","untreated","untreated"))
+#batch = as.factor(c("r2","r1","r2","r2","r1","r1","r2","r1","r3","r3"))
+#ids = as.factor(c("sT_mock_d3_r2","sT_mock_d8_r1","sT_mock_d8_r2","LTtr_mock_d8_r2","LTtr_mock_d3_r1","LTtr_mock_d8_r1","LTtr_mock_d3_r2","sT_mock_d3_r1","untreated_r1","untreated_r2"))
+#cData = data.frame(row.names=colnames(d.raw_mock_untreated), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d.raw_mock_untreated, colData=cData, design=~batch+replicates)
+#
+## OPTION6: sT vs untreated or LTtr vs untreated
+##P602 d8 vs p600 d8 (donor 1+2)
+##P604+605 d9/12 vs p600+601 d9/12 (donor 1+2)
+#d.raw_p602_p600_mixed <- subset(reordered.raw, select=c("V_8_4_1_p602_d8_DonorII","V_8_4_2_p602_d8_DonorI","V_8_2_3_p600_d8_DonorII", "V_8_2_1_p600_d8_DonorI",   "V_8_3_2_p604and605_d9_DonorII","V_8_3_1_p604and605_d12_DonorI",  "V_8_3_2_p600and601_d9_DonorII", "V_8_3_1_p600and601_d12_DonorI"))
+#replicates = as.factor(c("p602_d8","p602_d8","p600_d8","p600_d8", "p604and605_d9ord12","p604and605_d9ord12","p600and601_d9ord12","p600and601_d9ord12"))
+#batch = as.factor(c("200817","200817","191008","190228","200817","200420","100817","200420"))
+#ids = as.factor(c("p602_d8_DII","p602_d8_DI","p600_d8_DII","p600_d8_DI", "p604and605_d9ord12","p604and605_d9ord12", "p600and601_d9ord12","p600and601_d9ord12"))
+#cData = data.frame(row.names=colnames(d.raw_p602_p600_mixed), replicates=replicates, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d.raw_p602_p600_mixed, colData=cData, design=~batch+replicates)
+
+
+
+## OPTION7
+##replicates = as.factor(c("untreated","untreated","p601_d3","p604_d3",     "p601_d8","p604_d8","p601_d3","p604_d3",     "p601_d8","p604_d8","p600_d3","p605_d3",   "p600_d8", "p605_d8","p600_d3","p605_d3",       "p600_d8","p605_d8","p602_d8","p602_d8",      "p600and601_d12", "p604and605_d12","p600and601_d9","p604and605_d9"))
+#replicates = as.factor(c("untreated","untreated","p601_d3","p604_d3",     "p601_d8","p604_d8","p601_d3","p604_d3",     "p601_d8","p604_d8","p600_d3","p605_d3",   "p600_d8", "p605_d8","p600_d3","p605_d3",       "p600_d8","p605_d8","p602_d8","p602_d8",      "p600and601_d9d12", "p604and605_d9d12","p600and601_d9d12","p604and605_d9d12"))
+#batch = as.factor(c("200420", "200420", "190927", "190927",    "190927", "190927", "190228", "190228",    "190228", "190228", "191008", "191008",    "191008", "191008", "190228", "190228",     "190228", "190228", "200817", "200817",       "200420", "200420", "200817", "200817"))
+#ids = as.factor(c("untreated_DonorI","untreated_DonorII", "p601_d3_DonorII","p604_d3_DonorII", "p601_d8_DonorII","p604_d8_DonorII",   "p601_d3_DonorI","p604_d3_DonorI","p601_d8_DonorI","p604_d8_DonorI",  "p600_d3_DonorII","p605_d3_DonorII","p600_d8_DonorII", "p605_d8_DonorII",  "p600_d3_DonorI","p605_d3_DonorI","p600_d8_DonorI","p605_d8_DonorI",  "p602_d8_DonorII","p602_d8_DonorI",  "p600and601_d12_DonorI", "p604and605_d12_DonorI","p600and601_d9_DonorII","p604and605_d9_DonorII"))
+#donor = as.factor(c("DonorI","DonorII", "DonorII","DonorII", "DonorII","DonorII",   "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorII","DonorII", "DonorII",  "DonorI","DonorI","DonorI","DonorI",  "DonorII","DonorI",  "DonorI", "DonorI","DonorII","DonorII"))
+#cData = data.frame(row.names=colnames(reordered.raw), replicates=replicates, donor=donor, batch=batch, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=reordered.raw, colData=cData, design=~donor+replicates)  #batch+
+
