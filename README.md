@@ -1062,7 +1062,7 @@ cd pathways_MSigDB
 ```
 
 
-## 11, further databases for enrichments
+## 11.1, further databases for enrichments
 ```sh
 #PANTHER (Protein ANalysis THrough Evolutionary Relationships) Classification System
 http://www.pantherdb.org/help/PANTHERhelp.jsp
