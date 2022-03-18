@@ -1062,6 +1062,19 @@ cd pathways_MSigDB
 ```
 
 
+## 11, further databases for enrichments
+```sh
+#PANTHER (Protein ANalysis THrough Evolutionary Relationships) Classification System
+http://www.pantherdb.org/help/PANTHERhelp.jsp
+
+#Phylogenetic classification of proteins encoded in complete genomes (COG)
+https://www.ncbi.nlm.nih.gov/research/cog-project/
+
+#Rfam+Pfam
+http://xfam.org/
+```
+
+
 ## 12, clustering the genes and draw heatmap (sT)
 ```sh
 # -- prepare all_genes --
