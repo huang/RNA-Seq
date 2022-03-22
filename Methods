@@ -1,0 +1,19 @@
+RNASeq Workflow description: http://bioinformatics.mdc-berlin.de/pigx_docs/pigx-rna-seq.html
+
+#PiGx RNAseq follows academic best practices for preprocessing and analysis of RNAseq data. Figure 1 provides an overview of the different steps of the pipeline, as well as the outputs.
+
+- First, raw reads are trimmed using TrimGalore! to ensure a minimum read quality, and removal of adapter sequences. 
+- Next, reads are aligned to a reference genome using STAR, and the depth of coverage (normalized by DESeq2 size factors), is computed using GenomicAlignments, outputing bigwig files. 
+- Gene-level expression counts is obtained from GenomicAlignments::summarizeOverlaps, and transcript-level quantification is produced using Salmon. 
+- Statistical analysis for differential expression analysis is performed using DESeq2, GO term enrichment analysis is performed using gProfileR, and the results are used to compile a custom report.
+
+#Normalized counts tables
+
+In order to enable comparison of gene/transcript expression across all samples outside of the context of differential expression analysis, PiGx RNAseq produces normalized counts tables using two normalizatoin procedures:
+
+    DESeq2 (median of ratios) normalization (Recommended option)
+        feature_counts/normalized/deseq_normalized_counts.tsv for gene-level normalized counts.
+    TPM normalization
+        feature_counts/normalized/TPM_counts_from_SALMON.transcripts.tsv for transcript-level normalized counts.
+        feature_counts/normalized/TPM_counts_from_SALMON.genes.tsv for gene-level normalized counts.
+
