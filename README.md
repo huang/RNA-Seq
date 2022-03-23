@@ -586,6 +586,17 @@ mat <- assay(rld)
 mat <- limma::removeBatchEffect(mat, rld$batch)
 assay(rld) <- mat
 
+#http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#how-do-i-use-vst-or-rlog-data-for-differential-testing
+#It uses the design formula to calculate the within-group variability (if blind=FALSE) or the across-all-samples variability (if blind=TRUE).
+#- It is possible to visualize the transformed data with batch variation removed, using the removeBatchEffect function from limma.
+#- This simply removes any shifts in the log2-scale expression data that can be explained by batch.
+#IMPROVE: ~batch+replicates
+mat <- assay(rld)   #or vsd
+mm <- model.matrix(~replicates, colData(rld))
+mat <- limma::removeBatchEffect(mat, batch=rld$batch, design=mm)
+assay(rld) <- mat
+#plotPCA(rld)
+
 
 # -- after pca --
 png("pca_after_batch_correction.png", 1200, 800)
