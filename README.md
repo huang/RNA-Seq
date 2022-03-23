@@ -586,16 +586,20 @@ mat <- assay(rld)
 mat <- limma::removeBatchEffect(mat, rld$batch)
 assay(rld) <- mat
 
+#TODO: next time using vsd
 #http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#how-do-i-use-vst-or-rlog-data-for-differential-testing
 #It uses the design formula to calculate the within-group variability (if blind=FALSE) or the across-all-samples variability (if blind=TRUE).
 #- It is possible to visualize the transformed data with batch variation removed, using the removeBatchEffect function from limma.
 #- This simply removes any shifts in the log2-scale expression data that can be explained by batch.
 #IMPROVE: ~batch+replicates
-mat <- assay(rld)   #or vsd
-mm <- model.matrix(~replicates, colData(rld))
-mat <- limma::removeBatchEffect(mat, batch=rld$batch, design=mm)
-assay(rld) <- mat
-#plotPCA(rld)
+#https://support.bioconductor.org/p/116375/
+#Have a look at the manual pages of these functions. The first sentence of that for varianceStabilizingTransformation says "This function calculates a variance stabilizing transformation (VST) from the fitted dispersion-mean relation(s) and then transforms the count data (normalized by division by the size factors or normalization factors)." For rlog, it says "This function transforms the count data to the log2 scale in a way which minimizes differences between samples for rows with small counts, and which normalizes with respect to library size."
+#Do try to read the documentation and a little bit about the underlying methods, you'll find that you'll be more efficient and have much more fun with the software.
+mat <- assay(vsd)
+mm <- model.matrix(~replicates, colData(vsd))
+mat <- limma::removeBatchEffect(mat, batch=vsd$batch, design=mm)
+assay(vsd) <- mat
+#plotPCA(vsd)
 
 
 # -- after pca --
