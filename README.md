@@ -1102,7 +1102,7 @@ http://xfam.org/
 ## 12, clustering the genes and draw heatmap (sT)
 ```sh
 # -- prepare all_genes --
-#rld <- rlogTransformation(dds)
+#TABOO: assay(rld) are now after batch effect removal with limma package. It is not allowed to rewrite the data with the command. rld <- rlogTransformation(dds)
 RNASeq.NoCellLine <- assay(rld)
 # reorder the columns
 #colnames(RNASeq.NoCellLine) = c("", "")
