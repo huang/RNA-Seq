@@ -601,6 +601,15 @@ mat <- limma::removeBatchEffect(mat, batch=vsd$batch, design=mm)
 assay(vsd) <- mat
 #plotPCA(vsd)
 
+#https://www.biostars.org/p/403053/
+dds <- DESeqDataSetFromMatrix(countData=counts, colData=factors, design = ~ Batch + Covariate)
+dds <- DESeq(dds)
+vsd <- vst(dds, blind=FALSE)
+mat <- assay(vsd)
+mat <- limma::removeBatchEffect(mat, vsd$Batch)
+assay(vsd) <- mat
+counts_batch_corrected <- assay(vsd)
+
 
 # -- after pca --
 png("pca_after_batch_correction.png", 1200, 800)
