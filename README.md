@@ -17,7 +17,7 @@ conda activate rnaseq
 conda install -c conda-forge -c bioconda -c defaults hisat2 picard bioconductor-dupradar bioconductor-edger
 conda install -c conda-forge -c bioconda -c defaults conda-forge::r-data.table conda-forge::r-gplots conda-forge::r-markdown
 conda install -c conda-forge -c bioconda -c defaults csvtk preseq rseqc samtools stringtie subread gffread deeptools multiqc
-conda install -c conda-forge -c bioconda -c defaults nextflow 
+conda install -c conda-forge -c bioconda -c defaults nextflow=21.04
 ```
 
 
