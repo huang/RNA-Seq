@@ -9,8 +9,16 @@ In this study, performed by Holzer et al. (2016),
 response to infection based on an enriched pathway analysis and the literature. The Rousettus aegyptiacus genome and coding sequences from Pteropus vampyrus, a closely related bat species, were used to validate but also to detect homologous sequences in the bat transcriptome. Detected homologs were employed for the differential gene expression analysis. 
 - (6) One huge advantage of this comprehensive study was the manual inspection of ~7.5 % of the human genes. Each candidate gene was manually investigated in the IGV (Thorvaldsdóttir et al., 2013) and UCSC (Dreszer et al., 2012) browsers for the human and bat samples from all time points. Single-nucleotide modifications (differential SNPs, posttranscriptional modifications), intronic transcripts and regulators, alternative splicing and isoforms, as well as upstream and downstream transcript characteristics were described.
 
+
 ## 0, create environment
-conda env create -n rnaseq -c conda-forge -bioconda -defaults fastqc trim-galore star=2.6.1d
+```sh
+conda create -n rnaseq -c conda-forge -c bioconda -c defaults fastqc trim-galore star=2.6.1d
+conda activate rnaseq
+conda install -c conda-forge -c bioconda -c defaults hisat2 picard bioconductor-dupradar bioconductor-edger
+conda install -c conda-forge -c bioconda -c defaults conda-forge::r-data.table conda-forge::r-gplots conda-forge::r-markdown
+conda install -c conda-forge -c bioconda -c defaults csvtk preseq rseqc samtools stringtie subread gffread deeptools multiqc
+```
+
 
 ## 1(optional), mapping on the p602, p604, and p605 (MCPyV)
 ```sh
