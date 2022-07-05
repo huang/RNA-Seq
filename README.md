@@ -18,6 +18,7 @@ conda install -c conda-forge -c bioconda -c defaults hisat2 picard bioconductor-
 conda install -c conda-forge -c bioconda -c defaults conda-forge::r-data.table conda-forge::r-gplots conda-forge::r-markdown
 conda install -c conda-forge -c bioconda -c defaults csvtk preseq rseqc samtools stringtie subread gffread deeptools multiqc
 conda install -c conda-forge -c bioconda -c defaults nextflow=21.04
+nextflow run rnaseq --reads '/data/transcriptome_indices/Jiabin_files/Data_Ute_RNA2/mRNA/*.fastq.gz' --fasta /data/transcriptome_indices/Jiabin_files/GRCh38/Sequence/WholeGenomeFasta/genome.fa --gtf /data/transcriptome_indices/Jiabin_files/GRCh38/Annotation/Genes/genes.gtf --star_index /data/transcriptome_indices/Jiabin_files/GRCh38/Sequence/STARIndex/ --bed12 /data/transcriptome_indices/Jiabin_files/GRCh38/Annotation/Genes/genes.bed --singleEnd -profile standard --aligner star --fcGroupFeaturesType gene_biotype --skip_genebody_coverage -resume --skip_edger
 ```
 
 
