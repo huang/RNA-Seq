@@ -12,7 +12,7 @@ response to infection based on an enriched pathway analysis and the literature. 
 
 ## 0, create environment
 ```sh
-conda create -n rnaseq -c conda-forge -c bioconda -c defaults fastqc trim-galore star=2.6.1d
+conda create -n rnaseq -c conda-forge -c bioconda -c defaults fastqc trim-galore star=2.6.1d python=3.9
 conda activate rnaseq
 conda install -c conda-forge -c bioconda -c defaults hisat2 picard bioconductor-dupradar bioconductor-edger
 conda install -c conda-forge -c bioconda -c defaults conda-forge::r-data.table conda-forge::r-gplots conda-forge::r-markdown
