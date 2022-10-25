@@ -564,15 +564,15 @@ bamCoverage --bam V_8_4_2_p602_d3_DonorIIAligned.sortedByCoord.out.bam -o ../big
 #--go to BREAK POINT--
 # sorted by sT and truncLT
 
-#vsd <- vst(dds)
 rld <- rlogTransformation(dds)
+vsd <- vst(dds, blind=FALSE)
 
 # -- before pca --
 png("pca_before_batch_correction.png", 1200, 800)
-plotPCA(rld, intgroup=c("replicates"))
-#plotPCA(rld, intgroup = c("replicates", "batch"))
-#plotPCA(rld, intgroup = c("replicates", "ids"))
-#plotPCA(rld, "batch")
+plotPCA(vsd, intgroup=c("replicates"))
+#plotPCA(vsd, intgroup = c("replicates", "batch"))
+#plotPCA(vsd, intgroup = c("replicates", "ids"))
+#plotPCA(vsd, "batch")
 dev.off()
 
 
@@ -581,9 +581,9 @@ dev.off()
 library(gplots) 
 library("RColorBrewer")
 png("heatmap_before_batch_correction.png", 1200, 800)
-distsRL <- dist(t(assay(rld)))
+distsRL <- dist(t(assay(vsd)))
 mat <- as.matrix(distsRL)
-#paste( rld$dex, rld$cell, sep="-" )
+#paste( vsd$dex, vsd$cell, sep="-" )
 rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
 #rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,ids, sep=":"))
 hc <- hclust(distsRL)
@@ -595,9 +595,9 @@ dev.off()
 # -- remove batch effect --
 #show the results which delete the batches effect
 #http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#why-after-vst-are-there-still-batches-in-the-pca-plot
-mat <- assay(rld)
-mat <- limma::removeBatchEffect(mat, rld$batch)
-assay(rld) <- mat
+mat <- assay(vsd)
+mat <- limma::removeBatchEffect(mat, vsd$batch)
+assay(vsd) <- mat
 
 #TODO: next time using vsd
 #http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#how-do-i-use-vst-or-rlog-data-for-differential-testing
@@ -627,15 +627,15 @@ assay(vsd) <- mat
 
 # -- after pca --
 png("pca_after_batch_correction.png", 1200, 800)
-#plotPCA(rld, intgroup = c("replicates", "batch"))
-#plotPCA(rld, intgroup = c("replicates", "ids"))
-plotPCA(rld, intgroup=c("replicates"))
+#plotPCA(vsd, intgroup = c("replicates", "batch"))
+#plotPCA(vsd, intgroup = c("replicates", "ids"))
+plotPCA(vsd, intgroup=c("replicates"))
 dev.off()
 
 # -- after heatmap --
 ## generate the pairwise comparison between samples
 png("heatmap_after_batch_correction.png", 1200, 800)
-distsRL <- dist(t(assay(rld)))
+distsRL <- dist(t(assay(vsd)))
 mat <- as.matrix(distsRL)
 rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
 #rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,ids, sep=":"))
@@ -1116,8 +1116,8 @@ http://xfam.org/
 ## 12, clustering the genes and draw heatmap (sT)
 ```sh
 # -- prepare all_genes --
-#TABOO: assay(rld) are now after batch effect removal with limma package. It is not allowed to rewrite the data with the command. rld <- rlogTransformation(dds)
-RNASeq.NoCellLine <- assay(rld)
+#TABOO: assay(vsd) are now after batch effect removal with limma package. It is not allowed to rewrite the data with the command. rld <- rlogTransformation(dds)
+RNASeq.NoCellLine <- assay(vsd)
 # reorder the columns
 #colnames(RNASeq.NoCellLine) = c("", "")
 #col.order <-  c("mock_sT_d3", "mock_sT_d3_r2", "mock_sT_d8", "mock_sT_d8_r2", "sT_d3", "sT_d3_r2", "sT_d8", "sT_d8_r2")
@@ -1372,7 +1372,8 @@ cd pathways_KEGG
 ###################################################################
 ##### STEP3: prepare all_genes #####
 #rld <- rlogTransformation(dds)
-RNASeq.NoCellLine <- assay(rld)
+#vsd <- vst(dds, blind=FALSE)
+RNASeq.NoCellLine <- assay(vsd)
 # reorder the columns
 #colnames(RNASeq.NoCellLine) = c("", "")
 col.order <-  c("mock_truncLT_d3", "mock_truncLT_d3_r2", "mock_truncLT_d8", "mock_truncLT_d8_r2", "truncLT_d3", "truncLT_d3_r2", "truncLT_d8", "truncLT_d8_r2")
