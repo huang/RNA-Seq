@@ -452,6 +452,8 @@ for (i in clist) {
   res_df <- as.data.frame(res)
   geness_res <- merge(geness_uniq, res_df, by.x="ensembl_gene_id", by.y="ENSEMBL")
   dim(geness_res)
+  geness_res$padj <- ifelse(is.na(geness_res$padj), 1, geness_res$padj)
+  geness_res$pvalue <- ifelse(is.na(geness_res$pvalue), 1, geness_res$pvalue)
   rownames(geness_res) <- geness_res$ensembl_gene_id
   geness_res$ensembl_gene_id <- NULL
   write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "all.txt", sep="-"))
