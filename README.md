@@ -741,6 +741,8 @@ for (i in clist) {
   res_df <- as.data.frame(res)
   geness_res <- merge(geness, res_df)
   dim(geness_res)
+  geness_res$padj <- ifelse(is.na(geness_res$padj), 1, geness_res$padj)
+  geness_res$pvalue <- ifelse(is.na(geness_res$pvalue), 1, geness_res$pvalue)
   write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "all.txt", sep="-"))
   #write.csv(res_df, file = paste(i, "background.txt", sep="_"))
   up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
@@ -748,6 +750,11 @@ for (i in clist) {
   write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="-"))
   write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="-"))
 }
+
+#update NA in pvalue and padj with 1
+#http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
+#The easiest way to work with the adjusted p values in a benchmarking context is probably to convert these NA values to 1:
+#res$padj <- ifelse(is.na(res$padj), 1, res$padj)
 
 #----
 dds$replicates <- relevel(dds$replicates, "p601_d3_DonorII")
@@ -913,11 +920,6 @@ for (i in clist) {
   write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="-"))
   write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="-"))
 }
-
-#update NA in pvalue and padj with 1
-#http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
-#The easiest way to work with the adjusted p values in a benchmarking context is probably to convert these NA values to 1:
-#res$padj <- ifelse(is.na(res$padj), 1, res$padj)
 
 mv p600_d3_DonorII_vs_untreated_DonorII-all.txt p600_d3_vs_untreated-all.txt
 mv p600_d3_DonorII_vs_untreated_DonorII-up.txt p600_d3_vs_untreated-up.txt
