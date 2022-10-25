@@ -564,7 +564,7 @@ bamCoverage --bam V_8_4_2_p602_d3_DonorIIAligned.sortedByCoord.out.bam -o ../big
 #--go to BREAK POINT--
 # sorted by sT and truncLT
 
-rld <- rlogTransformation(dds)
+#rld <- rlogTransformation(dds)
 vsd <- vst(dds, blind=FALSE)
 
 # -- before pca --
