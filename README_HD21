@@ -95,7 +95,7 @@ sed -i -e "s/\tCDS\t/\texon\t/g" HD21-2.gtf
 #tRNAscan-SE_exon == tRNAscan-SE transcript       61
 #cmsearch_exon == cmsearch transcript             10
 ------------------------------------------------------
-#total                                          5313
+#total                                          5313 (transcript 2649-->bed, exon 2657, region 7)
 
 #in kate "\texon" --> "_exon"
 grep "Genbank_exon" HD21-2.gtf > HD21-2_Genbank_exon.gtf            #add gene_biotype "protein_coding"; at the end of line (2586)
