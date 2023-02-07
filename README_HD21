@@ -87,13 +87,15 @@ sed -i -e "s/\tCDS\t/\texon\t/g" HD21-2.gtf
 #tRNAscan-SE_CDS --> tRNAscan-SE_exon
 #or xxx_CDS --> xxx_exon --> xxx[cmsearch, Genbank, tRNAscan] exon
 #
-#-- STEP 0.2: add protein_coding to tpye exon
+#-- STEP 0.2: add protein_coding "xxxx" to type exon
 #exon (former Genbank CDS): 2657 = (Genbank transcript + cmsearch transcript + tRNAscan-SE transcript) = (2586+61+10)
-#Genbank region: 7
-#        transcript: 2649
-#Genbank transcript
-#cmsearch transcript
-#tRNAscan-SE transcript
+#Genbank region:                                   7
+#        transcript:                            2649
+#Genbank_exon == Genbank transcript             2586
+#tRNAscan-SE_exon == tRNAscan-SE transcript       61
+#cmsearch_exon == cmsearch transcript             10
+------------------------------------------------------
+#total                                          5313
 
 #in kate "\texon" --> "_exon"
 grep "Genbank_exon" HD21-2.gtf > HD21-2_Genbank_exon.gtf            #add gene_biotype "protein_coding"; at the end of line (2586)
