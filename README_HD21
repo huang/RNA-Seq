@@ -1,0 +1,721 @@
+https://www.bioconductor.org/help/course-materials/2013/CSAMA2013/tuesday/afternoon/DESeq_protocol.pdf
+https://academic.oup.com/nargab/article/3/4/lqab116/6478883
+https://git.embl.de/provazni/rna-seq-tutorial/-/blob/master/RNAseq_data_analysis.rmd
+https://currentprotocols.onlinelibrary.wiley.com/doi/pdf/10.1002/cpz1.411
+https://github.com/elsayed-lab/manuscript-shared-rnaseq
+#url(r'^careers/$', RedirectView.as_view(url='https://careers.workable.com/myCompanyName/')), 
+#path('about/', RedirectView.as_view(url='https://scholar.google.de/citations?hl=en&user=P1pS4s0AAAAJ', permanent=True)),
+#path('products/<slug:slug>', RedirectView.as_view(url='http://example.com/products/'+slug, permanent=True)),
+
+
+
+---------------
+-- 0, rename --
+
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-1-1-TSB/FCH5YJ2CCX2_L2_RDWHS.EgriPABEAA-211_1.fq.gz       HD21-1-1-TSB_R1.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-1-1-TSB/FCH5YJ2CCX2_L2_RDWHS.EgriPABEAA-211_2.fq.gz       HD21-1-1-TSB_R2.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP_more/Clean/HD21-1-2-TSB/FCH7H23CCX2_L2_RDWHS.EgriPABFAA-212_1.fq.gz  HD21-1-2-TSB_R1.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP_more/Clean/HD21-1-2-TSB/FCH7H23CCX2_L2_RDWHS.EgriPABFAA-212_2.fq.gz  HD21-1-2-TSB_R2.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-1-3-TSB/FCH5YJ2CCX2_L2_RDWHS.EgriPABGAA-213_1.fq.gz HD21-1-3-TSB_R1.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-1-3-TSB/FCH5YJ2CCX2_L2_RDWHS.EgriPABGAA-213_2.fq.gz HD21-1-3-TSB_R2.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-2-1-TSB/FCH5YJ2CCX2_L2_RDWHS.EgriPABHAA-214_1.fq.gz HD21-2-1-TSB_R1.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-2-1-TSB/FCH5YJ2CCX2_L2_RDWHS.EgriPABHAA-214_2.fq.gz HD21-2-1-TSB_R2.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP_more/Clean/HD21-2-2-TSB/FCH7H23CCX2_L2_RDWHS.EgriPABIAA-216_1.fq.gz HD21-2-2-TSB_R1.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP_more/Clean/HD21-2-2-TSB/FCH7H23CCX2_L2_RDWHS.EgriPABIAA-216_2.fq.gz HD21-2-2-TSB_R2.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-2-3-TSB/FCH5YJ2CCX2_L3_RDWHS.EgriPABJAA-218_1.fq.gz HD21-2-3-TSB_R1.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-2-3-TSB/FCH5YJ2CCX2_L3_RDWHS.EgriPABJAA-218_2.fq.gz HD21-2-3-TSB_R2.fq.gz
+
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-1-TSB/FCH5YL5CCX2_L2_RDWHS.EgbhPAARBA-214_1.fq.gz HD21N4-1-TSB_R1.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-1-TSB/FCH5YL5CCX2_L2_RDWHS.EgbhPAARBA-214_2.fq.gz HD21N4-1-TSB_R2.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-2-TSB/FCH5YL5CCX2_L2_RDWHS.EgbhPAASAA-216_1.fq.gz HD21N4-2-TSB_R1.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-2-TSB/FCH5YL5CCX2_L2_RDWHS.EgbhPAASAA-216_2.fq.gz HD21N4-2-TSB_R2.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-3-TSB/FCH5YL5CCX2_L2_RDWHS.EgbhPAATBA-218_1.fq.gz HD21N4-3-TSB_R1.fq.gz 
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-3-TSB/FCH5YL5CCX2_L2_RDWHS.EgbhPAATBA-218_2.fq.gz HD21N4-3-TSB_R2.fq.gz
+
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-1-TSB/FCH5YL5CCX2_L2_RDWHS.EgbhPAAUAA-219_1.fq.gz  HD21N5-1-TSB_R1.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-1-TSB/FCH5YL5CCX2_L2_RDWHS.EgbhPAAUAA-219_2.fq.gz  HD21N5-1-TSB_R2.fq.gz
+ln -s ../F19FTSEUHT1835_S.EgbhP_more/Clean/HD21N5-1-TSB/FCH7H23CCX2_L2_RDWHS.EgbhPAAUAA-219_1.fq.gz  HD21N5-2-TSB_R1.fq.gz   #HD21N5-1-TSB to HD21N5-2-TSB
+ln -s ../F19FTSEUHT1835_S.EgbhP_more/Clean/HD21N5-1-TSB/FCH7H23CCX2_L2_RDWHS.EgbhPAAUAA-219_2.fq.gz  HD21N5-2-TSB_R2.fq.gz   #HD21N5-1-TSB to HD21N5-2-TSB
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-3-TSB/FCH5YL5CCX2_L3_RDWHS.EgbhPAAVBA-220_1.fq.gz  HD21N5-3-TSB_R1.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-3-TSB/FCH5YL5CCX2_L3_RDWHS.EgbhPAAVBA-220_2.fq.gz  HD21N5-3-TSB_R2.fq.gz
+
+
+ln -s ../f20ftseuht0495-seeozp/Reads/Clean/HD21-1-1-hS/FCH7LHMCCX2_L8_RDWHS.EeozPAAAAA-201_1.fq.gz  HD21-1-1-hS_R1.fq.gz
+ln -s ../f20ftseuht0495-seeozp/Reads/Clean/HD21-1-1-hS/FCH7LHMCCX2_L8_RDWHS.EeozPAAAAA-201_2.fq.gz  HD21-1-1-hS_R2.fq.gz
+ln -s ../f20ftseuht0495-seeozp/Reads/Clean/HD21-1-2-hS/FCH7LHMCCX2_L8_RDWHS.EeozPAABAA-202_1.fq.gz  HD21-1-2-hS_R1.fq.gz
+ln -s ../f20ftseuht0495-seeozp/Reads/Clean/HD21-1-2-hS/FCH7LHMCCX2_L8_RDWHS.EeozPAABAA-202_2.fq.gz  HD21-1-2-hS_R2.fq.gz
+ln -s ../f20ftseuht0495-seeozp/Reads/Clean/HD21-1-3-hS/FCH7LHMCCX2_L8_RDWHS.EeozPAACAA-203_1.fq.gz  HD21-1-3-hS_R1.fq.gz
+ln -s ../f20ftseuht0495-seeozp/Reads/Clean/HD21-1-3-hS/FCH7LHMCCX2_L8_RDWHS.EeozPAACAA-203_2.fq.gz  HD21-1-3-hS_R2.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-2-1-hS/FCH5YJ2CCX2_L3_RDWHS.EgriPABOAA-223_1.fq.gz  HD21-2-1-hS_R1.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP/Clean/HD21-2-1-hS/FCH5YJ2CCX2_L3_RDWHS.EgriPABOAA-223_2.fq.gz  HD21-2-1-hS_R2.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP_more/Clean/HD21-2-2-hS/FCH7H23CCX2_L3_RDWHS.EgriPABPAA-225_1.fq.gz  HD21-2-2-hS_R1.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP_more/Clean/HD21-2-2-hS/FCH7H23CCX2_L3_RDWHS.EgriPABPAA-225_2.fq.gz  HD21-2-2-hS_R2.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP_more/Clean/HD21-2-3-hS/FCH7H23CCX2_L3_RDWHS.EgriPABQAA-201_1.fq.gz  HD21-2-3-hS_R1.fq.gz
+ln -s ../F19FTSEUHT1835_SEgriP_more/Clean/HD21-2-3-hS/FCH7H23CCX2_L3_RDWHS.EgriPABQAA-201_2.fq.gz  HD21-2-3-hS_R2.fq.gz
+
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-1-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPAAWAA-221_1.fq.gz  HD21N4-1-hS_R1.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-1-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPAAWAA-221_2.fq.gz  HD21N4-1-hS_R2.fq.gz
+ln -s ../F19FTSEUHT1835_S.EgbhP_more/Clean/HD21N4-2-hS/FCH7H23CCX2_L2_RDWHS.EgbhPAAXAA-222_1.fq.gz  HD21N4-2-hS_R1.fq.gz
+ln -s ../F19FTSEUHT1835_S.EgbhP_more/Clean/HD21N4-2-hS/FCH7H23CCX2_L2_RDWHS.EgbhPAAXAA-222_2.fq.gz  HD21N4-2-hS_R2.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-3-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPAAYAA-223_1.fq.gz  HD21N4-3-hS_R1.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N4-3-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPAAYAA-223_2.fq.gz  HD21N4-3-hS_R2.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-1-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPAAZAA-225_1.fq.gz  HD21N5-1-hS_R1.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-1-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPAAZAA-225_2.fq.gz  HD21N5-1-hS_R2.fq.gz 
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-2-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPABAAA-201_1.fq.gz  HD21N5-2-hS_R1.fq.gz 
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-2-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPABAAA-201_2.fq.gz  HD21N5-2-hS_R2.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-3-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPABBAA-202_1.fq.gz  HD21N5-3-hS_R1.fq.gz
+ln -s ../f19ftseuht1835-segbhp/Clean/HD21N5-3-hS/FCH5YL5CCX2_L3_RDWHS.EgbhPABBAA-202_2.fq.gz  HD21N5-3-hS_R2.fq.gz
+
+
+
+-- 0, generate the ref.gtf and ref.bed from GenBank file --
+            
+#[PREPARE gtf from gff] https://github.com/gpertea/gffread/issues/3
+#DEL gb2gff.py HD21-2_chr.gbk > HD21-2.gtf
+#DEL gb2gff.py HD21-2_plasmid_pHD21-2_1.gbk >> HD21-2.gtf
+#DEL gb2gff.py HD21-2_plasmid_pHD21-2_2.gbk >> HD21-2.gtf
+
+
+#-- STEP 0.0: download the gff3 files --
+cat HD21-2_chr.gff3 HD21-2_plasmid1.gff3 HD21-2_plasmid2.gff3 > HD21-2.gff3
+
+#-- STEP 0.1: rename CDS to exon! --
+gffread -E -F -O -T HD21-2.gff3 -o HD21-2.gtf
+sed -i -e "s/\tCDS\t/\texon\t/g" HD21-2.gtf 
+#Genbank_CDS --> Genbank_exon
+#cmsearch_CDS --> cmsearch_exon
+#tRNAscan-SE_CDS --> tRNAscan-SE_exon
+#or xxx_CDS --> xxx_exon --> xxx[cmsearch, Genbank, tRNAscan] exon
+#
+#-- STEP 0.2: add protein_coding to tpye exon
+#exon (former Genbank CDS): 2657 = (Genbank transcript + cmsearch transcript + tRNAscan-SE transcript) = (2586+61+10)
+#Genbank region: 7
+#        transcript: 2649
+#Genbank transcript
+#cmsearch transcript
+#tRNAscan-SE transcript
+
+#in kate "\texon" --> "_exon"
+grep "Genbank_exon" HD21-2.gtf > HD21-2_Genbank_exon.gtf            #add gene_biotype "protein_coding"; at the end of line (2586)
+grep "tRNAscan-SE_exon" HD21-2.gtf > HD21-2_tRNAscan-SE_exon.gtf    #add gene_biotype "tRNA"; at the end of line (61)
+grep "cmsearch_exon" HD21-2.gtf > HD21-2_cmsearch_exon.gtf          #add gene_biotype "RNase_P_RNA";| gene_biotype "ncRNA";| gene_biotype "rRNA";| gene_biotype "tmRNA";| gene_biotype "SRP_RNA"; at the end (10)
+
+grep -i -e "cmsearch" HD21-2.gtf > temp
+grep -i -e "gene_biotype" temp > temp2
+CP052994.1	cmsearch	transcript	1286239	1286622	.	-	.	transcript_id "rna-HKH70_06005"; gene_id "gene-HKH70_06005"; gene_name "rnpB"; Dbxref "RFAM:RF00011"; gbkey "ncRNA"; gene "rnpB"; inference "COORDINATES: profile:INFERNAL:1.1.1"; locus_tag "HKH70_06005"; product "RNase P RNA component class B"; Name "rnpB"; gene_biotype "RNase_P_RNA";
+CP052994.1	cmsearch	transcript	1452715	1452905	.	-	.	transcript_id "rna-HKH70_06865"; gene_id "gene-HKH70_06865"; gene_name "ssrS"; Dbxref "RFAM:RF00013"; gbkey "ncRNA"; gene "ssrS"; inference "COORDINATES: profile:INFERNAL:1.1.1"; locus_tag "HKH70_06865"; product "6S RNA"; Name "ssrS"; gene_biotype "ncRNA";
+CP052994.1	cmsearch	transcript	1706296	1706410	.	-	.	transcript_id "rna-HKH70_08190"; gene_id "gene-HKH70_08190"; gene_name "rrf"; Dbxref "RFAM:RF00001"; gbkey "rRNA"; gene "rrf"; inference "COORDINATES: profile:INFERNAL:1.1.1"; locus_tag "HKH70_08190"; product "5S ribosomal RNA"; Name "rrf"; gene_biotype "rRNA";
+...
+
+
+grep -v "_exon" HD21-2.gtf > HD21-2_non_exon.gtf #2656
+
+cat HD21-2_non_exon.gtf HD21-2_Genbank_exon.gtf HD21-2_tRNAscan-SE_exon.gtf HD21-2_cmsearch_exon.gtf  > HD21-2_new.gtf #5313
+
+#in kate "exon" --> "\texon"
+sort the HD21-2_new.gtf using libreoffice
+# Eventually replace "" with "; "transcript_id with transcript_id; "\n with \n in kate
+
+
+#-- STEP 0.3: PREPARE bed from gtf
+#replace '\t0\t' with '\t.\t' in the gff-file in the kate-editor
+gffread -E -F --bed HD21-2_new.gtf -o HD21-2_new.bed  #   .. loaded 2649 genomic features from HD21-2_new.gtf
+
+#GTF: CP052994.1      Genbank exon    1       1356    .       +       .       transcript_id "gene-HKH70_00005"; gene_id "gene-HKH70_00005"; gene_name "dnaA"; Dbxref "NCBI_GP:QRJ41002.1"; Name "QRJ41002.1"; gbkey "CDS"; gene "dnaA"; inference "COORDINATES: similar to AA sequence:RefSeq:WP_017723675.1"; locus_tag "HKH70_00005"; product "chromosomal replication initiator protein DnaA"; protein_id "QRJ41002.1"; transl_table "11"; gene_biotype "protein_coding";
+#BED: CP052994.1      0       1356    gene-HKH70_00005        100     +       0       1356    0,0,0   1       1356,   0,      CDS=0:1356;CDSphase=0;geneID=gene-HKH70_00005;gene_name=dnaA;Name=dnaA;gbkey=Gene;gene=dnaA;gene_biotype=protein_coding;locus_tag=HKH70_00005
+
+
+
+
+-------
+-- 2 --
+conda activate rnaseq
+# --> !!!! SUCCESSFUL !!!!
+nextflow run rnaseq --reads '/home/jhuang/DATA/Data_Anna_HAPDICS_RNASeq/raw_data/*_R{1,2}.fq.gz' --fasta /home/jhuang/DATA/Data_Anna_HAPDICS_RNASeq/HD21-2.fa --gtf /home/jhuang/DATA/Data_Anna_HAPDICS_RNASeq/HD21-2_new.gtf --bed12 /home/jhuang/DATA/Data_Anna_HAPDICS_RNASeq/HD21-2_new.bed -profile standard --aligner hisat2 --fcGroupFeatures gene_id --fcGroupFeaturesType gene_biotype --saveReference --skip_genebody_coverage --skip_dupradar --skip_preseq --skip_edger  -resume
+#default fcGroupFeatures="gene_biotype" (or gbkey)
+      --skip_qc                     Skip all QC steps apart from MultiQC
+      --skip_fastqc                 Skip FastQC
+      --skip_rseqc                  Skip RSeQC
+      --skip_genebody_coverage      Skip calculating genebody coverage
+      --skip_preseq                 Skip Preseq
+      --skip_dupradar               Skip dupRadar (and Picard MarkDups)
+      --skip_edger                  Skip edgeR MDS plot and heatmap
+      --skip_multiqc                Skip MultiQC
+
+
+
+
+###################################################################################
+#################### RNASeq #######################################################
+################################################################################################################
+##### STEP1: pca and heatmap_clusters, remove batch effects, intercept assay(rld), then removeBatchEffect  #####
+BiocManager::install(c("DESeq2"))
+requiredPackages1 <-c("AnnotationDbi","clusterProfiler","ReactomePA","org.Hs.eg.db","DESeq2", "gplots", "RColorBrewer")
+ipak <- function(pkg){
+        new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+        if (length(new.pkg))
+                install.packages(new.pkg, dependencies = TRUE)
+        sapply(pkg, require, character.only = TRUE)
+}
+ipak(requiredPackages1)
+#requiredPackages2 <- c("tidyverse")
+#ipak(requiredPackages2)
+
+
+
+
+cut -f1-1 -d$'\t' merged_gene_counts_.txt > f1.txt
+cut -f3- -d$'\t' merged_gene_counts_.txt > f3-.txt
+paste -d$'\t' f1.txt f3-.txt > f1_3-.txt
+#cut -f2-1 merged_gene_counts2.txt | sort > col1.txt  # remove 'gene_name'
+#cat col1.txt | uniq -c > temp2
+#sort temp2 > temp2_
+#remove the duplicaetd genes
+
+##remove the gene_name-line to the header
+#cp merged_gene_counts.txt merged_gene_counts_backup.txt
+#cut -f2- -d$'\t' merged_gene_counts_dedup.txt > merged_gene_counts_dedup_f2-.txt
+##cut -f1-1 -d$'\t' merged_gene_counts_dedup.txt > merged_gene_counts_dedup_f1.txt
+##cut -f3- -d$'\t' merged_gene_counts_dedup.txt > merged_gene_counts_dedup_f3-.txt
+##paste -d$'\t' merged_gene_counts_dedup_f1.txt merged_gene_counts_dedup_f3-.txt > merged_gene_counts_dedup_f2-.txt
+## rename the alr_1, alr_2, arsB_1, arsB_2, ...
+
+
+
+
+library("AnnotationDbi")
+library("clusterProfiler")
+library("ReactomePA")
+library("org.Hs.eg.db")
+library(DESeq2)
+library(gplots)
+#setwd("/home/jhuang/DATA/Data_Anna_HAPDICS_RNASeq/results/featureCounts")
+
+####-- dataset --
+d.raw<- read.delim2("f1_3-.txt",sep="\t", header=TRUE, row.names=1)
+
+col.order <- c("HD04.1.1.TSB.sorted.bam","HD04.1.2.TSB.sorted.bam","HD04.1.3.TSB.sorted.bam","HD04.8.1.TSB.sorted.bam","HD04.8.2.TSB.sorted.bam","HD04.8.3.TSB.sorted.bam","HD04N2.1.TSB.sorted.bam","HD04N2.2.TSB.sorted.bam","HD04N2.3.TSB.sorted.bam","HD04N6.3.TSB.sorted.bam","HD04.1.1.hS.sorted.bam","HD04.1.2.hS.sorted.bam","HD04.8.1.hS.sorted.bam","HD04.8.2.hS.sorted.bam","HD04.8.3.hS.sorted.bam","HD04N2.1.hS.sorted.bam","HD04N2.2.hS.sorted.bam","HD04N2.3.hS.sorted.bam","HD04N6.1.hS.sorted.bam","HD04N6.2.hS.sorted.bam","HD04N6.3.hS.sorted.bam","HD21.1.1.TSB.sorted.bam","HD21.1.2.TSB.sorted.bam","HD21.1.3.TSB.sorted.bam","HD21.2.1.TSB.sorted.bam","HD21.2.2.TSB.sorted.bam","HD21.2.3.TSB.sorted.bam","HD21N4.1.TSB.sorted.bam","HD21N4.2.TSB.sorted.bam","HD21N4.3.TSB.sorted.bam","HD21N5.1.TSB.sorted.bam","HD21N5.2.TSB.sorted.bam","HD21N5.3.TSB.sorted.bam","HD21.2.1.hS.sorted.bam","HD21.2.2.hS.sorted.bam","HD21.2.3.hS.sorted.bam","HD21N4.1.hS.sorted.bam","HD21N4.2.hS.sorted.bam","HD21N4.3.hS.sorted.bam","HD21N5.1.hS.sorted.bam","HD21N5.2.hS.sorted.bam","HD21N5.3.hS.sorted.bam",  "HD26.1.1.TSB.sorted.bam","HD26.1.2.TSB.sorted.bam","HD26.1.3.TSB.sorted.bam","HD26.7.1.TSB.sorted.bam","HD26.7.2.TSB.sorted.bam","HD26.7.3.TSB.sorted.bam",  "HD26N1.1.TSB.sorted.bam","HD26N1.2.TSB.sorted.bam","HD26N1.3.TSB.sorted.bam","HD26N3.1.TSB.sorted.bam","HD26N3.2.TSB.sorted.bam","HD26N3.3.TSB.sorted.bam","HD26.1.1.hS.sorted.bam","HD26.1.2.hS.sorted.bam","HD26.1.3.hS.sorted.bam","HD26.7.1.hS.sorted.bam","HD26.7.2.hS.sorted.bam","HD26.7.3.hS.sorted.bam","HD26N1.1.hS.sorted.bam","HD26N1.2.hS.sorted.bam","HD26N1.3.hS.sorted.bam","HD26N3.1.hS.sorted.bam","HD26N3.2.hS.sorted.bam","HD26N3.3.hS.sorted.bam",  "HD21.1.1.hS.sorted.bam","HD21.1.2.hS.sorted.bam","HD21.1.3.hS.sorted.bam","HD29.1.1.TSB.sorted.bam","HD29.1.1.hS.sorted.bam","HD29.1.2.TSB.sorted.bam","HD29.1.2.hS.sorted.bam","HD29.1.3.TSB.sorted.bam","HD29.1.3.hS.sorted.bam","HD29.2.1.TSB.sorted.bam","HD29.2.1.hS.sorted.bam","HD29.2.2.TSB.sorted.bam","HD29.2.2.hS.sorted.bam","HD29.2.3.TSB.sorted.bam","HD29.2.3.hS.sorted.bam","HD29N4.1.TSB.sorted.bam","HD29N4.1.hS.sorted.bam", "HD29N4.2.TSB.sorted.bam","HD29N4.2.hS.sorted.bam","HD29N4.3.TSB.sorted.bam","HD29N4.3.hS.sorted.bam","HD29N5.1.TSB.sorted.bam","HD29N5.1.hS.sorted.bam","HD29N5.2.TSB.sorted.bam","HD29N5.2.hS.sorted.bam","HD29N5.3.TSB.sorted.bam","HD29N5.3.hS.sorted.bam","HD33.3.1.TSB.sorted.bam","HD33.3.1.hS.sorted.bam","HD33.3.2.TSB.sorted.bam","HD33.3.2.hS.sorted.bam","HD33.3.3.TSB.sorted.bam","HD33.3.3.hS.sorted.bam","HD33.4.1.TSB.sorted.bam","HD33.4.1.hS.sorted.bam","HD33.4.2.TSB.sorted.bam","HD33.4.2.hS.sorted.bam","HD33.4.3.TSB.sorted.bam","HD33.4.3.hS.sorted.bam", "HD33N22.1.TSB.sorted.bam","HD33N22.1.hS.sorted.bam","HD33N22.2.TSB.sorted.bam","HD33N22.2.hS.sorted.bam","HD33N22.3.TSB.sorted.bam","HD33N22.3.hS.sorted.bam","HD33N28.1.TSB.sorted.bam","HD33N28.1.hS.sorted.bam","HD33N28.2.TSB.sorted.bam","HD33N28.2.hS.sorted.bam","HD33N28.3.hS.sorted.bam",  "HD33U28.3.TSB.sorted.bam","HD04.1.1.TSB_batch2.sorted.bam","HD04.1.2.TSB_batch2.sorted.bam","HD04.1.3.hS.sorted.bam","HD04N6.1.TSB.sorted.bam","HD04N6.2.TSB.sorted.bam")
+
+d.raw <- d.raw[,col.order]
+
+
+colnames(d.raw) = c("HD04.1.1.TSB","HD04.1.2.TSB","HD04.1.3.TSB","HD04.8.1.TSB","HD04.8.2.TSB","HD04.8.3.TSB","HD04N2.1.TSB","HD04N2.2.TSB","HD04N2.3.TSB","HD04N6.3.TSB","HD04.1.1.hS","HD04.1.2.hS","HD04.8.1.hS","HD04.8.2.hS","HD04.8.3.hS","HD04N2.1.hS","HD04N2.2.hS","HD04N2.3.hS","HD04N6.1.hS","HD04N6.2.hS","HD04N6.3.hS","HD21.1.1.TSB","HD21.1.2.TSB","HD21.1.3.TSB","HD21.2.1.TSB","HD21.2.2.TSB","HD21.2.3.TSB","HD21N4.1.TSB","HD21N4.2.TSB","HD21N4.3.TSB","HD21N5.1.TSB","HD21N5.2.TSB","HD21N5.3.TSB","HD21.2.1.hS","HD21.2.2.hS","HD21.2.3.hS","HD21N4.1.hS","HD21N4.2.hS","HD21N4.3.hS","HD21N5.1.hS","HD21N5.2.hS","HD21N5.3.hS","HD26.1.1.TSB","HD26.1.2.TSB","HD26.1.3.TSB","HD26.7.1.TSB","HD26.7.2.TSB","HD26.7.3.TSB","HD26N1.1.TSB","HD26N1.2.TSB","HD26N1.3.TSB","HD26N3.1.TSB","HD26N3.2.TSB","HD26N3.3.TSB","HD26.1.1.hS","HD26.1.2.hS","HD26.1.3.hS","HD26.7.1.hS","HD26.7.2.hS","HD26.7.3.hS","HD26N1.1.hS","HD26N1.2.hS","HD26N1.3.hS","HD26N3.1.hS","HD26N3.2.hS","HD26N3.3.hS","HD21.1.1.hS","HD21.1.2.hS","HD21.1.3.hS","HD29.1.1.TSB","HD29.1.1.hS","HD29.1.2.TSB","HD29.1.2.hS","HD29.1.3.TSB","HD29.1.3.hS","HD29.2.1.TSB","HD29.2.1.hS","HD29.2.2.TSB","HD29.2.2.hS","HD29.2.3.TSB","HD29.2.3.hS","HD29N4.1.TSB","HD29N4.1.hS","HD29N4.2.TSB","HD29N4.2.hS","HD29N4.3.TSB","HD29N4.3.hS","HD29N5.1.TSB","HD29N5.1.hS","HD29N5.2.TSB","HD29N5.2.hS","HD29N5.3.TSB","HD29N5.3.hS","HD33.3.1.TSB","HD33.3.1.hS","HD33.3.2.TSB","HD33.3.2.hS","HD33.3.3.TSB","HD33.3.3.hS","HD33.4.1.TSB","HD33.4.1.hS","HD33.4.2.TSB","HD33.4.2.hS","HD33.4.3.TSB","HD33.4.3.hS", "HD33N22.1.TSB","HD33N22.1.hS","HD33N22.2.TSB","HD33N22.2.hS","HD33N22.3.TSB","HD33N22.3.hS","HD33N28.1.TSB","HD33N28.1.hS","HD33N28.2.TSB","HD33N28.2.hS","HD33N28.3.hS","HD33N28.3.TSB","HD04.1.1.TSB_batch2","HD04.1.2.TSB_batch2","HD04.1.3.hS","HD04N6.1.TSB","HD04N6.2.TSB")
+# HD26.1.3.TSB is an outlier in rlogTransformation-results
+d.raw_ <- d.raw[-c(45)]
+d<- d.raw_[rowSums(d.raw_>3)>2,]
+
+
+#d<- d.raw[rowSums(d.raw>3)>2,]
+
+ids = as.factor(c("HD04.1.1.TSB","HD04.1.2.TSB","HD04.1.3.TSB","HD04.8.1.TSB","HD04.8.2.TSB","HD04.8.3.TSB","HD04N2.1.TSB","HD04N2.2.TSB","HD04N2.3.TSB","HD04N6.3.TSB","HD04.1.1.hS","HD04.1.2.hS","HD04.8.1.hS","HD04.8.2.hS","HD04.8.3.hS","HD04N2.1.hS","HD04N2.2.hS","HD04N2.3.hS","HD04N6.1.hS","HD04N6.2.hS","HD04N6.3.hS","HD21.1.1.TSB","HD21.1.2.TSB","HD21.1.3.TSB","HD21.2.1.TSB","HD21.2.2.TSB","HD21.2.3.TSB","HD21N4.1.TSB","HD21N4.2.TSB","HD21N4.3.TSB","HD21N5.1.TSB","HD21N5.2.TSB","HD21N5.3.TSB","HD21.2.1.hS","HD21.2.2.hS","HD21.2.3.hS","HD21N4.1.hS","HD21N4.2.hS","HD21N4.3.hS","HD21N5.1.hS","HD21N5.2.hS","HD21N5.3.hS","HD26.1.1.TSB","HD26.1.2.TSB","HD26.1.3.TSB","HD26.7.1.TSB","HD26.7.2.TSB","HD26.7.3.TSB","HD26N1.1.TSB","HD26N1.2.TSB","HD26N1.3.TSB","HD26N3.1.TSB","HD26N3.2.TSB","HD26N3.3.TSB","HD26.1.1.hS","HD26.1.2.hS","HD26.1.3.hS","HD26.7.1.hS","HD26.7.2.hS","HD26.7.3.hS","HD26N1.1.hS","HD26N1.2.hS","HD26N1.3.hS","HD26N3.1.hS","HD26N3.2.hS","HD26N3.3.hS","HD21.1.1.hS","HD21.1.2.hS","HD21.1.3.hS","HD29.1.1.TSB","HD29.1.1.hS","HD29.1.2.TSB","HD29.1.2.hS","HD29.1.3.TSB","HD29.1.3.hS","HD29.2.1.TSB","HD29.2.1.hS","HD29.2.2.TSB","HD29.2.2.hS","HD29.2.3.TSB","HD29.2.3.hS","HD29N4.1.TSB","HD29N4.1.hS","HD29N4.2.TSB","HD29N4.2.hS","HD29N4.3.TSB","HD29N4.3.hS","HD29N5.1.TSB","HD29N5.1.hS","HD29N5.2.TSB","HD29N5.2.hS","HD29N5.3.TSB","HD29N5.3.hS","HD33.3.1.TSB","HD33.3.1.hS","HD33.3.2.TSB","HD33.3.2.hS","HD33.3.3.TSB","HD33.3.3.hS","HD33.4.1.TSB","HD33.4.1.hS","HD33.4.2.TSB","HD33.4.2.hS","HD33.4.3.TSB","HD33.4.3.hS", "HD33N22.1.TSB","HD33N22.1.hS","HD33N22.2.TSB","HD33N22.2.hS","HD33N22.3.TSB","HD33N22.3.hS","HD33N28.1.TSB","HD33N28.1.hS","HD33N28.2.TSB","HD33N28.2.hS","HD33N28.3.hS","HD33N28.3.TSB","HD04.1.1.TSB_batch2","HD04.1.2.TSB_batch2","HD04.1.3.hS","HD04N6.1.TSB","HD04N6.2.TSB"))
+ids<-ids[-45]
+
+
+patient_source = as.factor(c("HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD04","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD21","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD26","HD21","HD21","HD21","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD29","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33", "HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD33","HD04","HD04","HD04","HD04","HD04"))
+patient_source<-patient_source[-45]
+
+TSB_or_hS = 
+as.factor(c("TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","hS","hS","hS","hS","hS","hS","hS","hS","hS","hS","hS","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","hS","hS","hS","hS","hS","hS","hS","hS","hS","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","TSB","hS","hS","hS","hS","hS","hS","hS","hS","hS","hS","hS","hS","hS","hS","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","TSB","hS","hS","TSB","TSB","TSB","hS","TSB","TSB"))
+TSB_or_hS<-TSB_or_hS[-45]
+
+batches = as.factor(c("old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","old","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new","new"))
+batches <- batches[-45]
+
+nose_or_infect = as.factor(c("infection","infection","infection","infection","infection","infection","nose","nose","nose","nose","infection","infection","infection","infection","infection","nose","nose","nose","nose","nose","nose","infection","infection","infection","infection","infection","infection","nose","nose","nose","nose","nose","nose","infection","infection","infection","nose","nose","nose","nose","nose","nose","infection","infection","infection","infection","infection","infection","nose","nose","nose","nose","nose","nose","infection","infection","infection","infection","infection","infection","nose","nose","nose","nose","nose","nose","infection","infection","infection","infection","infection","infection","infection","infection","infection","infection","infection","infection","infection","infection","infection","nose","nose","nose","nose","nose","nose","nose","nose","nose","nose","nose","nose","infection","infection","infection","infection","infection","infection","infection","infection","infection","infection","infection","infection", "nose","nose","nose","nose","nose","nose","nose","nose","nose","nose","nose","nose","infection","infection","infection","nose","nose"))
+nose_or_infect <- nose_or_infect[-45]
+
+replicates = as.factor(c("HD04.1.TSB","HD04.1.TSB","HD04.1.TSB","HD04.8.TSB","HD04.8.TSB","HD04.8.TSB","HD04N2.TSB","HD04N2.TSB","HD04N2.TSB","HD04N6.TSB","HD04.1.hS","HD04.1.hS","HD04.8.hS","HD04.8.hS","HD04.8.hS","HD04N2.hS","HD04N2.hS","HD04N2.hS","HD04N6.hS","HD04N6.hS","HD04N6.hS","HD21.1.TSB","HD21.1.TSB","HD21.1.TSB","HD21.2.TSB","HD21.2.TSB","HD21.2.TSB","HD21N4.TSB","HD21N4.TSB","HD21N4.TSB","HD21N5.TSB","HD21N5.TSB","HD21N5.TSB","HD21.2.hS","HD21.2.hS","HD21.2.hS","HD21N4.hS","HD21N4.hS","HD21N4.hS","HD21N5.hS","HD21N5.hS","HD21N5.hS","HD26.1.TSB","HD26.1.TSB","HD26.1.TSB","HD26.7.TSB","HD26.7.TSB","HD26.7.TSB","HD26N1.TSB","HD26N1.TSB","HD26N1.TSB","HD26N3.TSB","HD26N3.TSB","HD26N3.TSB","HD26.1.hS","HD26.1.hS","HD26.1.hS","HD26.7.hS","HD26.7.hS","HD26.7.hS","HD26N1.hS","HD26N1.hS","HD26N1.hS","HD26N3.hS","HD26N3.hS","HD26N3.hS","HD21.1.hS","HD21.1.hS","HD21.1.hS","HD29.1.TSB","HD29.1.hS","HD29.1.TSB","HD29.1.hS","HD29.1.TSB","HD29.1.hS","HD29.2.TSB","HD29.2.hS","HD29.2.TSB","HD29.2.hS","HD29.2.TSB","HD29.2.hS","HD29N4.TSB","HD29N4.hS","HD29N4.TSB","HD29N4.hS","HD29N4.TSB","HD29N4.hS","HD29N5.TSB","HD29N5.hS","HD29N5.TSB","HD29N5.hS","HD29N5.TSB","HD29N5.hS","HD33.3.TSB","HD33.3.hS","HD33.3.TSB","HD33.3.hS","HD33.3.TSB","HD33.3.hS","HD33.4.TSB","HD33.4.hS","HD33.4.TSB","HD33.4.hS","HD33.4.TSB","HD33.4.hS", "HD33N22.TSB","HD33N22.hS","HD33N22.TSB","HD33N22.hS","HD33N22.TSB","HD33N22.hS","HD33N28.TSB","HD33N28.hS","HD33N28.TSB","HD33N28.hS","HD33N28.hS","HD33N28.TSB","HD04.1.TSB","HD04.1.TSB","HD04.1.hS","HD04N6.TSB","HD04N6.TSB"))
+replicates <- replicates[-45]
+
+HD_infect_hS = as.factor(c("HD04.infection.TSB","HD04.infection.TSB","HD04.infection.TSB","HD04.infection.TSB","HD04.infection.TSB","HD04.infection.TSB","HD04.nose.TSB","HD04.nose.TSB","HD04.nose.TSB","HD04.nose.TSB","HD04.infection.hS","HD04.infection.hS","HD04.infection.hS","HD04.infection.hS","HD04.infection.hS","HD04.nose.hS","HD04.nose.hS","HD04.nose.hS","HD04.nose.hS","HD04.nose.hS","HD04.nose.hS","HD21.infection.TSB","HD21.infection.TSB","HD21.infection.TSB","HD21.infection.TSB","HD21.infection.TSB","HD21.infection.TSB","HD21.nose.TSB","HD21.nose.TSB","HD21.nose.TSB","HD21.nose.TSB","HD21.nose.TSB","HD21.nose.TSB","HD21.infection.hS","HD21.infection.hS","HD21.infection.hS","HD21.nose.hS","HD21.nose.hS","HD21.nose.hS","HD21.nose.hS","HD21.nose.hS","HD21.nose.hS","HD26.infection.TSB","HD26.infection.TSB","HD26.infection.TSB","HD26.infection.TSB","HD26.infection.TSB","HD26.infection.TSB","HD26.nose.TSB","HD26.nose.TSB","HD26.nose.TSB","HD26.nose.TSB","HD26.nose.TSB","HD26.nose.TSB","HD26.infection.hS","HD26.infection.hS","HD26.infection.hS","HD26.infection.hS","HD26.infection.hS","HD26.infection.hS","HD26.nose.hS","HD26.nose.hS","HD26.nose.hS","HD26.nose.hS","HD26.nose.hS","HD26.nose.hS","HD21.infection.hS","HD21.infection.hS","HD21.infection.hS","HD29.infection.TSB","HD29.infection.hS","HD29.infection.TSB","HD29.infection.hS","HD29.infection.TSB","HD29.infection.hS","HD29.infection.TSB","HD29.infection.hS","HD29.infection.TSB","HD29.infection.hS","HD29.infection.TSB","HD29.infection.hS","HD29.nose.TSB","HD29.nose.hS","HD29.nose.TSB","HD29.nose.hS","HD29.nose.TSB","HD29.nose.hS","HD29.nose.TSB","HD29.nose.hS","HD29.nose.TSB","HD29.nose.hS","HD29.nose.TSB","HD29.nose.hS","HD33.infection.TSB","HD33.infection.hS","HD33.infection.TSB","HD33.infection.hS","HD33.infection.TSB","HD33.infection.hS","HD33.infection.TSB","HD33.infection.hS","HD33.infection.TSB","HD33.infection.hS","HD33.infection.TSB","HD33.infection.hS", "HD33.nose.TSB","HD33.nose.hS","HD33.nose.TSB","HD33.nose.hS","HD33.nose.TSB","HD33.nose.hS","HD33.nose.TSB","HD33.nose.hS","HD33.nose.TSB","HD33.nose.hS","HD33.nose.hS","HD33.nose.TSB","HD04.infection.TSB","HD04.infection.TSB","HD04.infection.hS","HD04.nose.TSB","HD04.nose.TSB"))
+HD_infect_hS <- HD_infect_hS[-45]
+
+
+
+
+
+
+
+#TSB_ps=TSB_ps, TSB_ps2=TSB_ps2, nose_hS=nose_hS, 
+cData = data.frame(row.names=colnames(d), replicates=replicates, TSB_or_hS=TSB_or_hS, patient_source=patient_source, nose_or_infect=nose_or_infect, batches=batches, ids=ids, HD_infect_hS=HD_infect_hS)
+##dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~TSB_or_hS+patient_source)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~TSB_or_hS)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~TSB_ps)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~replicates)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batches+replicates)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batches)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~TSB_ps2)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~nose_hS)
+dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batches+HD_infect_hS)
+#rld <- vst(dds)   #vst (variance stabilization transformation)
+rld <- rlogTransformation(dds)  ##->RLD only for DRAWING, for DEGENE using dds!
+
+
+
+#-- save raw_data as xls --
+#~/Tools/csv2xls-0.4/csv_to_xls.py f1_3-.txt -d$'\t' -o merged_gene_counts_f1_3_.xls
+
+
+# -- [OPITONAL] before pca --
+png("pca_before_batch_correction.png", 1200, 800)
+#plotPCA(rld, intgroup=c("patients"))
+#plotPCA(rld, intgroup=c("TSB_or_hS", "patient_source"))
+#plotPCA(rld, intgroup=c("patient_source","nose_or_infect"))
+plotPCA(rld, intgroup = c("TSB_or_hS"))
+#plotPCA(rld, intgroup = c("nose_hS"))
+#plotPCA(rld, "batches")
+#plotPCA4(rld, "replicates")
+dev.off()
+
+
+# -- DRAW PCA with specified colors --
+#https://journals.plos.org/plosgenetics/article/file?type=supplementary&id=info:doi/10.1371/journal.pgen.1008398.s001
+#rld <- rlog(dds, blind=FALSE)
+data <- plotPCA(rld, intgroup=c("TSB_or_hS", "patient_source","nose_or_infect"), returnData=TRUE)
+percentVar <- round(100 * attr(data, "percentVar"))
+
+#"HD29:infection" = "DARKORANGE", "HD29:nose" = "ORANGE",
+png("PCA.png", 1000, 1000)
+svg("PCA.svg")
+pdf("PCA.pdf")
+ggplot(data, aes(PC1, PC2, colour=group)) + scale_colour_manual(values = c("hS:HD04:infection" = "DARKRED", "hS:HD04:nose" = "RED",  "hS:HD21:infection" = "DARKBLUE", "hS:HD21:nose" = "BLUE",   "hS:HD26:infection" = "DARKGREEN","hS:HD26:nose" = "GREEN",    "hS:HD29:infection" = "DARKSALMON","hS:HD29:nose" = "PINK",   "hS:HD33:infection" = "DARKCYAN","hS:HD33:nose" = "CYAN",              "TSB:HD04:infection" = "DARKMAGENTA", "TSB:HD04:nose" = "MAGENTA",   "TSB:HD21:infection" = "DEEPSKYBLUE4","TSB:HD21:nose" = "DEEPSKYBLUE",     "TSB:HD26:infection" = "DARKOLIVEGREEN","TSB:HD26:nose" = "DARKOLIVEGREEN1",    "TSB:HD29:infection" = "CORAL4","TSB:HD29:nose" = "CORAL",    "TSB:HD33:infection" = "DARKSLATEGREY","TSB:HD33:nose" = "SLATEGREY")) + geom_point(size=2) + xlab(paste0("PC1: ",percentVar[1],"% variance")) + ylab(paste0("PC2: ",percentVar[2],"% variance")) + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) + coord_fixed(ratio=1) 
+dev.off()
+
+#write.csv(round((counts(dds, normalized=TRUE)),0),file="Biorhiza.Trinity.salmon.matrix.normalised.csv")
+
+
+
+
+# -- before heatmap --
+## generate the pairwise comparison between samples
+library(gplots) 
+library("RColorBrewer")
+png("heatmap_before_batch_correction.png", 2400, 2400)
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+#paste( rld$dex, rld$cell, sep="-" )
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
+rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,ids, sep=":"))
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+
+# # -- remove batch effect option1: using limma::removeBatchEffect --
+# #show the results which delete the batches effect
+# #http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#why-after-vst-are-there-still-batches-in-the-pca-plot
+# THE BATCHEFFECT IS STILL THERE AFTER removeBatchEffect
+mat <- assay(rld)
+mat <- limma::removeBatchEffect(mat, rld$batch)
+assay(rld) <- mat
+
+
+# -- remove batch effect option2: using sva --
+BiocManager::install(c("edgeR"))
+
+library("edgeR")
+y <- DGEList(counts=d)
+y <- calcNormFactors(y)
+design <- model.matrix(~replicates) #-1,2,3- 
+v <- voom(y, design)                #-1,2-  
+library("sva")
+svobj <- sva(v$E, design, design[,1])  #-1,2-   
+design2 <- cbind(design, svobj$sv)     #-2-    
+v2 <- voom(y, design2)                 #-2-    
+fit <- eBayes(lmFit(v2, design2)) #for the stats  #-2-    
+#no.sv1 <- removeBatchEffect(v, design = design, covariates = svobj$sv)
+#no.sv2 <- removeBatchEffect(v2, design = design, covariates = svobj$sv)
+#no.sv3 <- removeBatchEffect(cpm(y, log=TRUE, prior.count=3),            covariates = svobj$sv, design = design)
+no.sv3 <- removeBatchEffect(cpm(y, log=TRUE, prior.count=3), rld$batch, covariates = svobj$sv, design = design)
+#CRITICAL STEP
+assay(rld) <- no.sv3
+
+
+
+
+# -- after pca --
+png("pca_after_batch_correction.png", 1200, 800)
+plotPCA(rld, intgroup = c("replicates", "batch"))
+#plotPCA(rld, intgroup = c("replicates", "ids"))
+dev.off()
+
+# -- after heatmap --
+## generate the pairwise comparison between samples
+png("heatmap_after_batch_correction.png", 1600, 1600)
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,batch, sep=":"))
+#rownames(mat) <- colnames(mat) <- with(colData(dds),paste(replicates,ids, sep=":"))
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+
+
+#This is the latest news from BGI :( Do you mind having a look at the data quality that we already have? Maybe it is sufficient? I was hoping to finish the manuscript soon...
+#Attached I send you the metadata for the experiment. It contains three infection groups: HD04, HD21 and HD26. We selected two infection isolates and two clonal nose isolates from each #group. All isolates were grown in TSB medium (nutrient rich) and human serum (reduced in nutrients, similar to joint fluid). Each experiment was performed in triplicate.
+
+
+
+
+
+####################################################################
+##### STEP2: select the differentially expressed genes #####
+Thank you so much!That's great! Can you put the 21-1.hS-1-3 back in? Since they all cluster together I think it is fair. Also HD21 belongs to sequence type 2 while the others belong to sequence type 5, so it is not unexpected that they behave differently. 
+I think the following comparisons would be very neat:
+-all strains HD04 and HD26 TSB vs. hS
+-HD04 TSB vs. hS
+-HD04N TSB vs. hS
+-HD26 TSB vs. hS
+-HD26N TSB vs. hS
+-HD21N TSB vs. hS
+-HD21 TSB vs. hS
+-For every patient infection vs. nose separate for hS and TSB. I think even very small differences are super interesting here! It could be good to also group again by sequence type. I think it's super interesting that ST seems to be a major predictor of expression pattern!
+-If possible TSB vs. hS over all isolates... they seem quite far apart though, not sure if anything good will come out.
+
+#CONSOLE: mkdir ~/DATA/Data_Anna_HAPDICS_RNASeq/results/featureCounts/degenes
+setwd("~/DATA/Data_Anna_HAPDICS_RNASeq/results/featureCounts/degenes")
+#---1---
+#-- dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batches+HD_infect_hS) --
+#-- dds contains raw_counts, which is required by DESeq2, not normalized values --
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD04.nose.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD04.nose.TSB_vs_HD04.nose.hS", "HD04.infection.hS_vs_HD04.nose.hS")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD04.nose.TSB")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD04.infection.TSB_vs_HD04.nose.TSB")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD04.infection.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD04.infection.TSB_vs_HD04.infection.hS")
+
+#---2---
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD21.nose.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD21.nose.TSB_vs_HD21.nose.hS", "HD21.infection.hS_vs_HD21.nose.hS")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD21.nose.TSB")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD21.infection.TSB_vs_HD21.nose.TSB")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD21.infection.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD21.infection.TSB_vs_HD21.infection.hS")
+
+#---3---
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD26.nose.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD26.nose.TSB_vs_HD26.nose.hS", "HD26.infection.hS_vs_HD26.nose.hS")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD26.nose.TSB")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD26.infection.TSB_vs_HD26.nose.TSB")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD26.infection.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD26.infection.TSB_vs_HD26.infection.hS")
+
+#---4---
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD29.nose.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD29.nose.TSB_vs_HD29.nose.hS", "HD29.infection.hS_vs_HD29.nose.hS")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD29.nose.TSB")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD29.infection.TSB_vs_HD29.nose.TSB")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD29.infection.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD29.infection.TSB_vs_HD29.infection.hS")
+
+#---5---
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD33.nose.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD33.nose.TSB_vs_HD33.nose.hS", "HD33.infection.hS_vs_HD33.nose.hS")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD33.nose.TSB")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD33.infection.TSB_vs_HD33.nose.TSB")
+
+dds$HD_infect_hS <- relevel(dds$HD_infect_hS, "HD33.infection.hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("HD33.infection.TSB_vs_HD33.infection.hS")
+
+#---6---
+dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batches+TSB_or_hS)
+dds$TSB_or_hS <- relevel(dds$TSB_or_hS, "hS")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("TSB_vs_hS")
+
+dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batches+nose_or_infect)
+dds$nose_or_infect <- relevel(dds$nose_or_infect, "nose")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("infection_vs_nose")
+
+
+
+
+#-- ensure no NA in output-excel --
+#https://support.bioconductor.org/p/79616/
+#https://support.bioconductor.org/p/76144/
+#https://support.bioconductor.org/p/70941/
+#results(dds, independentFiltering=FALSE)
+#res$pvalue[res$baseMean < 0.0001] <- NA
+#res$padj <- p.adjust(res$pvalue, method="BH")
+
+# up <- subset(res_df, padj<=0.05 & |log2FoldChange|>=1.58496250072)
+for (i in clist) {
+  contrast = paste("nose_or_infect", i, sep="_")
+  res = results(dds, name=contrast, independentFiltering=FALSE, cooksCutoff = Inf)
+  res <- res[!is.na(res$log2FoldChange),]
+  res$pvalue[res$baseMean < 0.0001] <- NA
+  res$padj <- p.adjust(res$pvalue, method="BH")
+  res_df <- as.data.frame(res)
+
+  write.csv(as.data.frame(res_df[order(res_df$pvalue),]), file = paste(i, "background.txt", sep="_"))
+  up <- subset(res_df, padj<=0.05 & log2FoldChange>=1.58496250072)
+  down <- subset(res_df, padj<=0.05 & log2FoldChange<=-1.58496250072)
+  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="_"))
+  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="_"))
+}
+#HD04.TSB_vs_HD04.hS_background.txt:"rrsA",2597.21035386021,-2.22212195578202,1.2645769671473,-1.75720577988607,NA,NA
+#HD04.TSB_vs_HD04.hS_background.txt:"rrsB",864.339147033516,-1.54545358504803,1.28378759153412,-1.20382343250508,NA,NA
+#HD04.TSB_vs_HD04.hS_background.txt:"SERP1674",4.0460999281313,0.301279538689062,2.26297007716908,0.133134565820665,NA,NA
+#HD04.TSB_vs_HD04.hS_background.txt:"rrsA",2597.21035386021,-2.22212195578202,1.2645769671473,-1.75720577988607,0.0788827404498319,0.149066043055718
+#HD04.TSB_vs_HD04.hS_background.txt:"rrsB",864.339147033516,-1.54545358504803,1.28378759153412,-1.20382343250508,0.228657830778095,0.350802334454476
+#HD04.TSB_vs_HD04.hS_background.txt:"SERP1674",4.0460999281313,0.301279538689062,2.26297007716908,0.133134565820665,0.894086958890892,0.953893364639168
+#grep ",NA" *
+
+
+#under DIR degenes under KONSOLE
+for sample in "HD04.nose.TSB_vs_HD04.nose.hS" "HD04.infection.hS_vs_HD04.nose.hS" "HD04.infection.TSB_vs_HD04.nose.TSB" "HD04.infection.TSB_vs_HD04.infection.hS" "HD21.nose.TSB_vs_HD21.nose.hS" "HD21.infection.hS_vs_HD21.nose.hS" "HD21.infection.TSB_vs_HD21.nose.TSB" "HD21.infection.TSB_vs_HD21.infection.hS" "HD26.nose.TSB_vs_HD26.nose.hS" "HD26.infection.hS_vs_HD26.nose.hS" "HD26.infection.TSB_vs_HD26.nose.TSB" "HD26.infection.TSB_vs_HD26.infection.hS" "HD29.nose.TSB_vs_HD29.nose.hS" "HD29.infection.hS_vs_HD29.nose.hS" "HD29.infection.TSB_vs_HD29.nose.TSB" "HD29.infection.TSB_vs_HD29.infection.hS" "HD33.nose.TSB_vs_HD33.nose.hS" "HD33.infection.hS_vs_HD33.nose.hS" "HD33.infection.TSB_vs_HD33.nose.TSB" "HD33.infection.TSB_vs_HD33.infection.hS" "TSB_vs_hS" "infection_vs_nose"; do \
+mkdir ${sample}_output; \
+cut -d',' -f1- ${sample}_up.txt > ${sample}_output/upregulated_filtered; \
+cut -d',' -f1- ${sample}_down.txt > ${sample}_output/downregulated_filtered; \
+cut -d',' -f1- ${sample}_background.txt > ${sample}_output/background; \
+cd ${sample}_output; \
+~/Tools/csv2xls-0.4/csv_to_xls.py upregulated_filtered downregulated_filtered background -d$',' -o ../${sample}_degenes.xls; \
+cd ..; \
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+#sed -i -e 's/Derived by automated computational analysis using gene prediction method: Protein Homology.//g' temp
+#############################################################################
+##### STEP3: run Gamola.pl on HD21-2_gene_coding.gtf #####
+#TODO: run annotation of the genes using nextflow!
+
+cat infection_vs_nose_background_annotated1.txt | grep -v "tRNAscan-SE" | grep -v "frameshifted;" | grep -v "incomplete;" | grep -v "internal stop;" > infection_vs_nose_background_annotated1_.txt
+cut -f1-1 -d"," infection_vs_nose_background_annotated1_.txt > ../../2322.sh
+##from HD21-2_gene.gtf to HD21-2_gene_coding.gtf
+./2322.sh     
+
+cut -f1-2 -d$'\t' HD21-2_coding_2322.gtf > f1-2
+cut -f4- -d$'\t'  HD21-2_coding_2322.gtf > f4-
+cut -f9-9 -d$'\t' HD21-2_coding_2322.gtf > f9
+cut -f2-2 -d';' f9 > f9_2
+paste -d$"\t" f1-2 f9_2 f4- > HD21-2_temp.gff
+#grep -v "pseudo=true" HD21-2__.gff > HD21-2_temp.gff
+#grep -v "RNA" HD21-2___.gff > HD21-2_temp.gff
+bedtools getfasta -fi HD21-2.fa -bed HD21-2_temp.gff -s -fo HD21-2_coding_2322.fna -name
+sed -i -e 's/ gene_id "//g' HD21-2_coding_2322.fna
+sed -i -e 's/"//g' HD21-2_coding_2322.fna
+
+echo ">HD21-2_coding_2322" > HD21-2_coding_2322.fa;
+merge_seq.py HD21-2_coding_2322.fna >> HD21-2_coding_2322.fa;
+bioawk -c fastx '{ print $name, length($seq) }' < HD21-2_coding_2322.fna > length.txt
+generate_gene_model.py length.txt > /media/jhuang/Titisee/GAMOLA2/Results/gene_models/HD21-2_coding_2322.fa.combined;
+cp HD21-2_coding_2322.fa /media/jhuang/Titisee/GAMOLA2/Input_sequences
+
+
+mkdir Annotation_transfer  COG_results     Genbank_annotation  IG_Blast_results PFam_results  Sequin_submission   SignalP_results  tmhmm_results  tRNAscan_results Blast_results  CRISPR_results  gene_models         non_coding_RNA_results  rRNA_results  Session_comparison  TIGRfam_results  TransTerm_results  vector_results
+# run GAMOLA2!
+sed -i -e 's/Class: ,/Class: None, None/g' /media/jhuang/Titisee/GAMOLA2/Results/COG_results/*.fa_COG_*
+
+
+cp /media/jhuang/Titisee/GAMOLA2/Consolidated_results/HD21-2_coding_2322.fa/HD21-2_coding_2322.fa.gb ./
+awk '{print $0 "ORIGIN"> "file" NR}' RS='ORIGIN' HD21-2_coding_2322.fa.gb
+sed -i 's/</ /g' file2
+sed -i 's/^ //g' file2
+cat file1 file2 > HD21-2_coding_2322_.fa.gb
+update_locustag.py HD21-2_coding_2322_.fa.gb HD21-2_coding_2322.fna.fai > HD21-2_coding_2322__.fa.gb
+# delete empty lines and last line
+
+
+
+
+
+# --------------------------
+# ---- batch annotation ----
+# only using infection_vs_nose_background_annotated2.txt
+mkdir degenes_annotated_HD04 degenes_annotated_COG degenes_annotated;
+for comp in infection_vs_nose TSB_vs_hS; do \
+for comp in HD04.infection.hS_vs_HD04.nose.hS HD04.infection.TSB_vs_HD04.infection.hS HD04.infection.TSB_vs_HD04.nose.TSB HD04.nose.TSB_vs_HD04.nose.hS HD21.infection.hS_vs_HD21.nose.hS HD21.infection.TSB_vs_HD21.infection.hS HD21.infection.TSB_vs_HD21.nose.TSB HD21.nose.TSB_vs_HD21.nose.hS HD26.infection.hS_vs_HD26.nose.hS HD26.infection.TSB_vs_HD26.infection.hS HD26.infection.TSB_vs_HD26.nose.TSB HD26.nose.TSB_vs_HD26.nose.hS HD29.infection.hS_vs_HD29.nose.hS HD29.infection.TSB_vs_HD29.infection.hS HD29.infection.TSB_vs_HD29.nose.TSB HD29.nose.TSB_vs_HD29.nose.hS HD33.infection.hS_vs_HD33.nose.hS HD33.infection.TSB_vs_HD33.infection.hS HD33.infection.TSB_vs_HD33.nose.TSB HD33.nose.TSB_vs_HD33.nose.hS infection_vs_nose TSB_vs_hS; do \
+mkdir degenes_annotated_HD04/${comp}_output
+process_gamola_gb.py degenes/${comp}_output/upregulated_filtered ../../HD21-2.gbk > degenes_annotated_HD04/${comp}_output/upregulated_filtered_
+process_gamola_gb.py degenes/${comp}_output/downregulated_filtered ../../HD21-2.gbk > degenes_annotated_HD04/${comp}_output/downregulated_filtered_
+process_gamola_gb.py degenes/${comp}_output/background ../../HD21-2.gbk > degenes_annotated_HD04/${comp}_output/background_
+cd degenes_annotated_HD04/${comp}_output;
+uni2ascii -B upregulated_filtered_ > upregulated_filtered
+uni2ascii -B downregulated_filtered_ > downregulated_filtered
+uni2ascii -B background_ > background
+cd ../..;
+mkdir degenes_annotated_COG/${comp}_output
+process_gamola_gb_wo_PFAM.py degenes/${comp}_output/upregulated_filtered ../../HD21-2_coding_2322__.fa.gb > degenes_annotated_COG/${comp}_output/upregulated_filtered_
+process_gamola_gb_wo_PFAM.py degenes/${comp}_output/downregulated_filtered ../../HD21-2_coding_2322__.fa.gb > degenes_annotated_COG/${comp}_output/downregulated_filtered_
+process_gamola_gb_wo_PFAM.py degenes/${comp}_output/background ../../HD21-2_coding_2322__.fa.gb > degenes_annotated_COG/${comp}_output/background_
+cd degenes_annotated_COG/${comp}_output;
+uni2ascii -B upregulated_filtered_ > upregulated_filtered
+uni2ascii -B downregulated_filtered_ > downregulated_filtered
+uni2ascii -B background_ > background
+cd ../..;
+done
+
+
+#DEBUG
+/home/jhuang/anaconda3/lib/python2.7/site-packages/Bio/GenBank/__init__.py:1085: BiopythonParserWarning: Should have at least 2 parts for compound location
+  BiopythonParserWarning)
+/home/jhuang/anaconda3/lib/python2.7/site-packages/Bio/GenBank/__init__.py:1047: BiopythonParserWarning: Ignoring invalid location: '1601821..1601301'
+  BiopythonParserWarning)
+/home/jhuang/anaconda3/lib/python2.7/site-packages/Bio/GenBank/__init__.py:1047: BiopythonParserWarning: Ignoring invalid location: '1639583..1638826'
+  BiopythonParserWarning)
+/home/jhuang/anaconda3/lib/python2.7/site-packages/Bio/GenBank/__init__.py:1047: BiopythonParserWarning: Ignoring invalid location: '1701479..1701466'
+  BiopythonParserWarning)
+/home/jhuang/anaconda3/lib/python2.7/site-packages/Bio/GenBank/__init__.py:1047: BiopythonParserWarning: Ignoring invalid location: '1847119..1844772'
+
+
+
+# -------------------------
+# ---- merge two files ----
+#!!!! DEBUG genename is not complete!!
+for comp in infection_vs_nose TSB_vs_hS; do \
+for comp in HD04.infection.hS_vs_HD04.nose.hS HD04.infection.TSB_vs_HD04.infection.hS HD04.infection.TSB_vs_HD04.nose.TSB HD04.nose.TSB_vs_HD04.nose.hS HD21.infection.hS_vs_HD21.nose.hS HD21.infection.TSB_vs_HD21.infection.hS HD21.infection.TSB_vs_HD21.nose.TSB HD21.nose.TSB_vs_HD21.nose.hS HD26.infection.hS_vs_HD26.nose.hS HD26.infection.TSB_vs_HD26.infection.hS HD26.infection.TSB_vs_HD26.nose.TSB HD26.nose.TSB_vs_HD26.nose.hS HD29.infection.hS_vs_HD29.nose.hS HD29.infection.TSB_vs_HD29.infection.hS HD29.infection.TSB_vs_HD29.nose.TSB HD29.nose.TSB_vs_HD29.nose.hS HD33.infection.hS_vs_HD33.nose.hS HD33.infection.TSB_vs_HD33.infection.hS HD33.infection.TSB_vs_HD33.nose.TSB HD33.nose.TSB_vs_HD33.nose.hS infection_vs_nose TSB_vs_hS; do \
+mkdir degenes_annotated/${comp}_output
+cut -d',' -f1-3 degenes_annotated_HD04/${comp}_output/upregulated_filtered > degenes_annotated/${comp}_output/upregulated_filtered_1_3
+cut -d',' -f1-3 degenes_annotated_HD04/${comp}_output/downregulated_filtered > degenes_annotated/${comp}_output/downregulated_filtered_1_3
+cut -d',' -f1-3 degenes_annotated_HD04/${comp}_output/background > degenes_annotated/${comp}_output/background_1_3
+#cp degenes_annotated_COG/${comp}_output/upregulated_filtered degenes_annotated/${comp}_output/upregulated_filtered_all
+#cp degenes_annotated_COG/${comp}_output/downregulated_filtered degenes_annotated/${comp}_output/downregulated_filtered_all
+#cp degenes_annotated_COG/${comp}_output/background degenes_annotated/${comp}_output/background_all
+cut -d',' -f2- degenes_annotated_COG/${comp}_output/upregulated_filtered > degenes_annotated/${comp}_output/upregulated_filtered_all
+cut -d',' -f2- degenes_annotated_COG/${comp}_output/downregulated_filtered > degenes_annotated/${comp}_output/downregulated_filtered_all
+cut -d',' -f2- degenes_annotated_COG/${comp}_output/background > degenes_annotated/${comp}_output/background_all
+cd degenes_annotated/${comp}_output;
+paste -d',' upregulated_filtered_1_3 upregulated_filtered_all  > upregulated_filtered
+paste -d',' downregulated_filtered_1_3 downregulated_filtered_all > downregulated_filtered
+paste -d',' background_1_3 background_all > background
+~/Tools/csv2xls-0.4/csv_to_xls.py upregulated_filtered downregulated_filtered background -d$',' -o ../${comp}_annotated_degenes.xls;
+cd ../..;
+done
+
+
+
+HJH94_10450
+HJH94_10445
+HJH94_10035
+HJH94_03060
+HJH94_03930
+HJH94_05560
+HJH94_03945
+HJH94_07830
+HJH94_11265
+HJH94_11370
+HJH94_10360
+HJH94_00940 -
+HJH94_07310
+HJH94_10815
+HJH94_10945
+HJH94_10950
+HJH94_07305
+HJH94_06710
+HJH94_11375
+HJH94_06840
+
+
+
+
+HJH94_04460, beta-class phenol-soluble modulin 
+HJH94_04465, beta-class phenol-soluble modulin
+HJH94_04470, 
+HJH94_04475, 
+HJH94_08270, noncanonical pyrimidine nucleotidase, YjjG family
+HJH94_08275, 
+
+
+HJH94_04460, HJH94_04465, HJH94_04470, HJH94_04475, HJH94_08270, HJH94_08275,
+
+
+MSKLAEAIANTVKAAQDQDWTKLGTSIVDIVESGVSVLGKIFGF
+
+
+
+
+
+
+
+
+
+
+############################## TRASH #############################
+"HJH94_00205","","hypothetical protein","Derived by automated computational analysis using gene prediction method: Protein Homology.","","","",0.06,1.04,0.92,"MTLSKQLKTYITERFKLNYQETWACETVDAVAEDVLPEKYIKNSPLEHKILNTFTYYNDELHEISIYPFLCYLDKELVAIGYLDNFDLDFIFLNDTHQVIIDERYLLQKGGE"
+"HJH94_12000","","histidine phosphatase family protein","Derived by automated computational analysis using gene prediction method: Protein Homology.","","","",-0.01,0.99,0.93,"MEIYLVRHGESQSNYDNKHGYLYFCGQLDVPLTERGIKSAKELSVYFKNKYIDNVYVSDLKRTRQTYEELFPYDIPTIYTKTLRERSLGVFEGKNKEEVCKDKRFEKYFRDPNYKYFRHSFSQKAPQGESYQDVYDRVVTFIENELNQQQRRVVIVAHQVVIRCFFVYFKMITKEEALTTEIHNCYPYLIKEEMKF"
+
+
+
+
+## following step retains only the feature.type = [“CDS”]
+#python ~/Scripts/parseGenbank_extractGenes.py -g HD21-2_cds__.fa.gb -o HD21-2_cds___.fa.gb
+## following step corrects the genbank-format. Note that some COG_match records contain false start..end, e.g. COG_match 287381..286861 → needs to be correctly manually
+#python ~/Scripts/parseGenbank_reformat.py -g HD21-2_cds__.fa.gb -o HD21-2_cds____.fa.gb
+#cd ../..
+
+process_gamola_gb.py infection_vs_nose_background.txt ../../../HD21-2_cds__.fa.gb > infection_vs_nose_background_annotated2.txt
+/home/jhuang/anaconda3/lib/python2.7/site-packages/Bio/GenBank/__init__.py:1047: BiopythonParserWarning: Ignoring invalid location: '1601821..1601301'
+  BiopythonParserWarning)
+/home/jhuang/anaconda3/lib/python2.7/site-packages/Bio/GenBank/__init__.py:1047: BiopythonParserWarning: Ignoring invalid location: '1639583..1638826'
+  BiopythonParserWarning)
+/home/jhuang/anaconda3/lib/python2.7/site-packages/Bio/GenBank/__init__.py:1047: BiopythonParserWarning: Ignoring invalid location: '1701479..1701466'
+  BiopythonParserWarning)
+/home/jhuang/anaconda3/lib/python2.7/site-packages/Bio/GenBank/__init__.py:1047: BiopythonParserWarning: Ignoring invalid location: '1847119..1844772'
+  BiopythonParserWarning)
+
+
+
+
+#process_gamola_gb.py infection_vs_nose_background.txt HD21-2.gbk > infection_vs_nose_background_annotated1.txt
+#TODO
+#merge infection_vs_nose_background_annotated1.txt (NCBI annotation) and infection_vs_nose_background_annotated2.txt (switch annotation)
+#paste -d"," infection_vs_nose_background_annotated1.txt infection_vs_nose_background_annotated2.txt > infection_vs_nose_background_annotated.txt
+
+
+
