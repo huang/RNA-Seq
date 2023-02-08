@@ -111,18 +111,18 @@ CP052994.1	cmsearch	transcript	1706296	1706410	.	-	.	transcript_id "rna-HKH70_08
 
 
 grep -v "_exon" HD21-2.gtf > HD21-2_non_exon.gtf #2656
-
 cat HD21-2_non_exon.gtf HD21-2_Genbank_exon.gtf HD21-2_tRNAscan-SE_exon.gtf HD21-2_cmsearch_exon.gtf  > HD21-2_new.gtf #5313
 
 #in kate "exon" --> "\texon"
-sort the HD21-2_new.gtf using libreoffice
-# Eventually replace "" with "; "transcript_id with transcript_id; "\n with \n in kate
+#[Eventually] sort the HD21-2_new.gtf using libreoffice
+#[Eventually] replace "" with "; "transcript_id with transcript_id; "\n with \n in kate
 
 
 #-- STEP 0.3: PREPARE bed from gtf
-#replace '\t0\t' with '\t.\t' in the gff-file in the kate-editor
+#[Eventually] replace '\t0\t' with '\t.\t' in the gff-file in the kate-editor
 gffread -E -F --bed HD21-2_new.gtf -o HD21-2_new.bed  #   .. loaded 2649 genomic features from HD21-2_new.gtf
 
+#[IMPORTANT] delelte [*.1] in gtf, bed. In fa could be e.g. ">CP052994 Staphylococcus epidermidis strain HD21-2 chromosome, complete genome"
 #GTF: CP052994.1      Genbank exon    1       1356    .       +       .       transcript_id "gene-HKH70_00005"; gene_id "gene-HKH70_00005"; gene_name "dnaA"; Dbxref "NCBI_GP:QRJ41002.1"; Name "QRJ41002.1"; gbkey "CDS"; gene "dnaA"; inference "COORDINATES: similar to AA sequence:RefSeq:WP_017723675.1"; locus_tag "HKH70_00005"; product "chromosomal replication initiator protein DnaA"; protein_id "QRJ41002.1"; transl_table "11"; gene_biotype "protein_coding";
 #BED: CP052994.1      0       1356    gene-HKH70_00005        100     +       0       1356    0,0,0   1       1356,   0,      CDS=0:1356;CDSphase=0;geneID=gene-HKH70_00005;gene_name=dnaA;Name=dnaA;gbkey=Gene;gene=dnaA;gene_biotype=protein_coding;locus_tag=HKH70_00005
 
