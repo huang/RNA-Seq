@@ -575,6 +575,32 @@ plotPCA(vsd, intgroup=c("replicates"))
 #plotPCA(vsd, "batch")
 dev.off()
 
+#https://loading.io/color/feature/Paired-12/
+library(ggplot2)
+svg("pca6.svg")
+data <- plotPCA(rld, intgroup=c("condition", "donor"), returnData=TRUE)
+percentVar <- round(100 * attr(data, "percentVar"))
+ggplot(data, aes(PC1, PC2, color=condition, shape=donor)) +
+  geom_point(size=3) +
+  scale_color_manual(values = c("untreated" = "grey",
+                                "mCh d3"="#a6cee3",
+                                "mCh d8"="#1f78b4",
+                                "GFP+mCh d9/12"="cyan",
+                                "GFP d3"="#b2df8a",
+                                "GFP d8"="#33a02c",
+                                "sT d3"="#fb9a99",
+                                "sT d8"="#e31a1c",
+                                "LT d3"="#fdbf6f",
+                                "LT d8"="#ff7f00",
+                                "LTtr d3"="#cab2d6",
+                                "LTtr d8"="#6a3d9a",
+                                "sT+LT d3"="#ffff99",                        
+                                "sT+LTtr d9/12"="#a14a1a")) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  coord_fixed()
+dev.off()
+
 
 # -- before heatmap --
 ## generate the pairwise comparison between samples
