@@ -473,7 +473,7 @@ res <- res[!is.na(res$log2FoldChange),]
 res_df <- as.data.frame(res)
 png("WT_3hdox21hchase_vs_control.png",width=1200, height=1000)
 #selectLab = c('VCAM1','KCTD12','ADAM12',   'CXCL12','CACNB2','SPARCL1','DUSP1','SAMHD1','MAOA'),
-EnhancedVolcano(res, lab = rownames(res$external_gene_name, x = 'log2FoldChange',y = 'padj', pCutoff=5e-2, FCcutoff=1.2, title='', subtitleLabSize = 18, pointSize = 3.0, labSize = 5.0, colAlpha=1, legendIconSize = 4.0, drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = 'black', subtitle="WT 3h dox + 21h chase vs. contro")
+EnhancedVolcano(res, lab = rownames(res$external_gene_name), x = 'log2FoldChange',y = 'padj', pCutoff=5e-2, FCcutoff=1.2, title='', subtitleLabSize = 18, pointSize = 3.0, labSize = 5.0, colAlpha=1, legendIconSize = 4.0, drawConnectors = TRUE, widthConnectors = 0.5, colConnectors = 'black', subtitle="WT 3h dox + 21h chase vs. contro")
 dev.off()
 
 
