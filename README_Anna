@@ -1,0 +1,622 @@
+#--The following are paired-end--
+Donor_A_M1
+Donor_A_M2
+Donor_B_M1
+Donor_B_M2
+Donor_C_M1
+Donor_C_M2
+Donor_D_M1
+Donor_D_M2
+
+M1_HL60_3h_Rep1
+M1_HL60_3h_Rep2
+M1_HL60_6h_Rep1
+M1_HL60_6h_Rep2
+M2_HL60_3h_Rep1
+M2_HL60_3h_Rep2
+M2_HL60_6h_Rep1
+M2_HL60_6h_Rep2
+
+
+#--The following are single-end--
+#Mac_0hrs_Rep1-->M0_HL60_0h_Rep1
+#Mac_0hrs_Rep2-->M0_HL60_0h_Rep2
+
+#DoA and Do3
+#  exposed them to one wt and one mutant S. epidermidis. At 2h and 6h we harve
+DoA_mock_Rep1.fastq.gz -> ../trimmed/DoA_mock_1.fastq.gz
+DoA_mock_Rep2.fastq.gz -> ../trimmed/DoA_mock_2.fastq.gz
+DoA_mock_Rep3.fastq.gz -> ../trimmed/DoA_mock_3.fastq.gz
+DoA_2h_1457_Rep1.fastq.gz -> ../trimmed/DoA_2h_1457_1.fastq.gz
+DoA_2h_1457_Rep2.fastq.gz -> ../trimmed/DoA_2h_1457_2.fastq.gz
+DoA_2h_1457_Rep3.fastq.gz -> ../trimmed/DoA_2h_1457_3.fastq.gz
+DoA_6h_1457_Rep1.fastq.gz -> ../trimmed/DoA_6h_1457_1.fastq.gz
+DoA_6h_1457_Rep2.fastq.gz -> ../trimmed/DoA_6h_1457_2.fastq.gz
+DoA_6h_1457_Rep3.fastq.gz -> ../trimmed/DoA_6h_1457_3.fastq.gz
+DoA_2h_M10_Rep1.fastq.gz -> ../trimmed/DoA_2h_M10_1.fastq.gz
+DoA_2h_M10_Rep2.fastq.gz -> ../trimmed/DoA_2h_M10_2.fastq.gz
+DoA_2h_M10_Rep3.fastq.gz -> ../trimmed/DoA_2h_M10_3.fastq.gz
+DoA_6h_M10_Rep1.fastq.gz -> ../trimmed/DoA_6h_M10_1.fastq.gz
+DoA_6h_M10_Rep2.fastq.gz -> ../trimmed/DoA_6h_M10_2.fastq.gz
+DoA_6h_M10_Rep3.fastq.gz -> ../trimmed/DoA_6h_M10_3.fastq.gz
+Do3_mock_Rep1.fastq.gz -> ../trimmed/Do3_mock_1.fastq.gz
+Do3_mock_Rep2.fastq.gz -> ../trimmed/Do3_mock_2.fastq.gz
+Do3_mock_Rep3.fastq.gz -> ../trimmed/Do3_mock_3.fastq.gz
+Do3_2h_1457_Rep1.fastq.gz -> ../trimmed/Do3_2h_1457_1.fastq.gz
+Do3_2h_1457_Rep2.fastq.gz -> ../trimmed/Do3_2h_1457_2.fastq.gz
+Do3_2h_1457_Rep3.fastq.gz -> ../trimmed/Do3_2h_1457_3.fastq.gz
+Do3_6h_1457_Rep1.fastq.gz -> ../trimmed/Do3_6h_1457_1.fastq.gz
+Do3_6h_1457_Rep2.fastq.gz -> ../trimmed/Do3_6h_1457_2.fastq.gz
+Do3_6h_1457_Rep3.fastq.gz -> ../trimmed/Do3_6h_1457_3.fastq.gz
+Do3_2h_M10_Rep1.fastq.gz -> ../trimmed/Do3_2h_M10_1.fastq.gz
+Do3_2h_M10_Rep2.fastq.gz -> ../trimmed/Do3_2h_M10_2.fastq.gz
+Do3_2h_M10_Rep3.fastq.gz -> ../trimmed/Do3_2h_M10_3.fastq.gz
+Do3_6h_M10_Rep1.fastq.gz -> ../trimmed/Do3_6h_M10_1.fastq.gz
+Do3_6h_M10_Rep2.fastq.gz -> ../trimmed/Do3_6h_M10_2.fastq.gz
+Do3_6h_M10_Rep3.fastq.gz -> ../trimmed/Do3_6h_M10_3.fastq.gz
+
+
+
+
+
+
+--0--: rename
+for file in *.fastq.gz; do mv $file $(echo $file | cut -d'_' -f1-4).fastq.gz; done
+for file in Do3_mock*.fastq.gz; do mv $file $(echo $file | cut -d'_' -f1-3).fastq.gz; done
+
+--1--: trimming
+mkdir trimmed; 
+cd trimmed;
+for sample_id in DoA_mock_1 DoA_mock_2 DoA_mock_3 DoA_2h_1457_1 DoA_2h_1457_2 DoA_2h_1457_3 DoA_6h_1457_1 DoA_6h_1457_2 DoA_6h_1457_3 DoA_2h_M10_1 DoA_2h_M10_2 DoA_2h_M10_3 DoA_6h_M10_1 DoA_6h_M10_2 DoA_6h_M10_3  Do3_mock_1 Do3_mock_2 Do3_mock_3 Do3_2h_1457_1 Do3_2h_1457_2 Do3_2h_1457_3 Do3_6h_1457_1 Do3_6h_1457_2 Do3_6h_1457_3 Do3_2h_M10_1 Do3_2h_M10_2 Do3_2h_M10_3 Do3_6h_M10_1 Do3_6h_M10_2 Do3_6h_M10_3; do \
+        java -jar /home/jhuang/Tools/Trimmomatic-0.36/trimmomatic-0.36.jar SE -threads 16 ../Raw_Data/${sample_id}.fastq.gz ${sample_id}.fastq.gz ILLUMINACLIP:/home/jhuang/Tools/Trimmomatic-0.36/adapters/TruSeq3-SE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 AVGQUAL:20; \
+done 2>trimmomatic.log
+
+# see read_biotype_assignment: https://github.com/ewels/ngi_visualizations/tree/master/ngi_visualizations/biotypes
+Running twice, once without biotype using UCSC  --> get the results which comparable to ChIPSeq-data, since they both using UCSC-gtf -->1
+               once with biotype using ENSEMBLE reference --> get images of biotypes and as controls -->2
+
+--2--
+ln -s /home/jhuang/Tools/rnaseq rnaseq
+conda activate rnaseq
+extflow run rnaseq --reads '/data/transcriptome_indices/Jiabin_files/Data_Anna14_RNASeq_plus_public/raw_data_pe/*{1,2}.fastq.gz' --fasta /data/transcriptome_indices/Jiabin_files/GRCh38/Sequence/WholeGenomeFasta/genome.fa --gtf /data/transcriptome_indices/Jiabin_files/GRCh38/Annotation/Genes/genes.gtf --star_index /data/transcriptome_indices/Jiabin_files/GRCh38/Sequence/STARIndex/ --bed12 /data/transcriptome_indices/Jiabin_files/GRCh38/Annotation/Genes/genes.bed -profile standard --aligner star --fcGroupFeaturesType gene_biotype --skip_genebody_coverage -resume --skip_edger
+
+
+ 
+library("AnnotationDbi")
+library("clusterProfiler")
+library("ReactomePA")
+library("org.Hs.eg.db")
+library(DESeq2)
+library(gplots)
+
+setwd("/home/jhuang/DATA/Data_Anna14_RNASeq_plus_public/results/")
+
+colnames(d.raw)<-c("gene_name","DoA_6h_M10_Rep1","DoA_6h_1457_Rep2","DoA_6h_M10_Rep3","Do3_mock_Rep1","DoA_2h_1457_Rep2","DoA_6h_1457_Rep3","Do3_2h_1457_Rep1","Do3_6h_M10_Rep1","Do3_mock_Rep2","Do3_2h_1457_Rep2","DoA_2h_1457_Rep3","DoA_2h_M10_Rep1","DoA_6h_1457_Rep1","Do3_2h_M10_Rep3","Do3_mock_Rep3","Do3_6h_1457_Rep3","M0_HL60_0h_Rep1","DoA_mock_Rep2","DoA_6h_M10_Rep2","Do3_6h_M10_Rep3","Do3_2h_M10_Rep2","DoA_2h_M10_Rep2","Do3_6h_1457_Rep2","Do3_6h_M10_Rep2","DoA_2h_1457_Rep1","M0_HL60_0h_Rep2","Do3_2h_M10_Rep1","Do3_2h_1457_Rep3","DoA_2h_M10_Rep3","DoA_mock_Rep1","DoA_mock_Rep3","Do3_6h_1457_Rep1","M1_HL60_6h_Rep2","M1_HL60_6h_Rep1","M1_HL60_3h_Rep2","Donor_A_M1","Donor_D_M1","Donor_C_M2","M2_HL60_6h_Rep2","Donor_C_M1","Donor_A_M2","Donor_B_M2","Donor_D_M2","M2_HL60_6h_Rep1","M2_HL60_3h_Rep1","M1_HL60_3h_Rep1","M2_HL60_3h_Rep2","Donor_B_M1")      
+
+col_order <- c("gene_name","Donor_A_M1","Donor_A_M2","Donor_B_M1","Donor_B_M2","Donor_C_M1","Donor_C_M2","Donor_D_M1","Donor_D_M2","M1_HL60_3h_Rep1","M1_HL60_3h_Rep2","M1_HL60_6h_Rep1","M1_HL60_6h_Rep2","M2_HL60_3h_Rep1","M2_HL60_3h_Rep2","M2_HL60_6h_Rep1","M2_HL60_6h_Rep2","M0_HL60_0h_Rep1","M0_HL60_0h_Rep2","DoA_mock_Rep1","DoA_mock_Rep2","DoA_mock_Rep3","DoA_2h_1457_Rep1","DoA_2h_1457_Rep2","DoA_2h_1457_Rep3","DoA_6h_1457_Rep1","DoA_6h_1457_Rep2","DoA_6h_1457_Rep3","DoA_2h_M10_Rep1","DoA_2h_M10_Rep2","DoA_2h_M10_Rep3","DoA_6h_M10_Rep1","DoA_6h_M10_Rep2","DoA_6h_M10_Rep3","Do3_mock_Rep1","Do3_mock_Rep2","Do3_mock_Rep3","Do3_2h_1457_Rep1","Do3_2h_1457_Rep2","Do3_2h_1457_Rep3","Do3_6h_1457_Rep1","Do3_6h_1457_Rep2","Do3_6h_1457_Rep3","Do3_2h_M10_Rep1","Do3_2h_M10_Rep2","Do3_2h_M10_Rep3","Do3_6h_M10_Rep1","Do3_6h_M10_Rep2","Do3_6h_M10_Rep3")
+reordered.raw <- d.raw[,col_order]
+reordered.raw$gene_name <- NULL
+d <- reordered.raw[rowSums(reordered.raw>3)>2,]
+
+#replicates = as.factor(c("Donor_A","Donor_A","Donor_B","Donor_B","Donor_C","Donor_C","Donor_D","Donor_D","M1_HL60_3h","M1_HL60_3h","M1_HL60_6h","M1_HL60_6h","M2_HL60_3h","M2_HL60_3h","M2_HL60_6h","M2_HL60_6h","M0_HL60_0h","M0_HL60_0h","DoA_mock","DoA_mock","DoA_mock","DoA_2h_1457","DoA_2h_1457","DoA_2h_1457","DoA_6h_1457","DoA_6h_1457","DoA_6h_1457","DoA_2h_M10","DoA_2h_M10","DoA_2h_M10","DoA_6h_M10","DoA_6h_M10","DoA_6h_M10","Do3_mock","Do3_mock","Do3_mock","Do3_2h_1457","Do3_2h_1457","Do3_2h_1457","Do3_6h_1457","Do3_6h_1457","Do3_6h_1457","Do3_2h_M10","Do3_2h_M10","Do3_2h_M10","Do3_6h_M10","Do3_6h_M10","Do3_6h_M10"))
+replicates = as.factor(c("mock_or_M0","mock_or_M0","Donor_B","Donor_B","Donor_C","Donor_C","Donor_D","Donor_D","M1_HL60_3h","M1_HL60_3h","M1_HL60_6h","M1_HL60_6h","M2_HL60_3h","M2_HL60_3h","M2_HL60_6h","M2_HL60_6h","mock_or_M0","mock_or_M0","mock_or_M0","mock_or_M0","mock_or_M0","DoA_2h_1457","DoA_2h_1457","DoA_2h_1457","DoA_6h_1457","DoA_6h_1457","DoA_6h_1457","DoA_2h_M10","DoA_2h_M10","DoA_2h_M10","DoA_6h_M10","DoA_6h_M10","DoA_6h_M10","mock_or_M0","mock_or_M0","mock_or_M0","Do3_2h_1457","Do3_2h_1457","Do3_2h_1457","Do3_6h_1457","Do3_6h_1457","Do3_6h_1457","Do3_2h_M10","Do3_2h_M10","Do3_2h_M10","Do3_6h_M10","Do3_6h_M10","Do3_6h_M10"))
+ids = as.factor(c("Donor_A_M1","Donor_A_M2","Donor_B_M1","Donor_B_M2","Donor_C_M1","Donor_C_M2","Donor_D_M1","Donor_D_M2","M1_HL60_3h_Rep1","M1_HL60_3h_Rep2","M1_HL60_6h_Rep1","M1_HL60_6h_Rep2","M2_HL60_3h_Rep1","M2_HL60_3h_Rep2","M2_HL60_6h_Rep1","M2_HL60_6h_Rep2","M0_HL60_0h_Rep1","M0_HL60_0h_Rep2","DoA_mock_Rep1","DoA_mock_Rep2","DoA_mock_Rep3","DoA_2h_1457_Rep1","DoA_2h_1457_Rep2","DoA_2h_1457_Rep3","DoA_6h_1457_Rep1","DoA_6h_1457_Rep2","DoA_6h_1457_Rep3","DoA_2h_M10_Rep1","DoA_2h_M10_Rep2","DoA_2h_M10_Rep3","DoA_6h_M10_Rep1","DoA_6h_M10_Rep2","DoA_6h_M10_Rep3","Do3_mock_Rep1","Do3_mock_Rep2","Do3_mock_Rep3","Do3_2h_1457_Rep1","Do3_2h_1457_Rep2","Do3_2h_1457_Rep3","Do3_6h_1457_Rep1","Do3_6h_1457_Rep2","Do3_6h_1457_Rep3","Do3_2h_M10_Rep1","Do3_2h_M10_Rep2","Do3_2h_M10_Rep3","Do3_6h_M10_Rep1","Do3_6h_M10_Rep2","Do3_6h_M10_Rep3"))
+#se_or_pe = as.factor(c("pe","pe","pe","pe","pe","pe","pe","pe","pe","pe","pe","pe","pe","pe","pe","pe","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se","se"))
+batch=as.factor(c("batch1","batch1","batch1","batch1","batch1","batch1","batch1","batch1","batch2","batch2","batch2","batch2","batch2","batch2","batch2","batch2","batch2","batch2","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3","batch3"))
+cData = data.frame(row.names=colnames(d), replicates=replicates,  batch=batch, ids=ids)
+dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~batch+replicates)
+#cData = data.frame(row.names=colnames(d), replicates=replicates, ids=ids)
+#dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~replicates)
+
+#This function transforms the count data to the log2 scale in a way which minimizes differences between samples for rows with small counts, and which normalizes with respect to library size.
+rld <- rlogTransformation(dds)
+#vsd <- vst(dds)
+rld <- vst(dds)
+
+library(gplots) 
+library("RColorBrewer")
+
+# -- before pca --
+png("pca_before_removeBatch2.png", 1200, 800)
+plotPCA(rld, intgroup=c("replicates"))
+dev.off()
+
+# -- before heatmap --
+png("heatmap_before_removeBatch2.png", 1200, 800)
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+mat <- assay(rld)
+mm <- model.matrix(~replicates, colData(rld))
+mat <- limma::removeBatchEffect(mat, batch=rld$batch, design=mm)
+assay(rld) <- mat
+
+# -- after pca --
+png("pca_after_removeBatch.png", 1200, 800)
+#svg("pca_after_removeBatch.svg")
+plotPCA(rld, intgroup=c("replicates"))
+dev.off()
+
+# -- after heatmap --
+png("heatmap_after_removeBatch.png", 1200, 800)
+#svg("heatmap_after_removeBatch.svg")
+distsRL <- dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+hc <- hclust(distsRL)
+hmcol <- colorRampPalette(brewer.pal(9,"GnBu"))(100)
+heatmap.2(mat, Rowv=as.dendrogram(hc),symm=TRUE, trace="none",col = rev(hmcol), margin=c(13, 13))
+dev.off()
+
+
+
+
+
+
+#-------- The following are not PERFORMED! --------
+####################################################################
+##### STEP2: select the differentially expressed genes #####
+
+
+#under KONSOLE
+mkdir degenes 
+
+setwd("../degenes")
+
+#---- relevel to mock ----
+dds$replicates <- relevel(dds$replicates, "mock")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("2h1457_vs_mock","2hM10_vs_mock","6h1457_vs_mock","6hM10_vs_mock")
+
+dds$replicates <- relevel(dds$replicates, "2h1457")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("2hM10_vs_2h1457","6h1457_vs_2h1457","6hM10_vs_2h1457")
+
+dds$replicates <- relevel(dds$replicates, "2hM10")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("6h1457_vs_2hM10","6hM10_vs_2hM10")
+
+dds$replicates <- relevel(dds$replicates, "6h1457")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("6hM10_vs_6h1457")
+
+for (i in clist) {
+  contrast = paste("replicates", i, sep="_")
+  res = results(dds, name=contrast)
+  res <- res[!is.na(res$log2FoldChange),]
+  geness <- AnnotationDbi::select(org.Hs.eg.db, keys = rownames(res), keytype = "SYMBOL", columns = c("ENSEMBL", "ENTREZID", "SYMBOL", "GENENAME"))
+  geness <- geness[!duplicated(geness$SYMBOL), ]
+  res$SYMBOL = rownames(res)
+  rownames(geness) <- geness$SYMBOL
+  identical(rownames(res), rownames(geness))
+  res_df <- as.data.frame(res)
+  geness_res <- merge(geness, res_df)
+  dim(geness_res)
+  write.csv(as.data.frame(geness_res[order(geness_res$pvalue),]), file = paste(i, "background.txt", sep="_"))
+  up <- subset(geness_res, padj<=0.05 & log2FoldChange>=2)
+  down <- subset(geness_res, padj<=0.05 & log2FoldChange<=-2)
+  write.csv(as.data.frame(up[order(up$log2FoldChange,decreasing=TRUE),]), file = paste(i, "up.txt", sep="_"))
+  write.csv(as.data.frame(down[order(abs(down$log2FoldChange),decreasing=TRUE),]), file = paste(i, "down.txt", sep="_"))
+}
+
+#under DIR degenes under KONSOLE
+mkdir degene_dir;
+for comp in 2h1457_vs_mock 2hM10_vs_mock 6h1457_vs_mock 6hM10_vs_mock   2hM10_vs_2h1457 6h1457_vs_2h1457 6hM10_vs_2h1457   6h1457_vs_2hM10 6hM10_vs_2hM10   6hM10_vs_6h1457; do \
+cut -d',' -f2- ${comp}_up.txt > degene_dir/${comp}_up; \
+cut -d',' -f2- ${comp}_down.txt > degene_dir/${comp}_down; \
+cut -d',' -f2- ${comp}_background.txt > degene_dir/${comp}_background; \
+done
+rm degenes.xls
+cd degene_dir;
+~/Tools/csv2xls-0.4/csv_to_xls.py 2h1457_vs_mock_up 2h1457_vs_mock_down 2h1457_vs_mock_background  2hM10_vs_mock_up 2hM10_vs_mock_down 2hM10_vs_mock_background  6h1457_vs_mock_up 6h1457_vs_mock_down 6h1457_vs_mock_background  6hM10_vs_mock_up 6hM10_vs_mock_down 6hM10_vs_mock_background  2hM10_vs_2h1457_up 2hM10_vs_2h1457_down 2hM10_vs_2h1457_background  6h1457_vs_2h1457_up 6h1457_vs_2h1457_down 6h1457_vs_2h1457_background  6hM10_vs_2h1457_up 6hM10_vs_2h1457_down 6hM10_vs_2h1457_background  6h1457_vs_2hM10_up 6h1457_vs_2hM10_down 6h1457_vs_2hM10_background  6hM10_vs_2hM10_up 6hM10_vs_2hM10_down 6hM10_vs_2hM10_background  6hM10_vs_6h1457_up 6hM10_vs_6h1457_down 6hM10_vs_6h1457_background -d$',' -o ../degenes.xls;
+cd ..;
+
+
+
+##--- load the temporary results and save the pathways ----
+# under CONSOLE
+mkdir ../pathways_KEGG
+
+
+
+
+library("clusterProfiler")
+library("ReactomePA")
+library("org.Hs.eg.db")
+setwd("/media/jhuang/Elements/Data_Anna14_RNASeq/results/featureCounts/pathways_KEGG")
+
+#---- 2h1457_vs_mock_up 2h1457_vs_mock_down ----
+x2h1457_vs_mock_up <- read.csv("../degenes/degene_dir/2h1457_vs_mock_up", row.names=1)      
+x2h1457_vs_mock_down <- read.csv("../degenes/degene_dir/2h1457_vs_mock_down", row.names=1)  
+x2h1457_vs_mock_sig <- rbind(x2h1457_vs_mock_up, x2h1457_vs_mock_down)                             
+x2h1457_vs_mock_KEGG <- enrichKEGG(x2h1457_vs_mock_sig$ENTREZID)
+write.table(as.data.frame(x2h1457_vs_mock_KEGG), file = "x2h1457_vs_mock_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#---- 2hM10_vs_mock_up 2hM10_vs_mock_down ----
+x2hM10_vs_mock_up <- read.csv("../degenes/degene_dir/2hM10_vs_mock_up", row.names=1)      
+x2hM10_vs_mock_down <- read.csv("../degenes/degene_dir/2hM10_vs_mock_down", row.names=1)  
+x2hM10_vs_mock_sig <- rbind(x2hM10_vs_mock_up, x2hM10_vs_mock_down)                             
+x2hM10_vs_mock_KEGG <- enrichKEGG(x2hM10_vs_mock_sig$ENTREZID)
+write.table(as.data.frame(x2hM10_vs_mock_KEGG), file = "x2hM10_vs_mock_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#---- 6h1457_vs_mock_up 6h1457_vs_mock_down ----
+x6h1457_vs_mock_up <- read.csv("../degenes/degene_dir/6h1457_vs_mock_up", row.names=1)      
+x6h1457_vs_mock_down <- read.csv("../degenes/degene_dir/6h1457_vs_mock_down", row.names=1)  
+x6h1457_vs_mock_sig <- rbind(x6h1457_vs_mock_up, x6h1457_vs_mock_down)                             
+x6h1457_vs_mock_KEGG <- enrichKEGG(x6h1457_vs_mock_sig$ENTREZID)
+write.table(as.data.frame(x6h1457_vs_mock_KEGG), file = "x6h1457_vs_mock_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#---- 6hM10_vs_mock_up 6hM10_vs_mock_down ----
+x6hM10_vs_mock_up <- read.csv("../degenes/degene_dir/6hM10_vs_mock_up", row.names=1)      
+x6hM10_vs_mock_down <- read.csv("../degenes/degene_dir/6hM10_vs_mock_down", row.names=1)  
+x6hM10_vs_mock_sig <- rbind(x6hM10_vs_mock_up, x6hM10_vs_mock_down)                             
+x6hM10_vs_mock_KEGG <- enrichKEGG(x6hM10_vs_mock_sig$ENTREZID)
+write.table(as.data.frame(x6hM10_vs_mock_KEGG), file = "x6hM10_vs_mock_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#---- 2hM10_vs_2h1457_up 2hM10_vs_2h1457_down ----
+x2hM10_vs_2h1457_up <- read.csv("../degenes/degene_dir/2hM10_vs_2h1457_up", row.names=1)      
+x2hM10_vs_2h1457_down <- read.csv("../degenes/degene_dir/2hM10_vs_2h1457_down", row.names=1)  
+x2hM10_vs_2h1457_sig <- rbind(x2hM10_vs_2h1457_up, x2hM10_vs_2h1457_down)                             
+x2hM10_vs_2h1457_KEGG <- enrichKEGG(x2hM10_vs_2h1457_sig$ENTREZID)
+write.table(as.data.frame(x2hM10_vs_2h1457_KEGG), file = "x2hM10_vs_2h1457_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#---- 6h1457_vs_2h1457_up 6h1457_vs_2h1457_down ----
+x6h1457_vs_2h1457_up <- read.csv("../degenes/degene_dir/6h1457_vs_2h1457_up", row.names=1)      
+x6h1457_vs_2h1457_down <- read.csv("../degenes/degene_dir/6h1457_vs_2h1457_down", row.names=1)  
+x6h1457_vs_2h1457_sig <- rbind(x6h1457_vs_2h1457_up, x6h1457_vs_2h1457_down)                             
+x6h1457_vs_2h1457_KEGG <- enrichKEGG(x6h1457_vs_2h1457_sig$ENTREZID)
+write.table(as.data.frame(x6h1457_vs_2h1457_KEGG), file = "x6h1457_vs_2h1457_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#---- 6hM10_vs_2h1457_up 6hM10_vs_2h1457_down ----
+x6hM10_vs_2h1457_up <- read.csv("../degenes/degene_dir/6hM10_vs_2h1457_up", row.names=1)      
+x6hM10_vs_2h1457_down <- read.csv("../degenes/degene_dir/6hM10_vs_2h1457_down", row.names=1)  
+x6hM10_vs_2h1457_sig <- rbind(x6hM10_vs_2h1457_up, x6hM10_vs_2h1457_down)                             
+x6hM10_vs_2h1457_KEGG <- enrichKEGG(x6hM10_vs_2h1457_sig$ENTREZID)
+write.table(as.data.frame(x6hM10_vs_2h1457_KEGG), file = "x6hM10_vs_2h1457_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#---- 6h1457_vs_2hM10_up 6h1457_vs_2hM10_down ----
+x6h1457_vs_2hM10_up <- read.csv("../degenes/degene_dir/6h1457_vs_2hM10_up", row.names=1)      
+x6h1457_vs_2hM10_down <- read.csv("../degenes/degene_dir/6h1457_vs_2hM10_down", row.names=1)  
+x6h1457_vs_2hM10_sig <- rbind(x6h1457_vs_2hM10_up, x6h1457_vs_2hM10_down)                             
+x6h1457_vs_2hM10_KEGG <- enrichKEGG(x6h1457_vs_2hM10_sig$ENTREZID)
+write.table(as.data.frame(x6h1457_vs_2hM10_KEGG), file = "x6h1457_vs_2hM10_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#---- 6hM10_vs_2hM10_up 6hM10_vs_2hM10_down ----
+x6hM10_vs_2hM10_up <- read.csv("../degenes/degene_dir/6hM10_vs_2hM10_up", row.names=1)      
+x6hM10_vs_2hM10_down <- read.csv("../degenes/degene_dir/6hM10_vs_2hM10_down", row.names=1)  
+x6hM10_vs_2hM10_sig <- rbind(x6hM10_vs_2hM10_up, x6hM10_vs_2hM10_down)                             
+x6hM10_vs_2hM10_KEGG <- enrichKEGG(x6hM10_vs_2hM10_sig$ENTREZID)
+write.table(as.data.frame(x6hM10_vs_2hM10_KEGG), file = "x6hM10_vs_2hM10_KEGG.txt", sep = "\t", row.names = FALSE)
+
+#---- 6hM10_vs_6h1457_up 6hM10_vs_6h1457_down ----
+x6hM10_vs_6h1457_up <- read.csv("../degenes/degene_dir/6hM10_vs_6h1457_up", row.names=1)      
+x6hM10_vs_6h1457_down <- read.csv("../degenes/degene_dir/6hM10_vs_6h1457_down", row.names=1)  
+x6hM10_vs_6h1457_sig <- rbind(x6hM10_vs_6h1457_up, x6hM10_vs_6h1457_down)                             
+x6hM10_vs_6h1457_KEGG <- enrichKEGG(x6hM10_vs_6h1457_sig$ENTREZID)
+write.table(as.data.frame(x6hM10_vs_6h1457_KEGG), file = "x6hM10_vs_6h1457_KEGG.txt", sep = "\t", row.names = FALSE)
+
+png("pathways_KEGG.png",width=1600, height=800)
+merged_list <- merge_result(list('2h1457-mock'=x2h1457_vs_mock_KEGG, '2hM10-mock'=x2hM10_vs_mock_KEGG, '6h1457-mock'=x6h1457_vs_mock_KEGG, '6hM10-mock'=x6hM10_vs_mock_KEGG, '2hM10-2h1457'=x2hM10_vs_2h1457_KEGG, '6h1457-2h1457'=x6h1457_vs_2h1457_KEGG, '6hM10-2h1457'=x6hM10_vs_2h1457_KEGG, 'x6h1457-2hM10'=x6h1457_vs_2hM10_KEGG, '6hM10-2hM10'=x6hM10_vs_2hM10_KEGG, '6hM10-6h1457'=x6hM10_vs_6h1457_KEGG))
+dotplot(merged_list, showCategory=30)
+dev.off()
+
+# under CONSOLE
+rm -rf degene_dir
+cd ../pathways_KEGG
+~/Tools/csv2xls-0.4/csv_to_xls.py x2h1457_vs_mock_KEGG.txt x2hM10_vs_mock_KEGG.txt x6h1457_vs_mock_KEGG.txt x6hM10_vs_mock_KEGG.txt x2hM10_vs_2h1457_KEGG.txt x6h1457_vs_2h1457_KEGG.txt x6hM10_vs_2h1457_KEGG.txt x6h1457_vs_2hM10_KEGG.txt x6hM10_vs_2hM10_KEGG.txt x6hM10_vs_6h1457_KEGG.txt  -d$'\t' -o pathways_KEGG.xls
+
+
+
+
+###################################################################
+##### STEP3: prepare all_genes #####
+
+RNASeq.NoCellLine <- assay(rld)
+# reorder the columns
+colnames(RNASeq.NoCellLine) = c("2h1457_2", "2hM10_2", "6hM10_1", "mock_2", "6h1457_3", "2h1457_3", "6hM10_2", "2hM10_3", "6hM10_3", "6h1457_1", "mock_3", "6h1457_2", "mock_1", "2h1457_1", "2hM10_1")
+col.order <- c("mock_1", "mock_2", "mock_3", "2h1457_1", "2h1457_2", "2h1457_3", "6h1457_1", "6h1457_2", "6h1457_3", "2hM10_1", "2hM10_2", "2hM10_3", "6hM10_1", "6hM10_2", "6hM10_3")
+RNASeq.NoCellLine <- RNASeq.NoCellLine[,col.order]
+
+
+
+RNASeq.NoCellLine <- assay(rld)
+# reorder the columns
+colnames(RNASeq.NoCellLine) = c("2h1457_2", "2hM10_2", "6hM10_1", "mock_2", "6h1457_3", "2h1457_3", "6hM10_2", "2hM10_3", "6hM10_3", "6h1457_1", "mock_3", "6h1457_2", "mock_1", "2h1457_1", "2hM10_1")
+col.order <- c("mock_1", "mock_2", "mock_3", "2h1457_1", "2h1457_2", "2h1457_3", "6h1457_1", "6h1457_2", "6h1457_3", "2hM10_1", "2hM10_2", "2hM10_3", "6hM10_1", "6hM10_2", "6hM10_3")
+RNASeq.NoCellLine <- RNASeq.NoCellLine[,col.order]
+
+#Option3: as paper described, A heatmap showing expression values of all DEGs which are significant between any pair conditions.
+all_genes <- c(rownames(x2h1457_vs_mock_sig), rownames(x2hM10_vs_mock_sig), rownames(x6h1457_vs_mock_sig), rownames(x6hM10_vs_mock_sig), rownames(x2hM10_vs_2h1457_sig), rownames(x6h1457_vs_2h1457_sig), rownames(x6hM10_vs_2h1457_sig), rownames(x6h1457_vs_2hM10_sig), rownames(x6hM10_vs_2hM10_sig), rownames(x6hM10_vs_6h1457_sig))  #8199
+all_genes <- unique(all_genes)  #2731
+
+#RNASeq.NoCellLine <- read.csv(file ="gene_expression_keeping_replicates.txt", row.names=1)
+RNASeq.NoCellLine_ <- RNASeq.NoCellLine[all_genes,]
+
+
+######################################################################
+##### STEP4: clustering the genes and draw heatmap #####
+#clustering methods: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC). pearson or
+spearman
+datamat = RNASeq.NoCellLine_
+hr <- hclust(as.dist(1-cor(t(datamat), method="pearson")), method="complete")
+hc <- hclust(as.dist(1-cor(datamat, method="spearman")), method="complete")
+mycl = cutree(hr, h=max(hr$height)/1.05)
+mycol = c("YELLOW", "DARKBLUE", "DARKORANGE", "DARKMAGENTA", "DARKCYAN", "DARKRED", "MAROON", "DARKGREEN", "LIGHTBLUE", "PINK", "MAGENTA",
+"LIGHTCYAN","LIGHTGREEN", "BLUE", "ORANGE", "CYAN", "RED", "GREEN");
+mycol = mycol[as.vector(mycl)]
+
+png("DEGs_heatmap.png", width=900, height=1000)
+heatmap.2(as.matrix(datamat),Rowv=as.dendrogram(hr),Colv = NA, dendrogram = 'row',
+scale='row',trace='none',col=bluered(75),
+RowSideColors = mycol, labRow="", srtCol=15)
+dev.off()
+
+
+
+
+
+#### cluster members #####
+write.csv(names(subset(mycl, mycl == '1')),file='cluster1_YELLOW.txt')
+write.csv(names(subset(mycl, mycl == '2')),file='cluster2_DARKBLUE.txt')
+write.csv(names(subset(mycl, mycl == '3')),file='cluster3_DARKORANGE.txt')
+write.csv(names(subset(mycl, mycl == '4')),file='cluster4_DARKMAGENTA.txt')
+#~/Tools/csv2xls-0.4/csv_to_xls.py cluster*.txt -d',' -o genelist_clusters.xls
+#### pathway plot ####
+library("clusterProfiler")
+library("ReactomePA")
+#The cutoff of pathway enrichment is padj <= 0.001 .
+for sample_id in cluster1_YELLOW cluster2_DARKBLUE cluster3_DARKORANGE cluster4_DARKMAGENTA; do \
+echo "${sample_id}_genes <- read.csv(\"${sample_id}.txt\")"; \
+echo "geness <- select(org.Hs.eg.db, keys = as.vector(${sample_id}_genes\$x), keytype = \"SYMBOL\", columns = c(\"ENTREZID\"))"; \
+echo "${sample_id}_pathways <- enrichKEGG(geness\$ENTREZID, pvalueCutoff = 0.001, pAdjustMethod=\"BH\")"; \
+echo "write.table(as.data.frame(${sample_id}_pathways), file = \"pathway_${sample_id}.txt\", sep = \"\t\", row.names = FALSE)"; \
+done
+
+
+
+png(file= 'pathways_clusters.png', width=800, height=800)
+#CHANGED!!!!
+merged_list <- merge_result(list(YELLOW=cluster1_YELLOW_pathways, DARKBLUE=cluster2_DARKBLUE_pathways, DARKMAGENTA=cluster4_DARKMAGENTA_pathways))
+#merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways)) %>% plot(., showCategory=29, font.size = 16)
+dotplot(merged_list, showCategory=30)  #, font.size = 16
+#dotplot(merged_list, showCategory=30,)
+dev.off()
+#~/Tools/csv2xls-0.4/csv_to_xls.py pathway_cluster*.txt -d$'\t' -o pathways_clusters.xls
+
+
+
+merged_list <- merge_result(list(YELLOW=cluster1_YELLOW_pathways, DARKBLUE=cluster2_DARKBLUE_pathways, DARKORANGE=cluster3_DARKORANGE_pathways, DARKCYAN=cluster5_DARKCYAN_pathways, LIGHTGREEN=cluster13_LIGHTGREEN_pathways)) 
+#merge_result(list(YELLOW=cluster1_pathways, BLUE=cluster2_pathways, ORANGE=cluster3_pathways)) %>% plot(., showCategory=30, font.size = 16)
+dotplot(merged_list, showCategory=30, font.size = 16)
+
+
+
+############################################
+#### venn diagram for paper submission #####
+#"x2h1457_vs_mock_sig"
+#"x2hM10_vs_mock_sig"
+#"x6h1457_vs_mock_sig"
+#"x6hM10_vs_mock_sig"
+
+#"x2hM10_vs_2h1457_sig"
+#"x6h1457_vs_2h1457_sig"
+#"x6hM10_vs_2h1457_sig"
+
+#"x6h1457_vs_2hM10_sig"
+#"x6hM10_vs_2hM10_sig"
+#"x6hM10_vs_6h1457_sig"
+
+## venn diagram ##
+require(gplots)
+x2h1457_vs_mock_sig_genenames <- rownames(x2h1457_vs_mock_sig)  #903
+x2hM10_vs_mock_sig_genenames <- rownames(x2hM10_vs_mock_sig)    #713
+x6h1457_vs_mock_sig_genenames <- rownames(x6h1457_vs_mock_sig)  #1899
+x6hM10_vs_mock_sig_genenames <- rownames(x6hM10_vs_mock_sig)    #1593
+png(file= 'venn_diagram1.png', width=800, height=800); 
+venn(list("2h1457_vs_mock"=x2h1457_vs_mock_sig_genenames,"2hM10_vs_mock"=x2hM10_vs_mock_sig_genenames, "6h1457_vs_mock"=x6h1457_vs_mock_sig_genenames, "6hM10_vs_mock"=x6hM10_vs_mock_sig_genenames))
+dev.off();
+
+x2hM10_vs_2h1457_sig_genenames <- rownames(x2hM10_vs_2h1457_sig)    #63
+x6h1457_vs_2h1457_sig_genenames <- rownames(x6h1457_vs_2h1457_sig)  #837
+x6hM10_vs_2h1457_sig_genenames <- rownames(x6hM10_vs_2h1457_sig)    #642
+png(file= 'venn_diagram2.png', width=800, height=800); 
+venn(list("2hM10_vs_2h1457"=x2hM10_vs_2h1457_sig_genenames,"6h1457_vs_2h1457"=x6h1457_vs_2h1457_sig_genenames, "6hM10_vs_2h1457"=x6hM10_vs_2h1457_sig_genenames))
+dev.off();
+
+x6h1457_vs_2hM10_sig_genenames <- rownames(x6h1457_vs_2hM10_sig)  #841
+x6hM10_vs_2hM10_sig_genenames <- rownames(x6hM10_vs_2hM10_sig)    #446
+png(file= 'venn_diagram3.png', width=800, height=800); 
+venn(list("6h1457_vs_2hM10"=x6h1457_vs_2hM10_sig_genenames,"6hM10_vs_2hM10"=x6hM10_vs_2hM10_sig_genenames))
+dev.off();
+
+
+# 505 (6h), 84, 200
+#require(VennDiagram)
+png(file= 'venn_diagram.png', width=800, height=800)
+grid.newpage()
+draw.pairwise.venn(area1 = 284, area2 = 589, cross.area = 84, category = c("1.5h", "6h"), lty = rep("blank",
+2), fill = c("light blue", "pink"), alpha = rep(0.5, 2), cat.pos = c(0,
+0), cat.dist = rep(0.025, 2), scaled = FALSE)
+dev.off()
+
+venn.plot <- draw.triple.venn(65, 75, 85,
+ 35, 15, 25, 5, c("First", "Second", "Third"));
+venn.plot <- draw.triple.venn(
+	area1 = 65,
+	area2 = 75,
+	area3 = 85,
+	n12 = 35,
+	n23 = 15,
+	n13 = 25,
+	n123 = 5,
+	category = c("First", "Second", "Third"),
+	fill = c("blue", "red", "green"),
+	lty = "blank",
+	cex = 2,
+	cat.cex = 2,
+	cat.col = c("blue", "red", "green")
+	);
+png(file= 'venn_diagram.png', width=800, height=800);
+grid.draw(venn.plot);
+dev.off();
+
+venn.plot <- draw.quad.venn(
+	area1 = 72,
+	area2 = 86,
+	area3 = 50,
+	area4 = 52,
+	n12 = 44,
+	n13 = 27,
+	n14 = 32,
+	n23 = 38,
+	n24 = 32,
+	n34 = 20,
+	n123 = 18,
+	n124 = 17,
+	n134 = 11,
+	n234 = 13,
+	n1234 = 6,
+	category = c("First", "Second", "Third", "Fourth"),
+	fill = c("orange", "red", "green", "blue"),
+	lty = "dashed",
+	cex = 2,
+	cat.cex = 2,
+	cat.col = c("orange", "red", "green", "blue")
+	);
+
+
+
+
+Commands:
+ln -s /media/jhuang/Elements/Data_Anna14_RNASeq/rnaseq/assets/multiqc_config.yaml multiqc_config.yaml
+multiqc -f --config multiqc_config.yaml . 2>&1
+rm multiqc_config.yaml
+
+
+
+
+
+data(geneList, package="DOSE")
+gene <- names(geneList)[abs(geneList) > 2]
+gene.df <- bitr(gene, fromType = "ENTREZID",
+        toType = c("ENSEMBL", "SYMBOL"),
+        OrgDb = org.Hs.eg.db)
+#> head(gene)
+#[1] "4312"  "8318"  "10874" "55143" "55388" "991" 
+#> head(gene.df)
+#  ENTREZID         ENSEMBL SYMBOL
+#1     4312 ENSG00000196611   MMP1
+#2     8318 ENSG00000093009  CDC45
+#Jak-STAT signaling pathway (hsa04630)
+kk <- enrichKEGG(gene = gene,
+                 organism     = 'hsa',
+                 pvalueCutoff = 0.05)
+browseKEGG(kk, 'hsa04110')
+
+
+
+
+
+
+
+
+
+
+
+https://bioconductor.org/packages/3.7/bioc/vignettes/clusterProfiler/inst/doc/clusterProfiler.html#browsekegg
+#### draw pathway for paper submission ####
+# --------------------------------------
+#hsa04060, hsa04620, hsa05164, hsa04621        hsa04623, hsa04061, hsa04630, hsa04668, hsa05162, hsa05160.
+##https://bioconductor.org/packages/3.7/bioc/vignettes/clusterProfiler/inst/doc/clusterProfiler.html#browsekegg
+
+
+
+
+# ---------------------
+# ------ PATHVIEW -----
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("pathview")
+library("pathview")
+
+d.raw<- read.delim2("merged_gene_counts.txt",sep="\t", header=TRUE, row.names=1)
+d.raw <- d.raw[-1]
+
+d <- dplyr::select(d.raw, 1:15)
+#15341 --> 14754    15
+#replicates = as.factor(c("Do3_2h_1457","Do3_2h_M10","Do3_6h_M10","Do3_mock","Do3_6h_1457","Do3_2h_1457","Do3_6h_M10","Do3_2h_M10","Do3_6h_M10","Do3_6h_1457","Do3_mock","Do3_6h_1457","Do3_mock","Do3_2h_1457","Do3_2h_M10"))
+replicates = as.factor(c("2h1457","2hM10","6hM10","mock","6h1457","2h1457","6hM10","2hM10","6hM10","6h1457","mock","6h1457","mock","2h1457","2hM10"))
+ids=as.factor(c("Do3_2h_1457_2","Do3_2h_M10_2","Do3_6h_M10_1","Do3_mock_2","Do3_6h_1457_3","Do3_2h_1457_3","Do3_6h_M10_2","Do3_2h_M10_3","Do3_6h_M10_3","Do3_6h_1457_1","Do3_mock_3","Do3_6h_1457_2","Do3_mock_1","Do3_2h_1457_1","Do3_2h_M10_1"))
+cData = data.frame(row.names=colnames(d), replicates=replicates, ids=ids)
+dds<-DESeqDataSetFromMatrix(countData=d, colData=cData, design=~replicates)
+#vsd <- vst(dds)
+rld <- rlogTransformation(dds)
+
+setwd("../degenes")
+#setwd("/media/jhuang/Elements/Data_Anna14_RNASeq/results/featureCounts/degenes")
+
+dds$replicates <- relevel(dds$replicates, "mock")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("2h1457_vs_mock","2hM10_vs_mock","6h1457_vs_mock","6hM10_vs_mock")
+
+dds$replicates <- relevel(dds$replicates, "2h1457")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("2hM10_vs_2h1457","6h1457_vs_2h1457","6hM10_vs_2h1457")
+
+dds$replicates <- relevel(dds$replicates, "2hM10")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("6h1457_vs_2hM10","6hM10_vs_2hM10")
+
+dds$replicates <- relevel(dds$replicates, "6h1457")
+dds = DESeq(dds, betaPrior=FALSE)
+resultsNames(dds)
+clist <- c("6hM10_vs_6h1457")
+
+#   kegg.names labels all.mapped type    x   y width height  mol.data mol.col
+#50      53833 IL20RB      53833 gene  882 906    46     17 0.7241710 #CE8F8F
+#51      53833 IL20RB      53833 gene  882 863    46     17 0.7241710 #CE8F8F
+#52       3565    IL4       3565 gene  580 739    46     17 1.2302237 #EF3030
+#"53833",0.724171014714364
+#"3565",1.23022368414192
+for (i in clist) {
+  contrast = paste("replicates", i, sep="_")
+  res <- results(dds, name=contrast)
+  res$SYMBOL <- rownames(res)
+  geness <- select(org.Hs.eg.db, keys = rownames(res), keytype = "SYMBOL", columns = c("ENTREZID"))
+  geness <- na.omit(geness)
+  geness <- geness[!duplicated(geness$ENTREZID), ]
+  rownames(geness) <- geness$ENTREZID
+  merged_table <- merge(geness, as.data.frame(res))
+  rownames(merged_table) <- merged_table$ENTREZID
+  geneList <- merged_table[,-c(1:3, 5:8)]
+  names(geneList) <- merged_table$ENTREZID
+  #No filtering
+  #res_sig <- res[which((res$padj <= 0.05) & (abs(res$log2FoldChange) >= 2)),]
+  
+  #length of nonfiltered geneList is 14626 --> 24885
+  # cpd refers to compound data not used in this pathway
+  hsa04060_obj <- pathview(gene.data  = geneList, pathway.id = "hsa04060", species  = "hsa", limit  = list(gene=2, cpd=1), out.suffix = i)
+  hsa04620_obj <- pathview(gene.data  = geneList, pathway.id = "hsa04620", species  = "hsa", limit  = list(gene=2, cpd=1), out.suffix = i)
+  hsa05164_obj <- pathview(gene.data  = geneList, pathway.id = "hsa05164", species  = "hsa", limit  = list(gene=2, cpd=1), out.suffix = i)
+  hsa04621_obj <- pathview(gene.data  = geneList, pathway.id = "hsa04621", species  = "hsa", limit  = list(gene=2, cpd=1), out.suffix = i)
+}
+
+#https://stackoverflow.com/questions/3695677/how-to-find-common-elements-from-multiple-vectors
+a <- unique(hsa04060_obj$plot.data.gene$labels)  #266
+b <- unique(hsa04620_obj$plot.data.gene$labels)  #67
+c <- unique(hsa05164_obj$plot.data.gene$labels)  #100
+d <- unique(hsa04621_obj$plot.data.gene$labels)  #113
+Reduce(intersect, list(a,b,c,d))
+intersect(intersect(intersect(a,b),c),d)
+
+
